@@ -1,46 +1,86 @@
 #!/bin/bash
 
-DIND_K8S_VERSION="${DIND_K8S_VERSION:-1.13}"
-DIND_SCRIPT="dind-cluster-v$DIND_K8S_VERSION.sh"
-DIND_SCRIPT_URL="https://raw.githubusercontent.com/morningspace/kubeadm-dind-cluster/master/fixed/$DIND_SCRIPT"
+# Kubernetes version
+DIND_K8S_VERSION=${DIND_K8S_VERSION:-v1.13}
 
-#################################################
+# Build Kubernetes from source
+BUILD_KUBEADM=${BUILD_KUBEADM:-}
+BUILD_HYPERKUBE=${BUILD_HYPERKUBE:-}
+
 # Customize Kubernetes Dashboard URL
 DASHBOARD_BASE_URL="https://raw.githubusercontent.com/kubernetes/dashboard/master/aio/deploy"
 DASHBOARD_URL="${DASHBOARD_BASE_URL}/recommended/kubernetes-dashboard.yaml"
 # DASHBOARD_URL="${DASHBOARD_BASE_URL}/alternative/kubernetes-dashboard.yaml"
-
 # To skip Kubernetes Dashboard deployment
-DIND_SKIP_DASHBOARD=1
+SKIP_DASHBOARD=${SKIP_DASHBOARD:-1}
 
 # To have kubeadm-dind-cluster join custom networks, separated by comma
-DIND_CUSTOM_NETWORK=net-registry
-
+DIND_CUSTOM_NETWORKS=${DIND_CUSTOM_NETWORKS:-net-registry}
 # To use insecure private Docker registries for kubeadm to pull images from there
-DIND_INSECURE_REGISTRIES='["k8s.gcr.io", "gcr.io", "mirantis", "mr.io"]'
+DIND_INSECURE_REGISTRIES=${DIND_INSECURE_REGISTRIES:-'["k8s.gcr.io", "gcr.io", "mirantis", "mr.io"]'}
 
 # To skip pull of image kubeadm-dind-cluster
-# DIND_SKIP_PULL=1
+DIND_SKIP_PULL=1
 
-# To skip download of kubectl
-# DOWNLOAD_KUBECTL=0
+# To skip snapshot
+# SKIP_SNAPSHOT=1
 
 #################################################
-# Run the shell script
-if [ ! -f ./$DIND_SCRIPT ] ; then
-  curl -sSL "$DIND_SCRIPT_URL" > ./$DIND_SCRIPT
-  chmod +x ./$DIND_SCRIPT
-fi
 
-if [ -f ./$DIND_SCRIPT ] ; then
-  echo "$0: (info) run $DIND_SCRIPT ..."
-  echo "  DASHBOARD_URL=$DASHBOARD_URL"
-  echo "  DIND_SKIP_DASHBOARD=$DIND_SKIP_DASHBOARD"
-  echo "  DIND_CUSTOM_NETWORK=$DIND_CUSTOM_NETWORK"
-  echo "  DIND_INSECURE_REGISTRIES=$DIND_INSECURE_REGISTRIES"
-  echo "  DIND_SKIP_PULL=$DIND_SKIP_PULL"
-  echo "  DOWNLOAD_KUBECTL=$DOWNLOAD_KUBECTL"
-  . ./$DIND_SCRIPT
+function log_env() {
+  echo "DIND_K8S_VERSION=$DIND_K8S_VERSION"
+  echo "BUILD_KUBEADM=$BUILD_KUBEADM"
+  echo "BUILD_HYPERKUBE=$BUILD_HYPERKUBE"
+  echo "DASHBOARD_URL=$DASHBOARD_URL"
+  echo "SKIP_DASHBOARD=$SKIP_DASHBOARD"
+  echo "DIND_CUSTOM_NETWORKS=$DIND_CUSTOM_NETWORKS"
+  echo "DIND_INSECURE_REGISTRIES=$DIND_INSECURE_REGISTRIES"
+  echo "DIND_SKIP_PULL=$DIND_SKIP_PULL"
+  echo "SKIP_SNAPSHOT=$SKIP_SNAPSHOT"
+}
+
+SCRIPT_HOME=$(cd -P "$(dirname "$0")" && pwd)
+SCRIPT_BASEURL="https://raw.githubusercontent.com/morningspace/kubeadm-dind-cluster"
+
+function load_script() {
+  local script_name
+  for script_name in "$@" ; do
+    local script_dir="$SCRIPT_HOME/$script_name"
+    local script_url="$SCRIPT_BASEURL/master/fixed/$script_name"
+    if [[ $BUILD_KUBEADM == y || $BUILD_HYPERKUBE == y ]] ; then
+      script_url="$SCRIPT_BASEURL/master/$script_name"
+    fi
+
+    if [ ! -f $script_dir ] ; then
+      echo "Download $script_name ..."
+      curl -sSL $script_url > $script_dir
+      chmod +x $script_dir
+    fi
+  done
+}
+
+function run_script() {
+  local script_name
+
+  if [[ $BUILD_KUBEADM == y || $BUILD_HYPERKUBE == y ]] ; then
+    script_name="dind-cluster.sh"
+    load_script $script_name "config.sh"
+  else
+    script_name="dind-cluster-$DIND_K8S_VERSION.sh"
+    load_script $script_name
+  fi
+
+  local script_dir="$SCRIPT_HOME/$script_name"
+
+  echo "Run $script_name ..."
+  start_time=$SECONDS
+  . $script_dir
+  elapsed_time=$(($SECONDS - $start_time))
+  echo "Total elapsed time: $elapsed_time seconds"
+}
+
+if [[ $1 == 'env' ]] ; then
+  log_env
 else
-  echo "$0: (error) $DIND_SCRIPT not found"
+  run_script $@
 fi
