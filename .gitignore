@@ -1,1 +1,2 @@
-dind-cluster-v*.sh
+dind-cluster*.sh
+config.sh
