@@ -2,6 +2,7 @@
 
 # Kubernetes version
 DIND_K8S_VERSION=${DIND_K8S_VERSION:-v1.13}
+DIND_COMMIT=${DIND_COMMIT:-76f7b8a5f3966aa80700a8c9f92d23f6936f949b}
 
 # Build Kubernetes from source
 BUILD_KUBEADM=${BUILD_KUBEADM:-}
@@ -46,10 +47,7 @@ function load_script() {
   local script_name
   for script_name in "$@" ; do
     local script_dir="$SCRIPT_HOME/$script_name"
-    local script_url="$SCRIPT_BASEURL/master/fixed/$script_name"
-    if [[ $BUILD_KUBEADM == y || $BUILD_HYPERKUBE == y ]] ; then
-      script_url="$SCRIPT_BASEURL/master/$script_name"
-    fi
+    local script_url="$SCRIPT_BASEURL/master/$script_name"
 
     if [ ! -f $script_dir ] ; then
       echo "Download $script_name ..."
@@ -60,15 +58,8 @@ function load_script() {
 }
 
 function run_script() {
-  local script_name
-
-  if [[ $BUILD_KUBEADM == y || $BUILD_HYPERKUBE == y ]] ; then
-    script_name="dind-cluster.sh"
-    load_script $script_name "config.sh"
-  else
-    script_name="dind-cluster-$DIND_K8S_VERSION.sh"
-    load_script $script_name
-  fi
+  local script_name="dind-cluster.sh"
+  load_script $script_name "config.sh"
 
   local script_dir="$SCRIPT_HOME/$script_name"
 
