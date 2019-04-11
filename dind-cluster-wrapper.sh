@@ -53,7 +53,7 @@ env BUILD_HYPERKUBE
 DASHBOARD_BASEURL="https://raw.githubusercontent.com/kubernetes/dashboard/master/aio/deploy"
 env DASHBOARD_URL ${DASHBOARD_BASEURL}/recommended/kubernetes-dashboard.yaml
 # env DASHBOARD_URL ${DASHBOARD_BASEURL}/alternative/kubernetes-dashboard.yaml
-env SKIP_DASHBOARD 1
+env SKIP_DASHBOARD
 
 # To have kubeadm-dind-cluster join custom networks, separated by comma
 env DIND_CUSTOM_NETWORKS net-registry
@@ -61,7 +61,7 @@ env DIND_CUSTOM_NETWORKS net-registry
 env DIND_INSECURE_REGISTRIES '"[\"k8s.gcr.io\", \"gcr.io\", \"mirantis\", \"mr.io\"]"'
 
 # To skip pull of image kubeadm-dind-cluster
-env DIND_SKIP_PULL 1
+env DIND_SKIP_PULL
 # To skip snapshot
 env SKIP_SNAPSHOT
 
@@ -73,5 +73,12 @@ elif [[ $1 == 'install' ]] ; then
   install_script 1
 else
   install_script
+
+  if [[ -z $1 ]] ; then
+    echo "prepare:" >&2
+    echo "  $0 env" >&2
+    echo "  $0 install" >&2
+  fi
+
   run_script $@
 fi
