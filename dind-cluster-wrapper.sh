@@ -3,8 +3,9 @@
 env_vars=()
 
 function env() {
-  env_vars+=($1)
-  eval "$1=\${$1:-$2}"
+  local env_var=$1
+  env_vars+=($env_var)
+  eval "if [[ -z \${$env_var+set} ]]; then $env_var=$2; fi"
 }
 
 function envs() {
@@ -16,7 +17,7 @@ function envs() {
 script_home=$(cd -P "$(dirname "$0")" && pwd)
 script_name="dind-cluster.sh"
 script_dir="$script_home/$script_name"
-script_baseurl="https://raw.githubusercontent.com/morningspace/kubeadm-dind-cluster"
+script_baseurl="https://raw.githubusercontent.com/kubernetes-sigs/kubeadm-dind-cluster"
 
 function install_script() {
   local script force=$1
@@ -42,8 +43,8 @@ function run_script() {
 #################################################
 
 # Kubernetes version
-env DIND_K8S_VERSION v1.13
-env DIND_COMMIT 76f7b8a5f3966aa80700a8c9f92d23f6936f949b
+env DIND_K8S_VERSION v1.14
+env DIND_COMMIT 814d9ca036b23adce9e6c683da532e8037820119
 
 # Build Kubernetes from source
 env BUILD_KUBEADM
