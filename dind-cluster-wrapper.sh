@@ -43,7 +43,7 @@ function run_script() {
 #################################################
 
 # Kubernetes version
-env DIND_K8S_VERSION v1.14
+env DIND_K8S_VERSION v1.13
 env DIND_COMMIT 814d9ca036b23adce9e6c683da532e8037820119
 
 # Build Kubernetes from source
@@ -51,7 +51,7 @@ env BUILD_KUBEADM
 env BUILD_HYPERKUBE
 
 # Customize Kubernetes Dashboard
-DASHBOARD_BASEURL="https://raw.githubusercontent.com/kubernetes/dashboard/master/aio/deploy"
+DASHBOARD_BASEURL="https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy"
 env DASHBOARD_URL ${DASHBOARD_BASEURL}/recommended/kubernetes-dashboard.yaml
 # env DASHBOARD_URL ${DASHBOARD_BASEURL}/alternative/kubernetes-dashboard.yaml
 env SKIP_DASHBOARD
