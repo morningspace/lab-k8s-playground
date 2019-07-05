@@ -2,7 +2,7 @@ version: '3.5'
 
 services:
 
-  k8s.grc.io:
+  k8s.gcr.io:
     image: registry:2
     hostname: k8s.gcr.io
     container_name: k8s.gcr.io
@@ -38,18 +38,18 @@ services:
     networks:
       - net-registry
 
-  mirantis:
-    image: registry:2
-    hostname: mirantis
-    container_name: mirantis
-    environment:
-      REGISTRY_HTTP_ADDR: 0.0.0.0:80
-      REGISTRY_STORAGE_DELETE_ENABLED: "true"
-    volumes:
-      - vol-mr.io:/var/lib/registry
-    networks:
-      - net-registry
-
+  # mirantis:
+  #   image: registry:2
+  #   hostname: mirantis
+  #   container_name: mirantis
+  #   environment:
+  #     REGISTRY_HTTP_ADDR: 0.0.0.0:80
+  #     REGISTRY_STORAGE_DELETE_ENABLED: "true"
+  #   volumes:
+  #     - vol-mr.io:/var/lib/registry
+  #   networks:
+  #     - net-registry
+  #
 volumes:
   vol-mr.io:
     name: vol-mr.io
