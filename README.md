@@ -10,7 +10,7 @@ Keywords: Kubernetes, Container
 
 ## Overview
 
-This is lab project is a playground for you to play with Kubernetes.
+This lab project is a playground for you to play with Kubernetes.
 
 It can launch a multi-node cluster on your local machine in less than one minute even without network connection! 
 
