@@ -16,17 +16,17 @@ function envs() {
 
 script_home=$(cd -P "$(dirname "$0")" && pwd)
 script_name="dind-cluster.sh"
-script_dir="$script_home/$script_name"
+script_dir="$script_home/install/$script_name"
 script_baseurl="https://raw.githubusercontent.com/kubernetes-sigs/kubeadm-dind-cluster"
 
 function install_script() {
   local script force=$1
   for script in "$script_name" "config.sh" ; do
-    local script_dir="$script_home/$script"
+    local script_dir="$script_home/install/$script"
     local script_url="$script_baseurl/master/$script"
     if [[ ! -f $script_dir || -n $force ]] ; then
       echo "Download $script ..."
-      curl -sSLO $script_url
+      curl -sSL $script_url -o $script_dir
       [ $? != 0 ] && exit 1
       chmod +x $script_dir
     fi
