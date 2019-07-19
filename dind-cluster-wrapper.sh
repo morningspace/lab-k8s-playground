@@ -59,12 +59,14 @@ env SKIP_DASHBOARD
 # To have kubeadm-dind-cluster join custom networks, separated by comma
 env DIND_CUSTOM_NETWORKS net-registry
 # To use insecure private Docker registries for kubeadm to pull images from there
-env DIND_INSECURE_REGISTRIES '"[\"k8s.gcr.io\", \"gcr.io\", \"mirantis\", \"mr.io\"]"'
+env DIND_INSECURE_REGISTRIES '"[\"k8s.gcr.io\", \"gcr.io\", \"quay.io\", \"mr.io\"]"'
 
 # To skip pull of image kubeadm-dind-cluster
 env DIND_SKIP_PULL
 # To skip snapshot
 env SKIP_SNAPSHOT
+#
+env NUM_NODES
 
 #################################################
 

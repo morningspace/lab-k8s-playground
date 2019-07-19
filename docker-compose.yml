@@ -26,6 +26,18 @@ services:
     networks:
       - net-registry
 
+  quay.io:
+    image: registry:2
+    hostname: quay.io
+    container_name: quay.io
+    environment:
+      REGISTRY_HTTP_ADDR: 0.0.0.0:80
+      REGISTRY_STORAGE_DELETE_ENABLED: "true"
+    volumes:
+      - vol-mr.io:/var/lib/registry
+    networks:
+      - net-registry
+
   mr.io:
     image: registry:2
     hostname: mr.io
@@ -35,6 +47,21 @@ services:
       REGISTRY_STORAGE_DELETE_ENABLED: "true"
     ports:
       - "5000:80"
+    volumes:
+      - vol-mr.io:/var/lib/registry
+    networks:
+      - net-registry
+
+  docker.io-mirror:
+    image: registry:2
+    hostname: docker.io-mirror
+    container_name: docker.io-mirror
+    environment:
+      REGISTRY_HTTP_ADDR: 0.0.0.0:80
+      REGISTRY_STORAGE_DELETE_ENABLED: "true"
+      REGISTRY_PROXY_REMOTEURL: https://registry-1.docker.io
+    ports:
+      - "5555:80"
     volumes:
       - vol-mr.io:/var/lib/registry
     networks:
