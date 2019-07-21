@@ -67,6 +67,8 @@ env DIND_SKIP_PULL
 env SKIP_SNAPSHOT
 #
 env NUM_NODES
+#
+env DIND_HOST_IP
 
 #################################################
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [[ ! -f ~/.lab-k8s-cache/kubernetes-dashboard.yaml ]]; then
-  download_url=https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy/recommended/kubernetes-dashboard.yaml
+  download_url=https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy/alternative/kubernetes-dashboard.yaml
   curl -sL $download_url -o ~/.lab-k8s-cache/kubernetes-dashboard.yaml
 fi
 
@@ -25,5 +25,20 @@ sudo \
 ./dind-cluster-wrapper.sh up
 
 sudo chown -R vagrant:vagrant ~/.kube
+
+cat <<EOF | kubectl apply -f -
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: cluster-admin
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: kubernetes-dashboard
+  namespace: kube-system
+EOF
 
 popd
