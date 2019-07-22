@@ -3,18 +3,20 @@ cpus = '6'
 # set amount of memory allocated by vm
 memory = '8192'
 
-# set kubernetes version, supported versions: v1.12, v1.13, v1.14
+# set Kubernetes version, supported versions: v1.12, v1.13, v1.14
 k8s_version = "v1.14"
 # set number of worker nodes
 nodes = 2
-# set host machine ip
+# set host ip of the box
 host_ip = '192.168.56.100'
-# special handling for users in China
+
+# special optimization for users in China
 is_country_cn = 1
-# set https_proxy, e.g. 9.2.112.117:8080
+# set https proxy
 https_proxy = ""
-# optional targets to be run
-targets = "helm,tools,istio"
+
+# optional targets to be run, can be customized as your need
+targets = "helm tools istio"
 
 ###############################################################################
 #                  DO NOT MODIFY ANYTHING BELOW THIS POINT                    #
@@ -33,8 +35,8 @@ configure_lab_env = <<SCRIPT
 # install web terminal
 apt-get install -y shellinabox
 
-# create link to run-targets.sh
-ln -sf /vagrant/install/run-targets.sh /usr/local/bin/run-targets
+# create link to launch.sh
+ln -sf /vagrant/install/launch.sh /usr/local/bin/launch
 
 # configure lab cache
 mkdir -p /vagrant/install/.lab-k8s-cache
@@ -74,11 +76,11 @@ Vagrant.configure(2) do |config|
   config.vm.provision "shell", inline: configure_ssh_keys, keep_color: true, name: "configure_ssh_keys"
   config.vm.provision "shell", inline: configure_lab_env, keep_color: true, name: "configure_lab_env"
   config.vm.provision :shell do |s|
-    s.path = 'install/run-targets.sh'
-    s.name = 'run_targets'
+    s.path = 'install/launch.sh'
+    s.name = 'launch_targets'
     s.privileged = false
     s.keep_color = true
-    s.args = "-a #{targets}"
+    s.args = "default #{targets}"
     s.env = {
       "DIND_K8S_VERSION" => "#{k8s_version}",
       "NUM_NODES" => "#{nodes}",

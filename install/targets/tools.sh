@@ -57,9 +57,9 @@ fi
 ########################
 if [[ ! -f ~/.lab-k8s-cache/get-pip.py ]]; then
   curl -sLo ~/.lab-k8s-cache/get-pip.py https://bootstrap.pypa.io/get-pip.py
-  python3 get-pip.py --user
 fi
 if ! check_command "kube-shell"; then
+  python3 ~/.lab-k8s-cache/get-pip.py --user
   sudo pip install kube-shell
   echo "* kube-shell installed"
 fi
