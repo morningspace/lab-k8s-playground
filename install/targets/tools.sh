@@ -60,7 +60,7 @@ if [[ ! -f ~/.lab-k8s-cache/get-pip.py ]]; then
 fi
 if ! check_command "kube-shell"; then
   python3 ~/.lab-k8s-cache/get-pip.py --user
-  sudo pip install kube-shell
+  $HOME/.local/bin/pip3 install kube-shell --user
   echo "* kube-shell installed"
 fi
 
