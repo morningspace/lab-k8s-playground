@@ -11,7 +11,7 @@ nodes = 2
 host_ip = '192.168.56.100'
 
 # special optimization for users in China, 1 or 0
-is_country_cn = 1
+is_country_cn = 0
 # set https proxy
 https_proxy = ""
 
@@ -42,9 +42,9 @@ ln -sf /vagrant/install/launch.sh /usr/local/bin/launch
 cat << EOF >> #{user_home}/.bashrc
 
 # launch autocompletion
-shells=($(ls -l /vagrant/install/targets/*.sh | awk '{print $9}' | cut -d . -f 1))
-words=(${shells[@]##*/})
-complete -W "$(echo ${words[@]})" launch
+shells=(\\$(ls -l /vagrant/install/targets/*.sh | awk '{print \\$9}' | cut -d . -f 1))
+words=(\\${shells[@]##*/})
+complete -W "default \\$(echo \\${words[@]})" launch
 EOF
 
 # configure lab cache
@@ -75,7 +75,7 @@ Vagrant.configure(2) do |config|
   config.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'"
 
   config.vm.provider "virtualbox" do |vb|
-    vb.name = "lab-k8s-playground-#{k8s_version}"
+    vb.name = "lab-k8s-playground"
     vb.customize ["modifyvm", :id, "--cpus", "#{cpus}"]
     vb.customize ["modifyvm", :id, "--memory", "#{memory}"]
   end

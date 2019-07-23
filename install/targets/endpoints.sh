@@ -1,6 +1,6 @@
 #!/bin/bash
 
-apiserver_port=$(/vagrant/install/dind-cluster.sh apiserver-port)
+apiserver_port=$(/vagrant/install/dind-cluster.sh apiserver-port 2>/dev/null)
 
 endpoints=(
   "Web terminal|https://$DIND_HOST_IP:4200"

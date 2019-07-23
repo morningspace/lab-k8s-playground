@@ -62,16 +62,18 @@ registries_cached=(
 
 # set up private registries
 my_registry=127.0.0.1:5000
-cat << EOF | sudo tee /etc/docker/daemon.json
+if [[ ! -f /etc/docker/daemon.json ]]; then
+  cat << EOF | sudo tee /etc/docker/daemon.json
 {
   "insecure-registries" : ["$my_registry"],
   "registry-mirrors": ["http://127.0.0.1:5555"]
 }
 EOF
 
-sudo systemctl daemon-reload
-sudo systemctl restart docker
-sudo systemctl show --property=Environment docker
+  sudo systemctl daemon-reload
+  sudo systemctl restart docker
+  sudo systemctl show --property=Environment docker
+fi
 
 sudo docker network inspect net-registry &>/dev/null || \
 sudo docker network create net-registry
