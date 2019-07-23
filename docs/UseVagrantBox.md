@@ -34,15 +34,21 @@
 
 ## Demo
 
-Repeatable and customizable bootstrap in offline mode. In this demo, I turn the Wi-Fi off on my laptop, then log into the provisioned box, run `launch kubernetes helm` to specifically re-install Kubernetes and Helm.
+> Customize repeatable bootstrap in offline mode.
+
+In this demo, I turned Wi-Fi off on my laptop, then logged into the provisioned box, and run `launch kubernetes helm` specifically to re-install Kubernetes and Helm.
 
 ![](demo-1.gif)
 
-Run Kubernetes tools (kube-shell, autocompletion, kubetail, kubebox, aliases, kubens) using OS terminal and web terminal
+> Run Kubernetes tools from both OS terminal and web terminal.
+
+In this demo, I ran tools e.g. kube-shell, autocompletion, kubetail, kubebox, aliases, kubens in OS terminal first, then web terminal.
 
 ![](demo-2.gif)
 
-Use Dashboard, Grafana, Kiali, Jaeger when run Istio Bookinfo demo app
+> Use Dashboard, Grafana, Kiali, Jaeger when run Istio Bookinfo demo app.
+
+In this demo I had Istio and its demo app installed with Kubernetes, then tried different deployed applications in browser.
 
 ![](demo-3.gif)
 
@@ -103,6 +109,23 @@ After system bootstrapped, you can use below endpoints to access variant applica
 | Kiali						| http://192.168.56.100:20001/
 | Jaeger					| http://192.168.56.100:15032/
 | Prometheus			| http://192.168.56.100:9090/
+
+Also, you can run `launch endpoints` to list all supported applications with their endpoints and current status.
+
+```shell
+vagrant@vagrant:~$ launch endpoints 
+* targets to be launched: [endpoints]
+####################################
+# Launch target endpoints...
+####################################
+✔   Web terminal: https://192.168.56.100:4200
+✔      Dashboard: http://192.168.56.100:32792/api/v1/namespaces/kube-system/services/http:kubernetes-dashboard:/proxy
+✔ Istio Bookinfo: http://192.168.56.100:31380/productpage
+✔        Grafana: http://192.168.56.100:3000
+✔          Kiali: http://192.168.56.100:20001
+✔         Jaeger: http://192.168.56.100:15032
+✔     Prometheus: http://192.168.56.100:9090
+```
 
 ### How to configure it
 
