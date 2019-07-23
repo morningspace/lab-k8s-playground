@@ -17,6 +17,10 @@ Usage: launch [targets]
   Targets are separated by space, e.g. helm tools istio, and launch in order of appearance one by one.
   The pre-defined target default will launch targets: docker docker-compose kubectl registry kubernetes.
 
+  e.g.
+  launch default tools istio
+  launch kubernetes
+
 EOF
   exit
 fi

@@ -10,7 +10,7 @@ nodes = 2
 # set host ip of the box
 host_ip = '192.168.56.100'
 
-# special optimization for users in China
+# special optimization for users in China, 1 or 0
 is_country_cn = 1
 # set https proxy
 https_proxy = ""
@@ -38,12 +38,21 @@ apt-get install -y shellinabox
 # create link to launch.sh
 ln -sf /vagrant/install/launch.sh /usr/local/bin/launch
 
+# launch autocompletion
+cat << EOF >> #{user_home}/.bashrc
+
+# launch autocompletion
+shells=($(ls -l /vagrant/install/targets/*.sh | awk '{print $9}' | cut -d . -f 1))
+words=(${shells[@]##*/})
+complete -W "$(echo ${words[@]})" launch
+EOF
+
 # configure lab cache
 mkdir -p /vagrant/install/.lab-k8s-cache
 ln -sf /vagrant/install/.lab-k8s-cache #{user_home}/.lab-k8s-cache
 
 # configure env vars
-cat << EOF | tee -a /etc/environment
+cat << EOF >> /etc/environment
 
 # environment variables for lab-k8s-playground
 export DIND_K8S_VERSION=#{k8s_version}

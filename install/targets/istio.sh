@@ -27,9 +27,9 @@ kubectl apply -f install/kubernetes/istio-demo.yaml
 wait_for_app "istio-system" "istio" "app=istio-ingressgateway"
 
 killall kubectl
-kubectl -n istio-system port-forward --address $DIND_HOST_IP service/istio-ingressgateway 31380:80 >/dev/null &
 kubectl -n istio-system port-forward --address $DIND_HOST_IP service/grafana 3000:3000 >/dev/null &
 kubectl -n istio-system port-forward --address $DIND_HOST_IP service/kiali 20001:20001 >/dev/null &
 kubectl -n istio-system port-forward --address $DIND_HOST_IP $(kubectl -n istio-system get pod -l app=jaeger -o jsonpath='{.items[0].metadata.name}') 15032:16686 >/dev/null &
+kubectl -n istio-system port-forward --address $DIND_HOST_IP $(kubectl -n istio-system get pod -l app=prometheus -o jsonpath='{.items[0].metadata.name}') 9090:9090 >/dev/null &
 
 popd
