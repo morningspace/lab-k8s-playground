@@ -26,7 +26,7 @@ tar -zxf ~/.lab-k8s-cache/$helm_tgz
 sudo mv ./$os-amd64/helm /usr/local/bin/helm
 rm -rf ./$os-amd64
 
-if [[ $IS_COUNTRY_CN == 1 ]]; then
+if [[ $IS_IN_CHINA == 1 ]]; then
   tiller_image="mr.io/kubernetes-helm-tiller:$HELM_VERSION"
   stable_repo="https://kubernetes.oss-cn-hangzhou.aliyuncs.com/charts"
   helm init -i $tiller_image --stable-repo-url $stable_repo

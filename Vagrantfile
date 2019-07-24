@@ -11,7 +11,7 @@ nodes = 2
 host_ip = '192.168.56.100'
 
 # special optimization for users in China, 1 or 0
-is_country_cn = 0
+is_in_china = 0
 # set https proxy
 https_proxy = ""
 
@@ -56,7 +56,7 @@ cat << EOF >> /etc/environment
 export DIND_K8S_VERSION=#{k8s_version}
 export NUM_NODES=#{nodes}
 export DIND_HOST_IP=#{host_ip}
-export IS_COUNTRY_CN=#{is_country_cn}
+export IS_IN_CHINA=#{is_in_china}
 export https_proxy=#{https_proxy}
 EOF
 
@@ -95,7 +95,7 @@ Vagrant.configure(2) do |config|
       "DIND_K8S_VERSION" => "#{k8s_version}",
       "NUM_NODES" => "#{nodes}",
       "DIND_HOST_IP" => "#{host_ip}",
-      "IS_COUNTRY_CN" => "#{is_country_cn}",
+      "IS_IN_CHINA" => "#{is_in_china}",
       "https_proxy" => "#{https_proxy}"
     }
   end

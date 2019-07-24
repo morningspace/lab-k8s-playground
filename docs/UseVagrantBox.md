@@ -28,7 +28,7 @@
 * Many Kubernetes tools integrated for you to learn, use, and evaluate.
 * [Web terminal](https://github.com/shellinabox/shellinabox) that allows to log in to the box from browser, so you can use all Kubernetes tools in the box wilthin browser without having them installed on your host machine.
 * Private Docker image registries and disk file cache to store both pulled images and downloaded installation packages that make cluster launch faster, even can be run in offline mode after the first privisioning to the box is done.
-* Special optimization for users in China through environment variables `IS_COUNTRY_CN` and `https_proxy` when pull images and download installation packages.
+* Special optimization for users in China through environment variables `IS_IN_CHINA` and `https_proxy` when pull images and download installation packages.
 * Repeatable quick system bootstrap at any time after the first provisioning for any reason, e.g. to destroy the current Kubernetes cluster and re-launch a new one with different versions, or to update the private Docker image registries to cache newly added images.
 * Customizable system bootstrap to meet your very specific requirements, e.g. only re-launch Kubernetes to bring up a clean cluster without touching other installed components. You can even hook your own installation scripts into the bootstrap process.
 
@@ -143,7 +143,7 @@ nodes = 2
 host_ip = '192.168.56.100'
 
 # special optimization for users in China, 1 or 0
-is_country_cn = 1
+is_in_china = 1
 # set https_proxy
 https_proxy = ""
 

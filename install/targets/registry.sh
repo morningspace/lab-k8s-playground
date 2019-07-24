@@ -93,7 +93,7 @@ sleep 3
 for image in ${images[@]} ; do  
   registry=${image%%/*}
   repository=${image#*/}
-  if [[ $IS_COUNTRY_CN == 1 ]]; then
+  if [[ $IS_IN_CHINA == 1 ]]; then
     if [[ ${registries_mirrored[@]} =~ $registry ]]; then
       registry=morningspace
       repository=${repository/\//-}
