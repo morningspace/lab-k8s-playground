@@ -1,8 +1,11 @@
 #!/bin/bash
 
-. /vagrant/install/funcs.sh
+LAB_HOME=${LAB_HOME:-/vagrant}
+INSTALL_HOME=$LAB_HOME/install
+source $INSTALL_HOME/funcs.sh
 
-check_command "kubectl" && exit
+ensure_command "kubectl" && exit
+ensure_k8s_version
 
 # set version per kubernetes version
 case $DIND_K8S_VERSION in
@@ -12,15 +15,12 @@ case $DIND_K8S_VERSION in
     kubectl_version="v1.13.8";;
   "v1.14")
     kubectl_version="v1.14.4";;
-  "*")
-    echo "Unsupported Kubernetes version... exiting."
-    exit 1
-    ;;
 esac
 
 if [[ ! -f ~/.lab-k8s-cache/kubectl-$kubectl_version ]]; then
   [[ -n $https_proxy ]] && echo "* https_proxy detected: $https_proxy"
-  download_url=https://storage.googleapis.com/kubernetes-release/release/$kubectl_version/bin/linux/amd64/kubectl
+  os=$(uname -s | tr '[:upper:]' '[:lower:]')
+  download_url=https://storage.googleapis.com/kubernetes-release/release/$kubectl_version/bin/$os/amd64/kubectl
   curl -sL $download_url -o ~/.lab-k8s-cache/kubectl-$kubectl_version
 fi
 

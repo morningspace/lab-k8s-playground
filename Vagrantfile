@@ -35,21 +35,19 @@ configure_lab_env = <<SCRIPT
 # install web terminal
 apt-get install -y shellinabox
 
-# create link to launch.sh
-ln -sf /vagrant/install/launch.sh /usr/local/bin/launch
+# install bash completion
+apt-get install -y bash-completion
 
 # launch autocompletion
 cat << EOF >> #{user_home}/.bashrc
+
+source /usr/share/bash-completion/bash_completion
 
 # launch autocompletion
 shells=(\\$(ls -l /vagrant/install/targets/*.sh | awk '{print \\$9}' | cut -d . -f 1))
 words=(\\${shells[@]##*/})
 complete -W "default \\$(echo \\${words[@]})" launch
 EOF
-
-# configure lab cache
-mkdir -p /vagrant/install/.lab-k8s-cache
-ln -sf /vagrant/install/.lab-k8s-cache #{user_home}/.lab-k8s-cache
 
 # configure env vars
 cat << EOF >> /etc/environment
@@ -61,6 +59,9 @@ export DIND_HOST_IP=#{host_ip}
 export IS_COUNTRY_CN=#{is_country_cn}
 export https_proxy=#{https_proxy}
 EOF
+
+# create link to launch.sh
+ln -sf /vagrant/install/launch.sh /usr/local/bin/launch
 SCRIPT
 
 Vagrant.configure(2) do |config|

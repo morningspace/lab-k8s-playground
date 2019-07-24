@@ -28,10 +28,27 @@ function wait_for_app {
   echo "[done]" >&2
 }
 
-function check_command {
+function ensure_command {
   if command -v $1 >/dev/null 2>&1; then
     echo "* $1 detected"
     return 0
   fi
   return 1
+}
+
+function ensure_box {
+  if [[ $(uname -s) == Linux ]]; then
+    echo "* vagrant box detected"
+    return 0
+  fi
+  return 1
+}
+
+function ensure_k8s_version {
+  valid="v1.12 v1.13 v1.14"
+  if [[ ! $valid =~ $DIND_K8S_VERSION ]]; then
+    echo "* Kubernetes version not supported, valid values: $valid"
+    return 1
+  fi
+  return 0
 }

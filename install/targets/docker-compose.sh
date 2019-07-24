@@ -1,8 +1,10 @@
 #!/bin/bash
 
-. /vagrant/install/funcs.sh
+LAB_HOME=${LAB_HOME:-/vagrant}
+INSTALL_HOME=$LAB_HOME/install
+source $INSTALL_HOME/funcs.sh
 
-check_command "docker-compose" && exit
+ensure_command "docker-compose" && exit
 
 if [[ ! -f ~/.lab-k8s-cache/docker-compose ]]; then
   download_url=https://github.com/docker/compose/releases/download/1.24.0/docker-compose-$(uname -s)-$(uname -m)

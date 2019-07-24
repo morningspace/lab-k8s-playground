@@ -1,8 +1,11 @@
 #!/bin/bash
 
-. /vagrant/install/funcs.sh
+LAB_HOME=${LAB_HOME:-/vagrant}
+INSTALL_HOME=$LAB_HOME/install
+source $INSTALL_HOME/funcs.sh
 
-check_command "docker" && exit
+ensure_command "docker" && exit
+ensure_box || exit
 
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"

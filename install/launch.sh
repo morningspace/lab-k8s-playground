@@ -1,5 +1,11 @@
 #!/bin/bash
 
+LAB_HOME=${LAB_HOME:-/vagrant}
+INSTALL_HOME=$LAB_HOME/install
+
+# configure lab cache
+mkdir -p $HOME/.lab-k8s-cache
+
 # default targets
 default=(
   "docker"
@@ -25,6 +31,7 @@ EOF
   exit
 fi
 
+# resolve targets
 if [[ $1 == default ]]; then
   targets=${default[@]}
   targets+=(${@:2})
@@ -32,13 +39,13 @@ else
   targets=$@
 fi
 
-# Launch targets
+# launch targets
 echo "* targets to be launched: [${targets[@]}]"
 for target in ${targets[@]} ; do
   echo "####################################"
   echo "# Launch target $target..."
   echo "####################################"
-  target_shell="/vagrant/install/targets/$target.sh"
+  target_shell="$INSTALL_HOME/targets/$target.sh"
   if [[ -f $target_shell ]]; then
     $target_shell
   else

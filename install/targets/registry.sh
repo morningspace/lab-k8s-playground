@@ -1,5 +1,11 @@
 #!/bin/bash
 
+LAB_HOME=${LAB_HOME:-/vagrant}
+INSTALL_HOME=$LAB_HOME/install
+source $INSTALL_HOME/funcs.sh
+
+ensure_k8s_version || exit
+
 # images to be cached per kubernetes version
 case $DIND_K8S_VERSION in
   "v1.12")
@@ -41,10 +47,6 @@ case $DIND_K8S_VERSION in
     # helm
     gcr.io/kubernetes-helm/tiller:v2.14.2
     );;
-  *)
-    echo "Unsupported Kubernetes version... exiting."
-    exit 1
-    ;;
 esac
 
 # registries have mirrors on docker hub
@@ -62,7 +64,8 @@ registries_cached=(
 
 # set up private registries
 my_registry=127.0.0.1:5000
-if [[ ! -f /etc/docker/daemon.json ]]; then
+ensure_box
+if [[ $? == 0 && ! -f /etc/docker/daemon.json ]]; then
   cat << EOF | sudo tee /etc/docker/daemon.json
 {
   "insecure-registries" : ["$my_registry"],
@@ -80,7 +83,7 @@ sudo docker network create net-registry
 sudo docker volume create vol-mr.io
 
 # start to pull images
-pushd /vagrant
+pushd $LAB_HOME
 
 sudo docker-compose up -d mr.io docker.io-mirror
 sleep 3

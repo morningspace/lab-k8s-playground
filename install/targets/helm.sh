@@ -1,5 +1,11 @@
 #!/bin/bash
 
+LAB_HOME=${LAB_HOME:-/vagrant}
+INSTALL_HOME=$LAB_HOME/install
+source $INSTALL_HOME/funcs.sh
+
+ensure_k8s_version
+
 # set version per kubernetes version
 case $DIND_K8S_VERSION in
   "v1.12")
@@ -8,20 +14,17 @@ case $DIND_K8S_VERSION in
     HELM_VERSION="v2.13.1";;
   "v1.14")
     HELM_VERSION="v2.14.2";;
-  "*")
-    echo "Unsupported Kubernetes version... exiting."
-    exit 1
-    ;;
 esac
 
-helm_tgz="helm-$HELM_VERSION-linux-amd64.tar.gz"
+os=$(uname -s | tr '[:upper:]' '[:lower:]')
+helm_tgz="helm-$HELM_VERSION-$os-amd64.tar.gz"
 if [[ ! -f ~/.lab-k8s-cache/$helm_tgz ]]; then
   curl -sL https://get.helm.sh/$helm_tgz -o ~/.lab-k8s-cache/$helm_tgz
 fi
 tar -zxf ~/.lab-k8s-cache/$helm_tgz
 
-sudo mv linux-amd64/helm /usr/local/bin/helm
-rm -rf linux-amd64
+sudo mv ./$os-amd64/helm /usr/local/bin/helm
+rm -rf ./$os-amd64
 
 if [[ $IS_COUNTRY_CN == 1 ]]; then
   tiller_image="mr.io/kubernetes-helm-tiller:$HELM_VERSION"
