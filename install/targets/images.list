@@ -7,6 +7,7 @@ images+=(
   istio/pilot:1.2.2
   istio/proxyv2:1.2.2
   istio/sidecar_injector:1.2.2
+  istio/proxy_init:1.2.2
   grafana/grafana:6.1.6
   jaegertracing/all-in-one:1.9
   prom/prometheus:v2.8.0
