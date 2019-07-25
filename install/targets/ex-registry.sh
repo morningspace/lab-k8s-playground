@@ -29,20 +29,20 @@ EOF
 
   X_REGISTRY=$(netstat -rn | grep "^0.0.0.0 " | cut -d " " -f10)
   echo "REGISTRY_PROXY_REMOTEURL=http://$X_REGISTRY:5000" >.env
-  sudo docker-compose -f docker-compose-x-reg.yml up -d
+  sudo docker-compose -f docker-compose-ex-reg.yml up -d
 
   popd
 }
 
 function up {
   pushd $LAB_HOME
-  docker-compose -f docker-compose-x-reg.yml up -d
+  docker-compose -f docker-compose-ex-reg.yml up -d
   popd
 }
 
 function down {
   pushd $LAB_HOME
-  docker-compose -f docker-compose-x-reg.yml down
+  docker-compose -f docker-compose-ex-reg.yml down
   popd
 }
 
