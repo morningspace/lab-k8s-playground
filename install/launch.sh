@@ -56,12 +56,15 @@ fi
 # launch targets
 echo "* targets to be launched: [${targets[@]}]"
 for target in ${targets[@]} ; do
+  command=${target/#*::}
+  target=${target/%::*}
+  [[ $target == $command ]] && command=""
   echo "####################################"
   echo "# Launch target $target..."
   echo "####################################"
   target_shell="$INSTALL_HOME/targets/$target.sh"
   if [[ -f $target_shell ]]; then
-    $target_shell
+    $target_shell $command
   else
     echo "* $target_shell not found"
   fi
