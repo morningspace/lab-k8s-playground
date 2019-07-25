@@ -2,49 +2,53 @@ version: '3.5'
 
 services:
 
-  k8s.gcr.io:
+  ex-k8s.gcr.io:
     image: registry:2
     hostname: k8s.gcr.io
     container_name: k8s.gcr.io
     environment:
       REGISTRY_HTTP_ADDR: 0.0.0.0:80
       REGISTRY_STORAGE_DELETE_ENABLED: "true"
+      REGISTRY_PROXY_REMOTEURL: ${REGISTRY_PROXY_REMOTEURL}
     volumes:
       - vol-registries:/var/lib/registry
     networks:
       - net-registries
 
-  gcr.io:
+  ex-gcr.io:
     image: registry:2
     hostname: gcr.io
     container_name: gcr.io
     environment:
       REGISTRY_HTTP_ADDR: 0.0.0.0:80
       REGISTRY_STORAGE_DELETE_ENABLED: "true"
+      REGISTRY_PROXY_REMOTEURL: ${REGISTRY_PROXY_REMOTEURL}
     volumes:
       - vol-registries:/var/lib/registry
     networks:
       - net-registries
 
-  quay.io:
+  ex-quay.io:
     image: registry:2
     hostname: quay.io
     container_name: quay.io
     environment:
       REGISTRY_HTTP_ADDR: 0.0.0.0:80
       REGISTRY_STORAGE_DELETE_ENABLED: "true"
+      REGISTRY_PROXY_REMOTEURL: ${REGISTRY_PROXY_REMOTEURL}
     volumes:
       - vol-registries:/var/lib/registry
     networks:
       - net-registries
 
-  mr.io:
+  ex-mr.io:
     image: registry:2
     hostname: mr.io
     container_name: mr.io
     environment:
       REGISTRY_HTTP_ADDR: 0.0.0.0:80
       REGISTRY_STORAGE_DELETE_ENABLED: "true"
+      REGISTRY_PROXY_REMOTEURL: ${REGISTRY_PROXY_REMOTEURL}
     ports:
       - "5000:80"
     volumes:
@@ -52,14 +56,14 @@ services:
     networks:
       - net-registries
 
-  docker.io.local:
+  ex-docker.io.local:
     image: registry:2
     hostname: docker.io.local
     container_name: docker.io.local
     environment:
       REGISTRY_HTTP_ADDR: 0.0.0.0:80
       REGISTRY_STORAGE_DELETE_ENABLED: "true"
-      REGISTRY_PROXY_REMOTEURL: https://registry-1.docker.io
+      REGISTRY_PROXY_REMOTEURL: ${REGISTRY_PROXY_REMOTEURL}
     ports:
       - "5555:80"
     volumes:

@@ -16,7 +16,7 @@ is_in_china = 0
 https_proxy = ""
 
 # optional targets to be run, can be customized as your need
-targets = "helm tools istio"
+targets = "default helm tools"
 
 ###############################################################################
 #                  DO NOT MODIFY ANYTHING BELOW THIS POINT                    #
@@ -90,7 +90,7 @@ Vagrant.configure(2) do |config|
     s.name = 'launch_targets'
     s.privileged = false
     s.keep_color = true
-    s.args = "default #{targets}"
+    s.args = "#{targets}"
     s.env = {
       "DIND_K8S_VERSION" => "#{k8s_version}",
       "NUM_NODES" => "#{nodes}",

@@ -57,7 +57,7 @@ env DASHBOARD_URL ${DASHBOARD_BASEURL}/recommended/kubernetes-dashboard.yaml
 env SKIP_DASHBOARD
 
 # To have kubeadm-dind-cluster join custom networks, separated by comma
-env DIND_CUSTOM_NETWORKS net-registry
+env DIND_CUSTOM_NETWORKS net-registries
 # To use insecure private Docker registries for kubeadm to pull images from there
 env DIND_INSECURE_REGISTRIES '"[\"k8s.gcr.io\", \"gcr.io\", \"quay.io\", \"mr.io\"]"'
 

@@ -11,7 +11,7 @@ if [[ ! -f ~/.lab-k8s-cache/kubernetes-dashboard.yaml ]]; then
   curl -sL $download_url -o ~/.lab-k8s-cache/kubernetes-dashboard.yaml
 fi
 
-DIND_REGISTRY_MIRROR=http://docker.io-mirror
+DIND_REGISTRY_MIRROR=http://docker.io.local
 DASHBOARD_URL=$HOME/.lab-k8s-cache/kubernetes-dashboard.yaml
 SKIP_SNAPSHOT=1
 
@@ -36,9 +36,10 @@ sudo \
   SKIP_SNAPSHOT=$SKIP_SNAPSHOT \
 ../dind-cluster-wrapper.sh up
 
-sudo chown -R $USER ~/.kube
+if [[ $? == 0 ]]; then
+  sudo chown -R $USER ~/.kube
 
-cat <<EOF | kubectl replace -f -
+  cat <<EOF | kubectl replace -f -
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
 metadata:
@@ -52,5 +53,6 @@ subjects:
   name: kubernetes-dashboard
   namespace: kube-system
 EOF
+fi
 
 popd

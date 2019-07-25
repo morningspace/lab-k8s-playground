@@ -4,7 +4,15 @@ LAB_HOME=${LAB_HOME:-/vagrant}
 INSTALL_HOME=$LAB_HOME/install
 
 # configure lab cache
-mkdir -p $HOME/.lab-k8s-cache
+mkdir -p $INSTALL_HOME/.lab-k8s-cache
+ln -sf $INSTALL_HOME/.lab-k8s-cache $HOME/.lab-k8s-cache
+
+# base targets
+base=(
+  "docker"
+  "docker-compose"
+  "kubectl"
+)
 
 # default targets
 default=(
@@ -20,8 +28,11 @@ if [[ $# == 0 ]]; then
 
 Usage: launch [targets]
 
-  Targets are separated by space, e.g. helm tools istio, and launch in order of appearance one by one.
-  The pre-defined target default will launch targets: docker docker-compose kubectl registry kubernetes.
+  Targets are separated by space and launch in order of appearance one by one.
+
+  Pre-defined targets:
+  * base      will launch docker docker-compose kubectl
+  * default   will launch base registry kubernetes
 
   e.g.
   launch default tools istio
@@ -32,7 +43,10 @@ EOF
 fi
 
 # resolve targets
-if [[ $1 == default ]]; then
+if [[ $1 == base ]]; then
+  targets=${base[@]}
+  targets+=(${@:2})
+elif [[ $1 == default ]]; then
   targets=${default[@]}
   targets+=(${@:2})
 else

@@ -78,15 +78,16 @@ EOF
   sudo systemctl show --property=Environment docker
 fi
 
-sudo docker network inspect net-registry &>/dev/null || \
-sudo docker network create net-registry
-sudo docker volume create vol-mr.io
+sudo docker network inspect net-registries &>/dev/null || \
+sudo docker network create net-registries
+sudo docker volume create vol-registries
 
 # start to pull images
 pushd $LAB_HOME
 
-sudo docker-compose up -d mr.io docker.io-mirror
-sleep 3
+sudo docker-compose up -d
+
+sleep 5
 
 [ -f install/targets/images.list ] && . install/targets/images.list
 
@@ -107,7 +108,5 @@ for image in ${images[@]} ; do
     sudo docker push $my_registry/$repository
   fi
 done  
-
-sudo docker-compose up -d 
 
 popd
