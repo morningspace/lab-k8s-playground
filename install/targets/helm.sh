@@ -14,6 +14,8 @@ case $DIND_K8S_VERSION in
     HELM_VERSION="v2.13.1";;
   "v1.14")
     HELM_VERSION="v2.14.2";;
+  "v1.15")
+    HELM_VERSION="v2.14.2";;
 esac
 
 os=$(uname -s | tr '[:upper:]' '[:lower:]')

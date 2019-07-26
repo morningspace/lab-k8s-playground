@@ -3,7 +3,7 @@ cpus = '6'
 # set amount of memory allocated by vm
 memory = '8192'
 
-# set Kubernetes version, supported versions: v1.12, v1.13, v1.14
+# set Kubernetes version, supported versions: v1.12, v1.13, v1.14, v1.15
 k8s_version = "v1.14"
 # set number of worker nodes
 nodes = 2
@@ -15,7 +15,7 @@ is_in_china = 0
 # set https proxy
 https_proxy = ""
 
-# optional targets to be run, can be customized as your need
+# targets to be run, can be customized as your need
 targets = "default helm tools"
 
 ###############################################################################

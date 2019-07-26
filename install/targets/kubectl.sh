@@ -15,6 +15,8 @@ case $DIND_K8S_VERSION in
     kubectl_version="v1.13.8";;
   "v1.14")
     kubectl_version="v1.14.4";;
+  "v1.15")
+    kubectl_version="v1.15.1";;
 esac
 
 if [[ ! -f ~/.lab-k8s-cache/kubectl-$kubectl_version ]]; then

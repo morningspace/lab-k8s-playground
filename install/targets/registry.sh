@@ -48,6 +48,19 @@ function init {
     # helm
     gcr.io/kubernetes-helm/tiller:v2.14.2
     );;
+  "v1.15")
+    images=(
+    # k8s
+    k8s.gcr.io/hyperkube:v1.15.0
+    k8s.gcr.io/kubernetes-dashboard-amd64:v1.10.1
+    k8s.gcr.io/pause:3.1
+    k8s.gcr.io/coredns:1.3.1
+    k8s.gcr.io/etcd:3.3.10
+    # kubeadm-dind-cluster
+    mirantis/kubeadm-dind-cluster:62f5a9277678777b63ae55d144bd2f99feb7c824-v1.15
+    # helm
+    gcr.io/kubernetes-helm/tiller:v2.14.2
+    );;
   esac
 
   # registries have mirrors on docker hub
