@@ -30,7 +30,7 @@ Usage: launch [targets]
 
   Targets are separated by space and launch in order of appearance one by one.
 
-  Pre-defined targets:
+  Special pre-defined targets:
   * base      will launch docker docker-compose kubectl
   * default   will launch base registry kubernetes
 
@@ -55,6 +55,7 @@ fi
 
 # launch targets
 echo "* targets to be launched: [${targets[@]}]"
+start_time=$SECONDS
 for target in ${targets[@]} ; do
   command=${target/#*::}
   target=${target/%::*}
@@ -69,3 +70,5 @@ for target in ${targets[@]} ; do
     echo "* $target_shell not found"
   fi
 done
+elapsed_time=$(($SECONDS - $start_time))
+echo "Total elapsed time: $elapsed_time seconds"
