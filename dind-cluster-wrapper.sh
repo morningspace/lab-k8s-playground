@@ -43,8 +43,8 @@ function run_script() {
 #################################################
 
 # Kubernetes version
-env DIND_K8S_VERSION v1.13
-env DIND_COMMIT 814d9ca036b23adce9e6c683da532e8037820119
+env DIND_K8S_VERSION v1.14
+env DIND_COMMIT 62f5a9277678777b63ae55d144bd2f99feb7c824
 
 # Build Kubernetes from source
 env BUILD_KUBEADM

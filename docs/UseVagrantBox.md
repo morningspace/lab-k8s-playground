@@ -3,7 +3,7 @@
 
 ## What it includes?
 
-* Kubernetes cluster with multiple nodes and configurable versions, supporting `v1.12`, `v1.13`, `v1.14`
+* Kubernetes cluster with multiple nodes and configurable versions, supporting `v1.12`, `v1.13`, `v1.14`, `v1.15`
 * Kubernetes tooling, e.g. 
   * [kubectl](https://kubernetes.io/docs/reference/kubectl)
   * [helm](https://helm.sh)
@@ -23,7 +23,7 @@
 
 ## What it supports?
 
-* Configurable Kubernetes versions, supporting `v1.12`, `v1.13`, `v1.14`.
+* Configurable Kubernetes versions, supporting `v1.12`, `v1.13`, `v1.14`, `v1.15`.
 * Configurable number of cluster nodes, one master node and two worker nodes by default.
 * Many Kubernetes tools integrated for you to learn, use, and evaluate.
 * [Web terminal](https://github.com/shellinabox/shellinabox) that allows to log in to the box from browser, so you can use all Kubernetes tools in the box wilthin browser without having them installed on your host machine.
@@ -135,7 +135,7 @@ cpus = '6'
 # set amount of memory allocated by vm
 memory = '8192'
 
-# set Kubernetes version, supported versions: v1.12, v1.13, v1.14
+# set Kubernetes version, supported versions: v1.12, v1.13, v1.14, v1.15
 k8s_version = "v1.14"
 # set number of worker nodes
 nodes = 2

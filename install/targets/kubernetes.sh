@@ -28,7 +28,7 @@ EOF
 
   pushd $LAB_HOME
 
-  sudo \
+  sudo -E \
     DIND_K8S_VERSION=$DIND_K8S_VERSION \
     NUM_NODES=$NUM_NODES \
     DIND_HOST_IP=$DIND_HOST_IP \

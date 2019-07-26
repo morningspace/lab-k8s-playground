@@ -67,7 +67,7 @@ function ensure_box {
 }
 
 function ensure_k8s_version {
-  local valid="v1.12 v1.13 v1.14"
+  local valid="v1.12 v1.13 v1.14 v1.15"
   if [[ ! $valid =~ $DIND_K8S_VERSION ]]; then
     echo "* Kubernetes version not supported, valid values: $valid"
     return 1
