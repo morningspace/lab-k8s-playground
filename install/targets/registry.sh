@@ -18,7 +18,7 @@ function init {
     k8s.gcr.io/coredns:1.2.2
     k8s.gcr.io/etcd:3.2.24
     # kubeadm-dind-cluster
-    mirantis/kubeadm-dind-cluster:814d9ca036b23adce9e6c683da532e8037820119-v1.12
+    mirantis/kubeadm-dind-cluster:62f5a9277678777b63ae55d144bd2f99feb7c824-v1.12
     # helm
     gcr.io/kubernetes-helm/tiller:v2.12.3
     );;
@@ -31,7 +31,7 @@ function init {
     k8s.gcr.io/coredns:1.2.6
     k8s.gcr.io/etcd:3.2.24
     # kubeadm-dind-cluster
-    mirantis/kubeadm-dind-cluster:814d9ca036b23adce9e6c683da532e8037820119-v1.13
+    mirantis/kubeadm-dind-cluster:62f5a9277678777b63ae55d144bd2f99feb7c824-v1.13
     # helm
     gcr.io/kubernetes-helm/tiller:v2.13.1
     );;
@@ -44,7 +44,7 @@ function init {
     k8s.gcr.io/coredns:1.3.1
     k8s.gcr.io/etcd:3.3.10
     # kubeadm-dind-cluster
-    mirantis/kubeadm-dind-cluster:814d9ca036b23adce9e6c683da532e8037820119-v1.14
+    mirantis/kubeadm-dind-cluster:62f5a9277678777b63ae55d144bd2f99feb7c824-v1.14
     # helm
     gcr.io/kubernetes-helm/tiller:v2.14.2
     );;
