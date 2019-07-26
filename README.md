@@ -28,7 +28,7 @@ It includes Kubernetes tools, e.g. [kubectl](https://kubernetes.io/docs/referenc
 
 And applications, e.g. [Kubernetes dashboard](https://github.com/kubernetes/dashboard), [Istio](https://istio.io) with demo app [bookinfo](https://istio.io/docs/examples/bookinfo), [Grafana](https://grafana.com), [Kiali](https://www.kiali.io), [Jaeger](https://www.jaegertracing.io), [Prometheus](https://prometheus.io) and Private Docker image registries that help boost cluster launch.
 
-Below are some demos. For more details on how to use the vagrant box, please check [Use the Vagrant Box](/docs/UseVagrantBox.md).
+Below are some demos. For more details on how to use the vagrant box, please check [Vagrant Box Overview](/docs/Vagrant-Box-Overview.md) and [Vagrant Box Getting Started](/docs/Vagrant-Box-Getting-Started.md).
 
 > Launch Kubernetes and Helm in offline mode.
 

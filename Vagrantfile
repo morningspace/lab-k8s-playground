@@ -15,7 +15,7 @@ is_in_china = 0
 # set https proxy
 https_proxy = ""
 
-# optional targets to be run, can be customized as your need
+# targets to be run, can be customized as your need
 targets = "default helm tools"
 
 ###############################################################################
