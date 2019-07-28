@@ -527,6 +527,8 @@ DIND_REGISTRY_MIRROR="${DIND_REGISTRY_MIRROR:-}"  # plain string format
 DIND_INSECURE_REGISTRIES="${DIND_INSECURE_REGISTRIES:-}"  # json list format
 # comma-separated custom network(s) for cluster nodes to join
 DIND_CUSTOM_NETWORKS="${DIND_CUSTOM_NETWORKS:-}"
+# comma-separated custom volume(s) for cluster nodes to use
+DIND_CUSTOM_VOLUMES="${DIND_CUSTOM_VOLUMES:-}"
 
 SKIP_DASHBOARD="${SKIP_DASHBOARD:-}"
 
@@ -1042,6 +1044,14 @@ function dind::run {
   dind::ensure-volume ${reuse_volume} "${volume_name}"
   dind::ensure-nat
   dind::ensure-dns
+
+  if [[ -n ${DIND_CUSTOM_VOLUMES} ]]; then
+    local cust_vols
+    local IFS=','; read -ra cust_vols <<< "${DIND_CUSTOM_VOLUMES}"
+    for cust_vol in "${cust_vols[@]}"; do
+      opts+=(-v ${cust_vol})
+    done
+  fi
 
   # TODO: create named volume for binaries and mount it to /k8s
   # in case of the source build

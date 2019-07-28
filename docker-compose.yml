@@ -52,17 +52,19 @@ services:
     networks:
       - net-registries
 
-  docker.io.local:
+  docker.io:
     image: registry:2
-    hostname: docker.io.local
-    container_name: docker.io.local
+    hostname: registry-1.docker.io
+    container_name: registry-1.docker.io
     environment:
-      REGISTRY_HTTP_ADDR: 0.0.0.0:80
+      REGISTRY_HTTP_ADDR: 0.0.0.0:443
       REGISTRY_STORAGE_DELETE_ENABLED: "true"
-      REGISTRY_PROXY_REMOTEURL: https://registry-1.docker.io
+      REGISTRY_HTTP_TLS_CERTIFICATE: /certs/registry-1.docker.io.crt
+      REGISTRY_HTTP_TLS_KEY: /certs/registry-1.docker.io.key
     ports:
-      - "5555:80"
+      - "443:443"
     volumes:
+      - ./install/certs:/certs
       - vol-registries:/var/lib/registry
     networks:
       - net-registries

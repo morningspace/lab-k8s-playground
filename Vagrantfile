@@ -44,8 +44,8 @@ cat << EOF >> #{user_home}/.bashrc
 source /usr/share/bash-completion/bash_completion
 
 # launch autocompletion
-shells=(\\$(ls -l /vagrant/install/targets/*.sh | awk '{print \\$9}' | cut -d . -f 1))
-words=(\\${shells[@]##*/})
+shells=(\\$(ls -l /vagrant/install/targets/*.sh | awk '{print \\$9}' | cut -d / -f 5))
+words=(\\${shells[@]%.sh})
 complete -W "base default \\$(echo \\${words[@]})" launch
 EOF
 
@@ -62,6 +62,10 @@ EOF
 
 # create link to launch.sh
 ln -sf /vagrant/install/launch.sh /usr/local/bin/launch
+
+# add self-signed ca cert for secured private registry access
+cp /vagrant/install/certs/lab-ca.pem.crt /usr/local/share/ca-certificates
+update-ca-certificates
 SCRIPT
 
 Vagrant.configure(2) do |config|

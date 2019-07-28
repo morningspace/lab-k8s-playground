@@ -2,7 +2,7 @@ version: '3.5'
 
 services:
 
-  ex-k8s.gcr.io:
+  k8s.gcr.io.proxy:
     image: registry:2
     hostname: k8s.gcr.io
     container_name: k8s.gcr.io
@@ -15,7 +15,7 @@ services:
     networks:
       - net-registries
 
-  ex-gcr.io:
+  gcr.io.proxy:
     image: registry:2
     hostname: gcr.io
     container_name: gcr.io
@@ -28,7 +28,7 @@ services:
     networks:
       - net-registries
 
-  ex-quay.io:
+  quay.io.proxy:
     image: registry:2
     hostname: quay.io
     container_name: quay.io
@@ -41,7 +41,7 @@ services:
     networks:
       - net-registries
 
-  ex-mr.io:
+  mr.io.proxy:
     image: registry:2
     hostname: mr.io
     container_name: mr.io
@@ -56,17 +56,20 @@ services:
     networks:
       - net-registries
 
-  ex-docker.io.local:
+  docker.io.proxy:
     image: registry:2
-    hostname: docker.io.local
-    container_name: docker.io.local
+    hostname: registry-1.docker.io
+    container_name: registry-1.docker.io
     environment:
-      REGISTRY_HTTP_ADDR: 0.0.0.0:80
+      REGISTRY_HTTP_ADDR: 0.0.0.0:443
       REGISTRY_STORAGE_DELETE_ENABLED: "true"
+      REGISTRY_HTTP_TLS_CERTIFICATE: /certs/registry-1.docker.io.crt
+      REGISTRY_HTTP_TLS_KEY: /certs/registry-1.docker.io.key
       REGISTRY_PROXY_REMOTEURL: ${REGISTRY_PROXY_REMOTEURL}
     ports:
-      - "5555:80"
+      - "443:443"
     volumes:
+      - ./install/certs:/certs
       - vol-registries:/var/lib/registry
     networks:
       - net-registries

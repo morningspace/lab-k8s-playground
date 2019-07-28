@@ -10,8 +10,7 @@ function init {
   if [[ $? == 0 && ! -f /etc/docker/daemon.json ]]; then
     cat << EOF | sudo tee /etc/docker/daemon.json
 {
-  "insecure-registries" : ["127.0.0.1:5000"],
-  "registry-mirrors": ["http://127.0.0.1:5555"]
+  "insecure-registries" : ["127.0.0.1:5000"]
 }
 EOF
 
@@ -24,25 +23,24 @@ EOF
   sudo docker network create net-registries
   sudo docker volume create vol-registries
 
-  # start external registries
   pushd $LAB_HOME
 
-  X_REGISTRY=$(netstat -rn | grep "^0.0.0.0 " | cut -d " " -f10)
-  echo "REGISTRY_PROXY_REMOTEURL=http://$X_REGISTRY:5000" >.env
-  sudo docker-compose -f docker-compose-ex-regs.yml up -d
+  REGISTRY_REMOTE=${REGISTRY_REMOTE:-$(netstat -rn | grep "^0.0.0.0 " | cut -d " " -f10)}
+  echo "REGISTRY_PROXY_REMOTEURL=http://$REGISTRY_REMOTE:5000" >.env
+  sudo docker-compose -f docker-compose-registry-proxy.yml up -d --scale docker.io.proxy=0
 
   popd
 }
 
 function up {
   pushd $LAB_HOME
-  docker-compose -f docker-compose-ex-regs.yml up -d
+  docker-compose -f docker-compose-registry-proxy.yml up -d --scale docker.io.proxy=0
   popd
 }
 
 function down {
   pushd $LAB_HOME
-  docker-compose -f docker-compose-ex-regs.yml down
+  docker-compose -f docker-compose-registry-proxy.yml down
   popd
 }
 

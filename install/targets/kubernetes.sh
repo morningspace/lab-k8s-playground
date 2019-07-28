@@ -12,7 +12,8 @@ function init {
     curl -sL $download_url -o ~/.lab-k8s-cache/kubernetes-dashboard.yaml
   fi
 
-  DIND_REGISTRY_MIRROR=http://docker.io.local
+  DIND_CUSTOM_VOLUMES=$INSTALL_HOME/certs:/certs
+  DIND_CA_CERT_URL=file:////certs/lab-ca.pem.crt
   DASHBOARD_URL=$HOME/.lab-k8s-cache/kubernetes-dashboard.yaml
   SKIP_SNAPSHOT=1
 
@@ -20,7 +21,8 @@ function init {
     cat /etc/environment | grep -q "^# for kubeadm-dind-clusters$" || \
     cat << EOF | sudo tee -a /etc/environment
 # for kubeadm-dind-clusters
-export DIND_REGISTRY_MIRROR=$DIND_REGISTRY_MIRROR
+export DIND_CUSTOM_VOLUMES=$DIND_CUSTOM_VOLUMES
+export DIND_CA_CERT_URL=$DIND_CA_CERT_URL
 export DASHBOARD_URL=$DASHBOARD_URL
 export SKIP_SNAPSHOT=$SKIP_SNAPSHOT
 EOF
@@ -32,7 +34,8 @@ EOF
     DIND_K8S_VERSION=$DIND_K8S_VERSION \
     NUM_NODES=$NUM_NODES \
     DIND_HOST_IP=$DIND_HOST_IP \
-    DIND_REGISTRY_MIRROR=$DIND_REGISTRY_MIRROR \
+    DIND_CUSTOM_VOLUMES=$DIND_CUSTOM_VOLUMES \
+    DIND_CA_CERT_URL=$DIND_CA_CERT_URL \
     DASHBOARD_URL=$DASHBOARD_URL \
     SKIP_SNAPSHOT=$SKIP_SNAPSHOT \
   ./dind-cluster-wrapper.sh up

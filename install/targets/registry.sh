@@ -63,13 +63,13 @@ function init {
     );;
   esac
 
-  # registries have mirrors on docker hub
+  # registries having mirrors on docker hub
   registries_mirrored=(
     k8s.gcr.io
     gcr.io
   )
-  # registries that are local cached
-  registries_cached=(
+  # registries not docker hub
+  registries_not_dockerhub=(
     k8s.gcr.io
     gcr.io
     quay.io
@@ -82,8 +82,7 @@ function init {
   if [[ $? == 0 && ! -f /etc/docker/daemon.json ]]; then
     cat << EOF | sudo tee /etc/docker/daemon.json
 {
-  "insecure-registries" : ["$my_registry"],
-  "registry-mirrors": ["http://127.0.0.1:5555"]
+  "insecure-registries" : ["$my_registry"]
 }
 EOF
 
@@ -99,7 +98,7 @@ EOF
   # start to pull images
   pushd $LAB_HOME
 
-  sudo docker-compose up -d
+  sudo docker-compose up -d mr.io
 
   sleep 5
 
@@ -116,19 +115,25 @@ EOF
     fi
 
     sudo docker pull $registry/$repository
-  
-    if [[ ${registries_cached[@]} =~ $registry ]]; then
+    if [[ ${registries_not_dockerhub[@]} =~ $registry ]]; then
       sudo docker tag $registry/$repository $my_registry/$repository
       sudo docker push $my_registry/$repository
+      sudo docker rmi $my_registry/$repository
+    else
+      sudo docker tag $registry/$repository $my_registry/$image
+      sudo docker push $my_registry/$image
+      sudo docker rmi $my_registry/$image
     fi
   done  
+
+  docker-compose up -d --scale docker.io=0
 
   popd
 }
 
 function up {
   pushd $LAB_HOME
-  docker-compose up -d
+  docker-compose up -d --scale docker.io=0
   popd
 }
 
