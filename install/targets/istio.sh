@@ -5,7 +5,7 @@ INSTALL_HOME=$LAB_HOME/install
 source $INSTALL_HOME/funcs.sh
 
 ISTIO_VERSION="1.2.2"
-HOST_IP=${DIND_HOST_IP:-127.0.0.1}
+HOST_IP=${HOST_IP:-127.0.0.1}
 
 function init {
   istio_tgz="istio-$ISTIO_VERSION-linux.tar.gz"

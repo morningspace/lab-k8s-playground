@@ -4,7 +4,7 @@ LAB_HOME=${LAB_HOME:-/vagrant}
 INSTALL_HOME=$LAB_HOME/install
 source $INSTALL_HOME/funcs.sh
 
-HOST_IP=${DIND_HOST_IP:-127.0.0.1}
+HOST_IP=${HOST_IP:-127.0.0.1}
 
 function init {
   pushd ~/.lab-k8s-cache/istio

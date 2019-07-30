@@ -3,10 +3,13 @@ cpus = '6'
 # set amount of memory allocated by vm
 memory = '8192'
 
+# targets to be run, can be customized as your need
+targets = "default helm tools"
+
 # set Kubernetes version, supported versions: v1.12, v1.13, v1.14, v1.15
 k8s_version = "v1.14"
 # set number of worker nodes
-nodes = 2
+num_nodes = 2
 # set host ip of the box
 host_ip = '192.168.56.100'
 
@@ -14,9 +17,6 @@ host_ip = '192.168.56.100'
 is_in_china = 0
 # set https proxy
 https_proxy = ""
-
-# targets to be run, can be customized as your need
-targets = "default helm tools"
 
 ###############################################################################
 #                  DO NOT MODIFY ANYTHING BELOW THIS POINT                    #
@@ -53,9 +53,9 @@ EOF
 cat << EOF >> /etc/environment
 
 # environment variables for lab-k8s-playground
-export DIND_K8S_VERSION=#{k8s_version}
-export NUM_NODES=#{nodes}
-export DIND_HOST_IP=#{host_ip}
+export K8S_VERSION=#{k8s_version}
+export NUM_NODES=#{num_nodes}
+export HOST_IP=#{host_ip}
 export IS_IN_CHINA=#{is_in_china}
 export https_proxy=#{https_proxy}
 EOF
@@ -96,9 +96,9 @@ Vagrant.configure(2) do |config|
     s.keep_color = true
     s.args = "#{targets}"
     s.env = {
-      "DIND_K8S_VERSION" => "#{k8s_version}",
-      "NUM_NODES" => "#{nodes}",
-      "DIND_HOST_IP" => "#{host_ip}",
+      "K8S_VERSION" => "#{k8s_version}",
+      "NUM_NODES" => "#{num_nodes}",
+      "HOST_IP" => "#{host_ip}",
       "IS_IN_CHINA" => "#{is_in_china}",
       "https_proxy" => "#{https_proxy}"
     }

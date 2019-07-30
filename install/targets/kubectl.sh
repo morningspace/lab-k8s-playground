@@ -8,7 +8,7 @@ ensure_command "kubectl" && exit
 ensure_k8s_version
 
 # set version per kubernetes version
-case $DIND_K8S_VERSION in
+case $K8S_VERSION in
   "v1.12")
     kubectl_version="v1.12.10";;
   "v1.13")

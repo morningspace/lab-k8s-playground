@@ -8,7 +8,7 @@ function init {
   ensure_k8s_version || exit
 
   # images to be cached per kubernetes version
-  case $DIND_K8S_VERSION in
+  case $K8S_VERSION in
   "v1.12")
     images=(
     # k8s

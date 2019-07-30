@@ -2,7 +2,7 @@
 
 LAB_HOME=${LAB_HOME:-/vagrant}
 INSTALL_HOME=$LAB_HOME/install
-HOST_IP=${DIND_HOST_IP:-127.0.0.1}
+HOST_IP=${HOST_IP:-127.0.0.1}
 
 apiserver_port=$($INSTALL_HOME/dind-cluster.sh apiserver-port 2>/dev/null)
 endpoints=(

@@ -7,7 +7,7 @@ source $INSTALL_HOME/funcs.sh
 ensure_k8s_version
 
 # set version per kubernetes version
-case $DIND_K8S_VERSION in
+case $K8S_VERSION in
   "v1.12")
     HELM_VERSION="v2.12.3";;
   "v1.13")

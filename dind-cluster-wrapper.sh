@@ -43,7 +43,7 @@ function run_script() {
 #################################################
 
 # Kubernetes version
-env DIND_K8S_VERSION v1.14
+env DIND_K8S_VERSION ${K8S_VERSION:-v1.14}
 env DIND_COMMIT 62f5a9277678777b63ae55d144bd2f99feb7c824
 
 # Build Kubernetes from source
@@ -68,7 +68,7 @@ env SKIP_SNAPSHOT
 #
 env NUM_NODES
 #
-env DIND_HOST_IP
+env HOST_IP
 
 #################################################
 

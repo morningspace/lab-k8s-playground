@@ -58,7 +58,7 @@ function dind::localhost() {
   if [[ ${SERVICE_NET_MODE} = "ipv6" ]]; then
     echo '[::1]'
   else
-    echo ${DIND_HOST_IP:-'127.0.0.1'}
+    echo ${HOST_IP:-'127.0.0.1'}
   fi
 }
 
