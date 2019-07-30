@@ -73,7 +73,6 @@ function init {
     k8s.gcr.io
     gcr.io
     quay.io
-    morningspace
   )
 
   # set up private registries
@@ -104,23 +103,28 @@ EOF
 
   [ -f install/targets/images.list ] && . install/targets/images.list
 
-  for image in ${images[@]} ; do  
-    registry=${image%%/*}
-    repository=${image#*/}
-    if [[ $IS_IN_CHINA == 1 ]]; then
-      if [[ ${registries_mirrored[@]} =~ $registry ]]; then
-        registry=morningspace
-        repository=${repository/\//-}
-      fi
+  for image in ${images[@]} ; do
+    local registry=${image%%/*}
+    local repository=${image#*/}
+    local mirrored=0
+    if [[ $IS_IN_CHINA == 1 && ${registries_mirrored[@]} =~ $registry ]]; then
+      registry=morningspace
+      repository=${repository/\//-}
+      image=$registry/$repository
+      mirrored=1
     fi
 
-    sudo docker pull $registry/$repository
-    if [[ ${registries_not_dockerhub[@]} =~ $registry ]]; then
-      sudo docker tag $registry/$repository $my_registry/$repository
+    if [[ $image != *"/"* ]]; then
+      image=library/$repository
+    fi
+
+    sudo docker pull $image
+    if [[ ${registries_not_dockerhub[@]} =~ $registry || $mirrored == 1 ]]; then
+      sudo docker tag $image $my_registry/$repository
       sudo docker push $my_registry/$repository
       sudo docker rmi $my_registry/$repository
     else
-      sudo docker tag $registry/$repository $my_registry/$image
+      sudo docker tag $image $my_registry/$image
       sudo docker push $my_registry/$image
       sudo docker rmi $my_registry/$image
     fi
