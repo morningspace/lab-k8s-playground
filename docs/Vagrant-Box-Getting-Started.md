@@ -41,7 +41,7 @@ tiller-deploy-5c5b6f6567-8thvr          1/1     Running   0          8m23s
 
 More use on variant tools, please check below demo: Run Kubernetes tools from both OS and web terminals. In this demo, I ran tools e.g. [kube-shell](https://github.com/cloudnativelabs/kube-shell), [kubectl autocompletion](https://kubernetes.io/docs/tasks/tools/install-kubectl/#optional-kubectl-configurations), [kubetail](https://github.com/johanhaleby/kubetail), [kubebox](https://github.com/astefanutti/kubebox), [kubectl aliases](https://github.com/ahmetb/kubectl-aliases), [kubens](https://github.com/ahmetb/kubectx) in OS terminal first, then web terminal.
 
-![](demo-2.gif)
+![](demo-tools.gif)
 
 ## Launch targets
 
@@ -67,7 +67,7 @@ Usually, the command is followed by a few targets separated by space. It then la
 $ launch kubectl helm
 ```
 
-Actually, the [Vagrantfile](/Vagrantfile) also consistently uses `launch` to provision the box. There are a whole bunch of pre-defined targets available. You can even add your own. See ["Launch Target Reference"](Launch-Target-Reference.md) for details.
+Actually, the [Vagrantfile](/Vagrantfile) also consistently uses `launch` to provision the box. There are a whole bunch of pre-defined targets available. You can even add your own. See ["Target Launch Reference"](Target-Launch-Reference.md) for details.
 
 Now, let's install `Istio`:
 ```
@@ -100,7 +100,7 @@ $ launch istio-bookinfo
 
 After it's installed, go back to check the endpoints, you will see all endpoints become healthy now. Choose one of them and open it in browser, or you can check below demo: Use Dashboard, Grafana, Kiali, Jaeger when run Istio Bookinfo demo app. In this demo I had Istio and its demo app installed with Kubernetes, then tried different deployed applications in browser.
 
-![](demo-3.gif)
+![](demo-apps.gif)
 
 ## Re-launch targets
 
@@ -154,7 +154,7 @@ $ launch kubernetes helm
 
 Also check below demo: Re-launch cluster in offline mode. In this demo, I turned Wi-Fi off on my laptop, then logged into the provisioned box, and run `launch kubernetes helm` specifically to re-install Kubernetes and Helm.
 
-![](demo-1.gif)
+![](demo-offline.gif)
 
 ## Use proxy registries
 
@@ -177,7 +177,7 @@ Now, we are going to share these registries to our cluster run within the box. G
 $ launch registry::down
 ```
 
-You may notice that here we append `::` then `down` when launch `registry`. This is going to call the command `down` of target `registry`. Some targets may support commands, please check ["Launch Target Reference"](Launch-Target-Reference.md) for details.
+You may notice that here we append `::` then `down` when launch `registry`. This is going to call the command `down` of target `registry`. Some targets may support commands, please check ["Target Launch Reference"](Target-Launch-Reference.md) for details.
 
 After it's finished, we then launch the same set of registries as proxies using target `registry-proxy`. This will delegate all image pull requests to the remote peers outside the box:
 ```shell
@@ -227,7 +227,7 @@ https_proxy = ""
 
 Notes:
 
-* The setting `targets` is used to customize the launch process during the box being provisioned. See ["Launch Target Reference"](Launch-Target-Reference.md) for details.
+* The setting `targets` is used to customize the launch process during the box being provisioned. See ["Target Launch Reference"](Target-Launch-Reference.md) for details.
 * Settings started from `k8s_version` are not only applicable when the box is being provisioned, but also can be used as environment variables when run `launch` command after the box is provisioned. Just convert the setting name to uppercase. That becomes the environment variable name, e.g. for setting `num_nodes`, its environment variable is `NUM_NODES`.
 * The setting `is_in_china` or the environment variable `IS_IN_CHINA` is specific to users in China who may not have network access to some sites required by Kubernetes when launch the cluster, e.g. by default, images from `k8s.gcr.io` and `gcr.io` are not accessible; the default google charts repository for helm installation is also not accessible. There are some special optimizations to handle these cases if we set `is_in_china` to 1.
 

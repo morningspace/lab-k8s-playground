@@ -30,16 +30,16 @@ And applications, e.g. [Kubernetes dashboard](https://github.com/kubernetes/dash
 
 Below are some demos. For more details on how to use the vagrant box, please check [Vagrant Box Overview](/docs/Vagrant-Box-Overview.md) and [Vagrant Box Getting Started](/docs/Vagrant-Box-Getting-Started.md).
 
-> Launch Kubernetes and Helm in offline mode.
+> Run Kubernetes tools from both OS and web terminals.
 
-![](/docs/demo-1.gif)
+![](/docs/demo-tools.gif)
 
-> Run Kubernetes tools from both OS terminal and web terminal.
+> Use Dashboard, Grafana, Kiali, Jaeger when run Istio Bookinfo demo app.
 
-![](/docs/demo-2.gif)
+![](/docs/demo-apps.gif)
 
-> Use Dashboard, Grafana, Kiali, Jaeger, Prometheus when run Istio Bookinfo demo app.
+> Re-launch cluster in offline mode
 
-![](/docs/demo-3.gif)
+![](/docs/demo-offline.gif)
 
 Have Fun!
