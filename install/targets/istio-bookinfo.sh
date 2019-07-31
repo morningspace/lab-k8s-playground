@@ -6,7 +6,7 @@ source $INSTALL_HOME/funcs.sh
 
 HOST_IP=${HOST_IP:-127.0.0.1}
 
-function init {
+function istio-bookinfo::init {
   pushd ~/.lab-k8s-cache/istio
 
   kubectl config set-context --current --namespace=default
@@ -24,16 +24,10 @@ function init {
   popd
 }
 
-function clean {
+function istio-bookinfo::clean {
   pushd ~/.lab-k8s-cache/istio
   samples/bookinfo/platform/kube/cleanup.sh
   popd
 }
 
-command=${1:-init}
-
-case $command in
-  "init") init;;
-  "clean") clean;;
-  *) echo "* unkown command";;
-esac
+run_target_command $@

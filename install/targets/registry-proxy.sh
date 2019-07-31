@@ -4,7 +4,9 @@ LAB_HOME=${LAB_HOME:-/vagrant}
 INSTALL_HOME=$LAB_HOME/install
 source $INSTALL_HOME/funcs.sh
 
-function init {
+docker_compose="docker-compose -f docker-compose-registry-proxy.yml"
+
+function registry-proxy::init {
   # set up private registries
   ensure_box
   if [[ $? == 0 && ! -f /etc/docker/daemon.json ]]; then
@@ -27,28 +29,21 @@ EOF
 
   REGISTRY_REMOTE=${REGISTRY_REMOTE:-$(netstat -rn | grep "^0.0.0.0 " | cut -d " " -f10)}
   echo "REGISTRY_PROXY_REMOTEURL=http://$REGISTRY_REMOTE:5000" >.env
-  sudo docker-compose -f docker-compose-registry-proxy.yml up -d --scale docker.io.proxy=0
+  sudo $docker_compose up -d --scale docker.io.proxy=0
 
   popd
 }
 
-function up {
+function registry-proxy::up {
   pushd $LAB_HOME
-  docker-compose -f docker-compose-registry-proxy.yml up -d --scale docker.io.proxy=0
+  $docker_compose up -d --scale docker.io.proxy=0
   popd
 }
 
-function down {
+function registry-proxy::down {
   pushd $LAB_HOME
-  docker-compose -f docker-compose-registry-proxy.yml down
+  $docker_compose down
   popd
 }
 
-command=${1:-init}
-
-case $command in
-  "init") init;;
-  "up") up;;
-  "down") down;;
-  *) echo "* unkown command";;
-esac
+run_target_command $@

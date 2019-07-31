@@ -44,9 +44,7 @@ cat << EOF >> #{user_home}/.bashrc
 source /usr/share/bash-completion/bash_completion
 
 # launch autocompletion
-shells=(\\$(ls -l /vagrant/install/targets/*.sh | awk '{print \\$9}' | cut -d / -f 5))
-words=(\\${shells[@]%.sh})
-complete -W "base default \\$(echo \\${words[@]})" launch
+source /vagrant/install/completion.sh
 EOF
 
 # configure env vars

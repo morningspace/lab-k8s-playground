@@ -7,7 +7,7 @@ source $INSTALL_HOME/funcs.sh
 ISTIO_VERSION="1.2.2"
 HOST_IP=${HOST_IP:-127.0.0.1}
 
-function init {
+function istio::init {
   istio_tgz="istio-$ISTIO_VERSION-linux.tar.gz"
   if [[ ! -f ~/.lab-k8s-cache/$istio_tgz ]]; then
     download_url=https://github.com/istio/istio/releases/download/$ISTIO_VERSION/$istio_tgz
@@ -39,16 +39,10 @@ function init {
   popd
 }
 
-function clean {
+function istio::clean {
   pushd ~/.lab-k8s-cache/istio
   kubectl delete -f install/kubernetes/istio-demo.yaml
   popd
 }
 
-command=${1:-init}
-
-case $command in
-  "init") init;;
-  "clean") clean;;
-  *) echo "* unkown command";;
-esac
+run_target_command $@

@@ -4,9 +4,7 @@ LAB_HOME=${LAB_HOME:-/vagrant}
 INSTALL_HOME=$LAB_HOME/install
 source $INSTALL_HOME/funcs.sh
 
-function init {
-  ensure_k8s_version || exit
-
+function kubernetes::init {
   if [[ ! -f ~/.lab-k8s-cache/kubernetes-dashboard.yaml ]]; then
     download_url=https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy/alternative/kubernetes-dashboard.yaml
     curl -sL $download_url -o ~/.lab-k8s-cache/kubernetes-dashboard.yaml
@@ -62,19 +60,20 @@ EOF
   popd
 }
 
-function run {
-  pushd $LAB_HOME
-  SKIP_SNAPSHOT= ./dind-cluster-wrapper.sh $1
-  popd
+function kubernetes::up {
+  pushd $LAB_HOME; SKIP_SNAPSHOT= ./dind-cluster-wrapper.sh up; popd
 }
 
-command=${1:-init}
+function kubernetes::down {
+  pushd $LAB_HOME; SKIP_SNAPSHOT= ./dind-cluster-wrapper.sh down; popd
+}
 
-case $command in
-  "init") init;;
-  "up") run up;;
-  "down") run down;;
-  "clean") run clean;;
-  "snapshot") run snapshot;;
-  *) echo "* unkown command";;
-esac
+function kubernetes::clean {
+  pushd $LAB_HOME; SKIP_SNAPSHOT= ./dind-cluster-wrapper.sh clean; popd
+}
+
+function kubernetes::snapshot {
+  pushd $LAB_HOME; SKIP_SNAPSHOT= ./dind-cluster-wrapper.sh snapshot; popd
+}
+
+run_target_command $@

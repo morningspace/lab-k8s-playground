@@ -5,8 +5,9 @@ INSTALL_HOME=$LAB_HOME/install
 source $INSTALL_HOME/funcs.sh
 
 host="registry-1.docker.io"
+docker_compose="docker-compose -f docker-compose-registry-proxy.yml"
 
-function init {
+function docker.io-proxy::init {
   if cat /etc/hosts | grep -q "# $host"; then
     echo "* $host mapping detected"
   else
@@ -16,36 +17,28 @@ function init {
 EOF
   fi
 
-  up
+  docker.io-proxy::up
 }
 
-function up {
+function docker.io-proxy::up {
   pushd $LAB_HOME
-  docker-compose -f docker-compose-registry-proxy.yml up -d docker.io.proxy
+  $docker_compose up -d docker.io.proxy
   popd
 }
 
-function down {
+function docker.io-proxy::down {
   pushd $LAB_HOME
-  docker-compose -f docker-compose-registry-proxy.yml stop docker.io.proxy
-  docker-compose -f docker-compose-registry-proxy.yml rm -f docker.io.proxy
+  $docker_compose stop docker.io.proxy
+  $docker_compose rm -f docker.io.proxy
   popd
 }
 
-function clean {
+function docker.io-proxy::clean {
   if cat /etc/hosts | grep -q "# $host"; then
     sudo sed -i.bak "/$host/d" /etc/hosts
   fi
 
-  down
+  docker.io-proxy::down
 }
 
-command=${1:-init}
-
-case $command in
-  "init") init;;
-  "up") up;;
-  "down") down;;
-  "clean") clean;;
-  *) echo "* unkown command";;
-esac
+run_target_command $@

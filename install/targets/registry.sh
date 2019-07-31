@@ -4,7 +4,7 @@ LAB_HOME=${LAB_HOME:-/vagrant}
 INSTALL_HOME=$LAB_HOME/install
 source $INSTALL_HOME/funcs.sh
 
-function init {
+function registry::init {
   ensure_k8s_version || exit
 
   # images to be cached per kubernetes version
@@ -135,23 +135,16 @@ EOF
   popd
 }
 
-function up {
+function registry::up {
   pushd $LAB_HOME
   docker-compose up -d --scale docker.io=0
   popd
 }
 
-function down {
+function registry::down {
   pushd $LAB_HOME
   docker-compose down
   popd
 }
 
-command=${1:-init}
-
-case $command in
-  "init") init;;
-  "up") up;;
-  "down") down;;
-  *) echo "* unkown command";;
-esac
+run_target_command $@

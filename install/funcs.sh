@@ -74,3 +74,14 @@ function ensure_k8s_version {
   fi
   return 0
 }
+
+function run_target_command {
+  local target=${0##*/}
+  target=${target%.sh}
+  local command=${1:-init}
+  if [[ $(type -t $target::$command) == function ]]; then
+    $target::$command
+  else
+    echo "* unkown command $command"
+  fi
+}

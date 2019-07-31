@@ -4,7 +4,7 @@ LAB_HOME=${LAB_HOME:-/vagrant}
 INSTALL_HOME=$LAB_HOME/install
 source $INSTALL_HOME/funcs.sh
 
-ensure_k8s_version
+ensure_k8s_version || exit
 
 # set version per kubernetes version
 case $K8S_VERSION in
