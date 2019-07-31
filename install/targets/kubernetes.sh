@@ -76,4 +76,4 @@ function kubernetes::snapshot {
   pushd $LAB_HOME; SKIP_SNAPSHOT= ./dind-cluster-wrapper.sh snapshot; popd
 }
 
-run_target_command $@
+target::command $@

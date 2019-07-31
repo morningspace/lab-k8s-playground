@@ -1,8 +1,7 @@
 #!/bin/bash
 
 LAB_HOME=${LAB_HOME:-/vagrant}
-INSTALL_HOME=$LAB_HOME/install
-source $INSTALL_HOME/funcs.sh
+source $LAB_HOME/install/funcs.sh
 
 docker_compose="docker-compose -f docker-compose-registry-proxy.yml"
 
@@ -46,4 +45,4 @@ function registry-proxy::down {
   popd
 }
 
-run_target_command $@
+target::command $@

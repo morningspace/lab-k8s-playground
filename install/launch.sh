@@ -31,8 +31,8 @@ Usage: launch [targets]
   Targets are separated by space and launch in order of appearance one by one.
 
   Special pre-defined targets:
-  * base      will launch docker docker-compose kubectl
-  * default   will launch base registry kubernetes
+  * base      will launch target docker, docker-compose, and kubectl
+  * default   will launch target base, registry, and kubernetes
 
   e.g.
   launch default tools istio

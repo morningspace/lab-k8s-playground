@@ -75,13 +75,19 @@ function ensure_k8s_version {
   return 0
 }
 
-function run_target_command {
+function get_first_command {
+  local pattern="^function $1::\w\+ {$"
+  local funcs=($(grep "$pattern" $0 | awk '{print $2}'))
+  echo "${funcs[0]#*::}"
+}
+
+function target::command {
   local target=${0##*/}
   target=${target%.sh}
-  local command=${1:-init}
+  local command=${1:-$(get_first_command $target)}
   if [[ $(type -t $target::$command) == function ]]; then
     $target::$command
   else
-    echo "* unkown command $command"
+    echo "* function $target::$command not found in $0"
   fi
 }

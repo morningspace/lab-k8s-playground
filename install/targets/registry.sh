@@ -1,8 +1,7 @@
 #!/bin/bash
 
 LAB_HOME=${LAB_HOME:-/vagrant}
-INSTALL_HOME=$LAB_HOME/install
-source $INSTALL_HOME/funcs.sh
+source $LAB_HOME/install/funcs.sh
 
 function registry::init {
   ensure_k8s_version || exit
@@ -147,4 +146,4 @@ function registry::down {
   popd
 }
 
-run_target_command $@
+target::command $@

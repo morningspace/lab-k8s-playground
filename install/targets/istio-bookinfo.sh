@@ -1,8 +1,7 @@
 #!/bin/bash
 
 LAB_HOME=${LAB_HOME:-/vagrant}
-INSTALL_HOME=$LAB_HOME/install
-source $INSTALL_HOME/funcs.sh
+source $LAB_HOME/install/funcs.sh
 
 HOST_IP=${HOST_IP:-127.0.0.1}
 
@@ -30,4 +29,4 @@ function istio-bookinfo::clean {
   popd
 }
 
-run_target_command $@
+target::command $@

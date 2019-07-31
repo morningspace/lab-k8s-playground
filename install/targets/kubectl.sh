@@ -1,8 +1,7 @@
 #!/bin/bash
 
 LAB_HOME=${LAB_HOME:-/vagrant}
-INSTALL_HOME=$LAB_HOME/install
-source $INSTALL_HOME/funcs.sh
+source $LAB_HOME/install/funcs.sh
 
 ensure_command "kubectl" && exit
 ensure_k8s_version || exit
