@@ -9,15 +9,27 @@ targets+=(${shells[@]%.sh})
 
 launch_completions() {
   local words=${targets[@]}
-  local input=${COMP_WORDS[@]:(-1)}
+  local input="${COMP_WORDS[COMP_CWORD]}"
+  local prev="${COMP_WORDS[COMP_CWORD-1]}"
+  
+  if [[ $input == "::" ]]; then
+    input="$prev::"
+  elif [[ $prev == "::" ]]; then
+    input="${COMP_WORDS[COMP_CWORD-2]}::$input"
+  fi
 
   if [[ $input == *"::"* ]]; then
     local shell=${input%::*}
     if [[ ${shells[@]} =~ $shell ]]; then
       input=${input#*::}
       local pattern="^function $shell::\w\+ {$"
-      local funcs=($(grep "$pattern" $INSTALL_HOME/targets/$shell.sh | awk '{print $2}'))
-      words=(${funcs[@]#*::})
+      local file="$INSTALL_HOME/targets/$shell.sh"
+      if [[ -f $file ]]; then
+        local funcs=($(grep "$pattern" $file | awk '{print $2}'))
+        words=(${funcs[@]#*::})
+      else
+        words=()
+      fi
     fi
   fi
 
