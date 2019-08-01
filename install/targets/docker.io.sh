@@ -5,7 +5,7 @@ source $LAB_HOME/install/funcs.sh
 
 host="registry-1.docker.io"
 
-function docker.io::init {
+function docker.io::up {
   if cat /etc/hosts | grep -q "# $host"; then
     echo "* $host mapping detected"
   else
@@ -15,28 +15,20 @@ function docker.io::init {
 EOF
   fi
 
-  docker.io::up
-}
-
-function docker.io::up {
   pushd $LAB_HOME
   docker-compose up -d docker.io
   popd
 }
 
 function docker.io::down {
-  pushd $LAB_HOME
-  docker-compose stop docker.io
-  docker-compose rm -f docker.io
-  popd
-}
-
-function docker.io::clean {
   if cat /etc/hosts | grep -q "# $host"; then
     sudo sed -i.bak "/$host/d" /etc/hosts
   fi
 
-  docker.io::down
+  pushd $LAB_HOME
+  docker-compose stop docker.io
+  docker-compose rm -f docker.io
+  popd
 }
 
 target::command $@

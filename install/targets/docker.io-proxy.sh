@@ -6,7 +6,7 @@ source $LAB_HOME/install/funcs.sh
 host="registry-1.docker.io"
 docker_compose="docker-compose -f docker-compose-registry-proxy.yml"
 
-function docker.io-proxy::init {
+function docker.io-proxy::up {
   if cat /etc/hosts | grep -q "# $host"; then
     echo "* $host mapping detected"
   else
@@ -16,28 +16,20 @@ function docker.io-proxy::init {
 EOF
   fi
 
-  docker.io-proxy::up
-}
-
-function docker.io-proxy::up {
   pushd $LAB_HOME
   $docker_compose up -d docker.io.proxy
   popd
 }
 
 function docker.io-proxy::down {
-  pushd $LAB_HOME
-  $docker_compose stop docker.io.proxy
-  $docker_compose rm -f docker.io.proxy
-  popd
-}
-
-function docker.io-proxy::clean {
   if cat /etc/hosts | grep -q "# $host"; then
     sudo sed -i.bak "/$host/d" /etc/hosts
   fi
 
-  docker.io-proxy::down
+  pushd $LAB_HOME
+  $docker_compose stop docker.io.proxy
+  $docker_compose rm -f docker.io.proxy
+  popd
 }
 
 target::command $@
