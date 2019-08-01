@@ -14,31 +14,29 @@ This lab project is a playground for you to play with Kubernetes.
 
 It can launch a multi-node cluster on your local machine in less than one minute even without network connection! 
 
-It also supports to maintain multi-version Kubernetes clusters in parallel on your machine even the latest snapshot built from Kubernetes source.
+It also supports to maintain multi-version Kubernetes clusters in parallel on your machine even includes the latest snapshot built from Kubernetes source!
 
-For more details on how to run this project, please check [Launch multi-node Kubernetes cluster locally in one minute, and more...](https://morningspace.github.io/tech/k8s-run/), or the video tutorial on [YouTube](https://www.youtube.com/watch?v=0uVdF3Inv48&list=PLVQM6jLkNkfqHgd0aX7TnjioOiQrqsXIa), or [YouKu](https://v.youku.com/v_show/id_XNDI2Mzk1NDcyMA==.html?f=52221532).
+The project also has a [Vagrant box](/Vagrantfile) that integrates a lot of popular Kubernetes applications and tools with best practices to make your daily work with Kubernetes more efficiently.
+
+For more details:
+* Please check ["Launch multi-node Kubernetes cluster locally in one minute, and more..."](https://morningspace.github.io/tech/k8s-run/),  also the video tutorials on [YouTube](https://www.youtube.com/watch?v=0uVdF3Inv48&list=PLVQM6jLkNkfqHgd0aX7TnjioOiQrqsXIa) or [YouKu](https://v.youku.com/v_show/id_XNDI2Mzk1NDcyMA==.html?f=52221532), if you want to know how to run this project in general.
+* Please check ["Vagrant Box Overview"](/docs/Vagrant-Box-Overview.md), if you want to know what the Vagrant box can provide with us in general, ["Vagrant Box Getting Started"](/docs/Vagrant-Box-Getting-Started.md) for detailed steps on how to use the box, and ["Target Launch Reference"](/docs/Target-Launch-Reference.md) on more advanced use of the box.
 
 More tools and samples will be coming soon...
 
-## The Vagrant Box
+## Demos
 
-The project also has a [vagrant box](/Vagrantfile) that integrates a lot of popular Kubernetes related applications and tools with best practices to make your daily work with Kubernetes more efficiently.
+Below are some demos. For more details on how to use the box, please check ["Vagrant Box Overview"](/docs/Vagrant-Box-Overview.md) and ["Vagrant Box Getting Started"](/docs/Vagrant-Box-Getting-Started.md).
 
-It includes Kubernetes tools, e.g. [kubectl](https://kubernetes.io/docs/reference/kubectl), [helm](https://helm.sh), [kubectl autocompletion](https://kubernetes.io/docs/tasks/tools/install-kubectl/#optional-kubectl-configurations), [kubectl aliases](https://github.com/ahmetb/kubectl-aliases), [kubens](https://github.com/ahmetb/kubectx), [kubebox](https://github.com/astefanutti/kubebox), [kubetail](https://github.com/johanhaleby/kubetail), [kube-shell](https://github.com/cloudnativelabs/kube-shell).
-
-And applications, e.g. [Kubernetes dashboard](https://github.com/kubernetes/dashboard), [Istio](https://istio.io) with demo app [bookinfo](https://istio.io/docs/examples/bookinfo), [Grafana](https://grafana.com), [Kiali](https://www.kiali.io), [Jaeger](https://www.jaegertracing.io), [Prometheus](https://prometheus.io) and Private Docker image registries that help boost cluster launch.
-
-Below are some demos. For more details on how to use the vagrant box, please check [Vagrant Box Overview](/docs/Vagrant-Box-Overview.md) and [Vagrant Box Getting Started](/docs/Vagrant-Box-Getting-Started.md).
-
-> Run Kubernetes tools from both OS and web terminals.
+Run Kubernetes tools from both OS and web terminals.
 
 ![](/docs/demo-tools.gif)
 
-> Use Dashboard, Grafana, Kiali, Jaeger when run Istio Bookinfo demo app.
+Use Dashboard, Grafana, Kiali, Jaeger when run Istio Bookinfo demo app.
 
 ![](/docs/demo-apps.gif)
 
-> Re-launch cluster in offline mode
+Re-launch cluster in offline mode
 
 ![](/docs/demo-offline.gif)
 
