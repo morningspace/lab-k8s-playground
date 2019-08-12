@@ -6,7 +6,7 @@ source $INSTALL_HOME/funcs.sh
 
 function kubernetes::init {
   if [[ ! -f ~/.lab-k8s-cache/kubernetes-dashboard.yaml ]]; then
-    download_url=https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy/alternative/kubernetes-dashboard.yaml
+    download_url=https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy/recommended/kubernetes-dashboard.yaml
     curl -sL $download_url -o ~/.lab-k8s-cache/kubernetes-dashboard.yaml
   fi
 

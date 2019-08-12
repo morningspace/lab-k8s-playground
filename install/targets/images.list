@@ -20,4 +20,8 @@ images+=(
   istio/examples-bookinfo-reviews-v1:1.12.0
   istio/examples-bookinfo-reviews-v2:1.12.0
   istio/examples-bookinfo-reviews-v3:1.12.0
+
+  # ingress
+  quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.25.0
+  k8s.gcr.io/defaultbackend-amd64:1.5
 )

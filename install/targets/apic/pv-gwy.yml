@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: apic-gwy-tms
+spec:
+  capacity:
+    # storage: 2Gi
+    storage: 5Gi
+  storageClassName: apic-local-storage
+  local:
+    path: /drouter/ramdisk2/mnt/raid-volume/raid0/local
+  nodeAffinity:
+      required:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: kubernetes.io/hostname
+            operator: In
+            values: ["kube-node-1"]
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
