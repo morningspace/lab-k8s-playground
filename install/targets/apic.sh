@@ -11,7 +11,7 @@ source $INSTALL_HOME/funcs.sh
 source $APIC_DEPLOY_HOME/settings.sh
 
 function ensure_nodes {
-  target::step "Ensure cluster nodes"
+  target::step "ensure cluster nodes"
 
   if [[ $NUM_NODES != 3 ]]; then
     target::log "NUM_NODES must be 3, current value $NUM_NODES"
@@ -19,8 +19,8 @@ function ensure_nodes {
   fi
 }
 
-function ensure_downloads {
-  target::step "Ensure apic installation packages"
+function ensure_images {
+  target::step "ensure apic packaged images"
 
   if [[ ! -d $APIC_INSTALL_HOME ]]; then
     target::log "$APIC_INSTALL_HOME not found"
@@ -30,18 +30,28 @@ function ensure_downloads {
     mgmt_images_tgz=$(ls $APIC_INSTALL_HOME/management*gz)
     analyt_images_tgz=$(ls $APIC_INSTALL_HOME/analytics*gz)
     gwy_images_tgz=$(ls $APIC_INSTALL_HOME/idg*gz)
+    target::log "$ptl_images_tgz"
+    target::log "$mgmt_images_tgz"
+    target::log "$analyt_images_tgz"
+    target::log "$gwy_images_tgz"
+  fi
+}
+
+function ensure_apicup {
+  target::step "ensure apicup"
+
+  if [[ ! -d $APIC_INSTALL_HOME ]]; then
+    target::log "$APIC_INSTALL_HOME not found"
+    exit 255
+  else
     apicup=$(ls $APIC_INSTALL_HOME/apicup*)
     chmod +x $apicup
-    target::log "portal images tgz: $ptl_images_tgz"
-    target::log "management images tgz: $mgmt_images_tgz"
-    target::log "analytics images tgz: $analyt_images_tgz"
-    target::log "gateway images tgz: $gwy_images_tgz"
-    target::log "apicup: $apicup"
+    target::log "$apicup"
   fi
 }
 
 function ensure_namespace {
-  target::step "Ensure namespace $apic_ns"
+  target::step "ensure namespace $apic_ns"
 
   if kubectl get namespace | grep -q $apic_ns ; then
     target::log "namespace $apic_ns detected"
@@ -51,7 +61,7 @@ function ensure_namespace {
 }
 
 function init_project {
-  target::step "Init apic project"
+  target::step "init apic project"
 
   if [[ -d $APIC_PROJECT_HOME ]]; then
     target::log "$APIC_PROJECT_HOME detected"
@@ -64,37 +74,38 @@ function init_project {
   kubectl apply -f $APIC_DEPLOY_HOME/CustomResourceDefinition.yml
 }
 
+function load_image {
+  docker tag $1 127.0.0.1:5000/$2
+  docker push 127.0.0.1:5000/$2
+  docker rmi 127.0.0.1:5000/$2
+}
+
 function load_images {
-  target::step "Load apic images into private registry"
+  target::step "load apic images into private registry"
 
   $INSTALL_HOME/targets/docker.io.sh up
 
-  target::step "Load portal images"
+  target::step "load portal images"
   $apicup registry-upload portal $ptl_images_tgz registry-1.docker.io
 
-  target::step "Load management images"
+  target::step "load management images"
   $apicup registry-upload management $mgmt_images_tgz registry-1.docker.io
 
-  target::step "Load analytics images"
+  target::step "load analytics images"
   $apicup registry-upload analytics $analyt_images_tgz registry-1.docker.io
 
   $INSTALL_HOME/targets/docker.io.sh down
 
-  target::step "Load gateway image"
+  target::step "load gateway image"
   local gwy_image=$(docker load -i $gwy_images_tgz | grep -o ibmcom/datapower.*)
-  docker tag $gwy_image 127.0.0.1:5000/$image_repository:$image_tag
-  docker push 127.0.0.1:5000/$image_repository:$image_tag
-  docker rmi 127.0.0.1:5000/$image_repository:$image_tag
+  load_image $gwy_image $image_repository:$image_tag
 
-  target::step "Load busybox image"
-  docker pull busybox:1.29-glibc
-  docker tag busybox:1.29-glibc 127.0.0.1:5000/busybox:1.29-glibc
-  docker push 127.0.0.1:5000/busybox:1.29-glibc
-  docker rmi 127.0.0.1:5000/busybox:1.29-glibc
+  target::step "load busybox image"
+  load_image busybox:1.29-glibc busybox:1.29-glibc
 }
 
 function install_mgmt {
-  target::step "Install management subsystem"
+  target::step "install management subsystem"
 
   # create pv
   docker exec kube-node-1 mkdir -p /var/db
@@ -130,10 +141,11 @@ function install_mgmt {
   fi
 
   $apicup subsys install mgmt --plan-dir=mgmt-install-plan
+  target::log
 }
 
 function install_gwy {
-  target::step "Install gateway subsystem"
+  target::step "install gateway subsystem"
 
   # create pv
   docker exec kube-node-1 mkdir -p /drouter/ramdisk2/mnt/raid-volume/raid0/local
@@ -172,10 +184,11 @@ function install_gwy {
   fi
 
   $apicup subsys install gwy --plan-dir=gwy-install-plan
+  target::log
 }
 
 function install_analyt {
-  target::step "Install analytics subsystem"
+  target::step "install analytics subsystem"
 
   # adjust vm.max_map_count
   if ! $(sysctl vm.max_map_count|grep -q $max_map_count) ; then
@@ -218,10 +231,11 @@ function install_analyt {
   fi
 
   $apicup subsys install analyt --plan-dir=analyt-install-plan
+  target::log
 }
 
 function install_ptl {
-  target::step "Install portal subsystem"
+  target::step "install portal subsystem"
 
   # create pv
   docker exec kube-node-2 mkdir -p /var/lib/mysqldata
@@ -260,10 +274,11 @@ function install_ptl {
   fi
 
   $apicup subsys install ptl --plan-dir=ptl-install-plan
+  target::log
 }
 
 function install_ingress {
-  target::step "Install ingress controller"
+  target::step "install ingress controller"
 
   helm upgrade -i ingress stable/nginx-ingress \
     --namespace $apic_ns \
@@ -282,11 +297,12 @@ function install_ingress {
     kubectl apply -f -
 }
 
-ensure_nodes
-ensure_downloads
-ensure_namespace
-
 function apic::init {
+  ensure_nodes
+  ensure_images
+  ensure_apicup
+  ensure_namespace
+
   init_project
 
   pushd $APIC_PROJECT_HOME >/dev/null
@@ -302,42 +318,62 @@ function apic::init {
 }
 
 function apic::validate {
+  ensure_apicup
+
   pushd $APIC_PROJECT_HOME >/dev/null
 
-  target::step "Validate gateway subsystem"
+  target::step "validate gateway subsystem"
   $apicup subsys get gwy --validate
 
-  target::step "Validate portal subsystem"
+  target::step "validate portal subsystem"
   $apicup subsys get ptl --validate
 
-  target::step "Validate analytics subsystem"
+  target::step "validate analytics subsystem"
   $apicup subsys get analyt --validate
 
-  target::step "Validate management subsystem"
+  target::step "validate management subsystem"
   $apicup subsys get mgmt --validate
 
   popd >/dev/null
 }
 
 function apic::clean {
-  target::step "Delete namespace $apic_ns"
+  target::step "delete namespace $apic_ns"
   kubectl delete namespace $apic_ns
   
-  target::step "Delete CRDs"
-  kubectl delete -f $APIC_DEPLOY_HOME/CustomResourceDefinition.yml
+  target::step "delete CRDs"
+  local crds=$(kubectl get crd -o name | grep .apic.ibm.com)
+  [ -n "$crds" ] && kubectl delete crd $crds
 
-  target::step "Delete PVs"
-  kubectl delete -f $APIC_DEPLOY_HOME/pv-mgmt.yml
-  kubectl delete -f $APIC_DEPLOY_HOME/pv-gwy.yml
-  kubectl delete -f $APIC_DEPLOY_HOME/pv-analyt.yml
-  kubectl delete -f $APIC_DEPLOY_HOME/pv-ptl.yml
+  target::step "delete PVs"
+  local pvs=$(kubectl get pv -o name | grep persistentvolume/apic-)
+  [ -n "$pvs" ] kubectl delete pv $pvs
 
-  target::step "Clean apic project"
+  target::step "clean apic project"
   rm -rf $APIC_PROJECT_HOME
 }
 
-function apic::endpoint {
-  kubectl -n $apic_ns port-forward --address $HOST_IP service/ingress-nginx-ingress-controller 443:443
+function apic::endpoints {
+  endpoints=(
+    # Gateway
+    Gatway Management Endpoint|$apic_gw_service
+    Gatway API Endpoint Base|$api_gateway
+    # Portoal
+    Portal Management Endpoint|$portal_admin
+    Portal Website URL|$portal_www
+    # Analytics
+    Analytics Management Endpoint|$analytics_client
+  )
+  
+  for endpoint in "${endpoints[@]}" ; do
+    app=${endpoint/%|*}
+    url=${endpoint/#*|}
+    printf "%30s: %s\n" "$app" $url
+  done
+}
+
+function apic::portforward {
+  kubectl -n $apic_ns port-forward --address $HOST_IP service/ingress-nginx-ingress-controller 443:443 >/dev/null &
 }
 
 target::command $@
