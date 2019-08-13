@@ -367,6 +367,8 @@ function apic::endpoints {
     "Portal Website URL|https://$portal_www"
     # Analytics
     "Analytics Management Endpoint|https://$analytics_client"
+    # Management
+    "Cloud Manager UI|https://$cloud_admin_ui"
   )
   
   for endpoint in "${endpoints[@]}" ; do
