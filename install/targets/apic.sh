@@ -109,7 +109,9 @@ function install_mgmt {
 
   # create pv
   docker exec kube-node-1 mkdir -p /var/db
-  kubectl apply -f $APIC_DEPLOY_HOME/pv-mgmt.yml
+  cat $APIC_DEPLOY_HOME/pv-mgmt.yml | \
+    sed -e "s/@@cassandra_volume_size_gb/$cassandra_volume_size_gb/g" | \
+    kubectl apply -f -
 
   # config settings
   if $apicup subsys list|grep -q mgmt; then
@@ -149,7 +151,9 @@ function install_gwy {
 
   # create pv
   docker exec kube-node-1 mkdir -p /drouter/ramdisk2/mnt/raid-volume/raid0/local
-  kubectl apply -f $APIC_DEPLOY_HOME/pv-gwy.yml
+  cat $APIC_DEPLOY_HOME/pv-gwy.yml | \
+    sed -e "s/@@tms_peering_storage_size_gb/$tms_peering_storage_size_gb/g" | \
+    kubectl apply -f -
 
   # config settings
   if $apicup subsys list|grep -q mgmt; then
@@ -199,7 +203,10 @@ function install_analyt {
   # create pv
   docker exec kube-node-2 mkdir -p /var/lib/elasticsearch
   docker exec kube-node-3 mkdir -p /var/lib/elasticsearch
-  kubectl apply -f $APIC_DEPLOY_HOME/pv-analyt.yml
+  cat $APIC_DEPLOY_HOME/pv-analyt.yml | \
+    sed -e "s/@@data_storage_size_gb/$data_storage_size_gb/g; \
+      s/@@master_storage_size_gb/$master_storage_size_gb/g" | \
+    kubectl apply -f -
 
   # config settings
   if $apicup subsys list|grep -q mgmt; then
@@ -243,7 +250,13 @@ function install_ptl {
   docker exec kube-node-2 mkdir -p /web
   docker exec kube-node-2 mkdir -p /var/aegir/backups
   docker exec kube-node-2 mkdir -p /var/devportal
-  kubectl apply -f $APIC_DEPLOY_HOME/pv-ptl.yml
+  cat $APIC_DEPLOY_HOME/pv-ptl.yml | \
+    sed -e "s/@@db_storage_size_gb/db_storage_size_gb/g; \
+      s/@@db_logs_storage_size_gb/db_logs_storage_size_gb/g; \
+      s/@@www_storage_size_gb/www_storage_size_gb/g; \
+      s/@@backup_storage_size_gb/backup_storage_size_gb/g; \
+      s/@@admin_storage_size_gb/admin_storage_size_gb/g" | \
+    kubectl apply -f -
 
   # config settings
   if $apicup subsys list|grep -q mgmt; then
@@ -368,13 +381,13 @@ function apic::endpoints {
     # Analytics
     "Analytics Management Endpoint|https://$analytics_client"
     # Management
-    "Cloud Manager UI|https://$cloud_admin_ui"
+    "Cloud Manager UI|https://$cloud_admin_ui (default usr/pwd: admin/7iron-hide)"
   )
   
   for endpoint in "${endpoints[@]}" ; do
     app=${endpoint/%|*}
     url=${endpoint/#*|}
-    printf "%30s: %s\n" "$app" $url
+    printf "%30s: %s\n" "$app" "$url"
   done
 }
 

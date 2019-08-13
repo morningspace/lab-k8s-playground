@@ -4,8 +4,7 @@ metadata:
   name: apic-gwy-tms
 spec:
   capacity:
-    # storage: 2Gi
-    storage: 5Gi
+    storage: @@tms_peering_storage_size_gb
   storageClassName: apic-local-storage
   local:
     path: /drouter/ramdisk2/mnt/raid-volume/raid0/local

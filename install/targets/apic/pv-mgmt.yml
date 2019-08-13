@@ -4,8 +4,7 @@ metadata:
   name: apic-mgmt-cassandra
 spec:
   capacity:
-    # storage: 1Gi
-    storage: 5Gi
+    storage: @@cassandra_volume_size_gb
   storageClassName: apic-local-storage
   local:
     path: /var/db
