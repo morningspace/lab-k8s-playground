@@ -92,8 +92,11 @@ function target::command {
   fi
 }
 
+c_yellow='\033[1;33m'
+c_no='\033[0m'
+
 function target::step {
-  echo "• $1..."
+  echo -e "$c_yellow• $1...$c_no"
 }
 
 function target::log {

@@ -1,5 +1,6 @@
 # general
 apic_ns=apic
+apic_skip_load_images=
 max_map_count=262144
 
 # management subsystem

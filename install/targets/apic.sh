@@ -307,6 +307,7 @@ function apic::init {
 
   pushd $APIC_PROJECT_HOME >/dev/null
 
+  [ -z $apic_skip_load_images ] && \
   load_images
   install_gwy
   install_ptl
@@ -318,6 +319,8 @@ function apic::init {
 }
 
 function apic::validate {
+  [ ! -d $APIC_PROJECT_HOME ] && echo "$APIC_PROJECT_HOME not found" && exit
+
   ensure_apicup
 
   pushd $APIC_PROJECT_HOME >/dev/null
@@ -339,30 +342,31 @@ function apic::validate {
 
 function apic::clean {
   target::step "delete namespace $apic_ns"
+  (kubectl get namespace | grep -q $apic_ns) && \
   kubectl delete namespace $apic_ns
   
   target::step "delete CRDs"
-  local crds=$(kubectl get crd -o name | grep .apic.ibm.com)
-  [ -n "$crds" ] && kubectl delete crd $crds
+  local crds=($(kubectl get crd -o name | grep .apic.ibm.com))
+  [ -n "$crds" ] && kubectl delete crd "${crds[@]##*/}"
 
   target::step "delete PVs"
-  local pvs=$(kubectl get pv -o name | grep persistentvolume/apic-)
-  [ -n "$pvs" ] kubectl delete pv $pvs
+  local pvs=($(kubectl get pv -o name | grep persistentvolume/apic-))
+  [ -n "$pvs" ] && kubectl delete pv "${pvs[@]##*/}"
 
   target::step "clean apic project"
   rm -rf $APIC_PROJECT_HOME
 }
 
 function apic::endpoints {
-  endpoints=(
+  local endpoints=(
     # Gateway
-    Gatway Management Endpoint|$apic_gw_service
-    Gatway API Endpoint Base|$api_gateway
+    "Gatway Management Endpoint|https://$apic_gw_service"
+    "Gatway API Endpoint Base|https://$api_gateway"
     # Portoal
-    Portal Management Endpoint|$portal_admin
-    Portal Website URL|$portal_www
+    "Portal Management Endpoint|https://$portal_admin"
+    "Portal Website URL|https://$portal_www"
     # Analytics
-    Analytics Management Endpoint|$analytics_client
+    "Analytics Management Endpoint|https://$analytics_client"
   )
   
   for endpoint in "${endpoints[@]}" ; do
@@ -374,6 +378,7 @@ function apic::endpoints {
 
 function apic::portforward {
   kubectl -n $apic_ns port-forward --address $HOST_IP service/ingress-nginx-ingress-controller 443:443 >/dev/null &
+  target::log "done"
 }
 
 target::command $@
