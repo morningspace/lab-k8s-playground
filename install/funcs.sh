@@ -68,7 +68,7 @@ function ensure_box {
 
 function ensure_k8s_version {
   local valid="v1.12 v1.13 v1.14 v1.15"
-  if [[ ! $valid =~ $K8S_VERSION ]]; then
+  if [[ -z $K8S_VERSION || ! $valid =~ $K8S_VERSION ]]; then
     echo "* Kubernetes version not supported, valid values: $valid"
     return 1
   fi
@@ -90,4 +90,15 @@ function target::command {
   else
     echo "* function $target::$command not found in $0"
   fi
+}
+
+c_yellow='\033[1;33m'
+c_no='\033[0m'
+
+function target::step {
+  echo -e "$c_yellow• $1...$c_no"
+}
+
+function target::log {
+  echo "$1"
 }
