@@ -50,6 +50,15 @@ function kill_portfwds {
   fi
 }
 
+function create_portfwd {
+  mkdir -p ~/.lab-k8s-cache/logs
+  local ns=$1 app=${2#service/}
+  local logfile=~/.lab-k8s-cache/logs/pfwd-$app.log
+  target::step "Forwarding ${@:2}"
+  nohup kubectl -n $ns port-forward --address $HOST_IP ${@:2} > $logfile 2>&1 &
+  target::log "Done. Please check $logfile"
+}
+
 function ensure_command {
   if command -v $1 >/dev/null 2>&1; then
     echo "* $1 detected"
@@ -96,7 +105,7 @@ c_yellow='\033[1;33m'
 c_no='\033[0m'
 
 function target::step {
-  echo -e "$c_yellow• $1...$c_no"
+  echo -e "$c_yellow» $@...$c_no"
 }
 
 function target::log {
