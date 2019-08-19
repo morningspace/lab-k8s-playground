@@ -29,12 +29,6 @@ function istio::init {
 
   wait_for_app "istio-system" "istio" "app=istio-ingressgateway"
 
-  kill_portfwds "3000:3000" "20001:20001" "15032:16686" "9090:9090"
-  kubectl -n istio-system port-forward --address $HOST_IP service/grafana 3000:3000 >/dev/null &
-  kubectl -n istio-system port-forward --address $HOST_IP service/kiali 20001:20001 >/dev/null &
-  kubectl -n istio-system port-forward --address $HOST_IP $(kubectl -n istio-system get pod -l app=jaeger -o jsonpath='{.items[0].metadata.name}') 15032:16686 >/dev/null &
-  kubectl -n istio-system port-forward --address $HOST_IP $(kubectl -n istio-system get pod -l app=prometheus -o jsonpath='{.items[0].metadata.name}') 9090:9090 >/dev/null &
-
   popd
 }
 
@@ -42,6 +36,15 @@ function istio::clean {
   pushd ~/.lab-k8s-cache/istio
   kubectl delete -f install/kubernetes/istio-demo.yaml
   popd
+}
+
+function istio::portforward {
+  kill_portfwds "3000:3000" "20001:20001" "15032:16686" "9090:9090"
+
+  create_portfwd istio-system service/grafana 3000:3000
+  create_portfwd istio-system service/kiali 20001:20001
+  create_portfwd istio-system $(kubectl -n istio-system get pod -l app=jaeger -o jsonpath='{.items[0].metadata.name}') 15032:16686
+  create_portfwd istio-system $(kubectl -n istio-system get pod -l app=prometheus -o jsonpath='{.items[0].metadata.name}') 9090:9090
 }
 
 target::command $@
