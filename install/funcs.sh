@@ -51,9 +51,12 @@ function kill_portfwds {
 }
 
 function create_portfwd {
-  mkdir -p ~/.lab-k8s-cache/logs
+  local logsdir=$LAB_HOME/install/logs
   local ns=$1 app=${2#service/}
-  local logfile=~/.lab-k8s-cache/logs/pfwd-$app.log
+  local logfile=$logsdir/pfwd-$app.log
+
+  mkdir -p $logsdir
+
   target::step "Forwarding ${@:2}"
   nohup kubectl -n $ns port-forward --address $HOST_IP ${@:2} > $logfile 2>&1 &
   target::log "Done. Please check $logfile"
