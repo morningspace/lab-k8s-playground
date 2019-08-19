@@ -52,14 +52,22 @@ function kill_portfwds {
 
 function create_portfwd {
   local logsdir=$LAB_HOME/install/logs
-  local ns=$1 app=${2#service/}
+  local ns=$1 app=${2#*/} apptype=${2%%/*}
   local logfile=$logsdir/pfwd-$app.log
 
   mkdir -p $logsdir
 
   target::step "Forwarding ${@:2}"
-  nohup kubectl -n $ns port-forward --address $HOST_IP ${@:2} > $logfile 2>&1 &
-  target::log "Done. Please check $logfile"
+  if [[ $apptype == pod ]]; then
+    local pod=$(kubectl -n $ns get pod -l app=$app -o jsonpath='{.items[0].metadata.name}')
+    if [[ -n "$pod" ]]; then
+      nohup kubectl -n $ns port-forward --address $HOST_IP $pod ${@:3} > $logfile 2>&1 &
+      target::log "Done. Please check $logfile"
+    fi
+  else
+    nohup kubectl -n $ns port-forward --address $HOST_IP ${@:2} > $logfile 2>&1 &
+    target::log "Done. Please check $logfile"
+  fi
 }
 
 function ensure_command {
