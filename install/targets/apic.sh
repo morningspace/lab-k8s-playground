@@ -392,8 +392,8 @@ function apic::endpoints {
 }
 
 function apic::portforward {
-  kubectl -n $apic_ns port-forward --address $HOST_IP service/ingress-nginx-ingress-controller 443:443 >/dev/null &
-  target::log "done"
+  kill_portfwds "443:443"
+  create_portfwd $apic_ns service/ingress-nginx-ingress-controller 443:443
 }
 
 target::command $@
