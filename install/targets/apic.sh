@@ -332,7 +332,7 @@ function apic::init {
 }
 
 function apic::validate {
-  [ ! -d $APIC_PROJECT_HOME ] && echo "$APIC_PROJECT_HOME not found" && exit
+  [ ! -d $APIC_PROJECT_HOME ] && target::log "$APIC_PROJECT_HOME not found" && exit
 
   ensure_apicup
 
