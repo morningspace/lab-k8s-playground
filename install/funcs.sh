@@ -1,5 +1,8 @@
 #!/bin/bash
 
+logs_dir=$LAB_HOME/install/logs
+endpoints_dir=$LAB_HOME/install/targets/endpoints
+
 function is_app_ready {
   local out
   if ! out="$(kubectl get pod -n $1 -l "$2" -o jsonpath='{ .items[*].status.conditions[?(@.type == "Ready")].status }' 2>/dev/null)"; then
@@ -26,10 +29,10 @@ function wait_for_app {
   local app_name=$2
   local app_labels=("${@:3}")
   local num_tries=500
-  target::step "Waiting for $app_name to be up"
+  target::step "waiting for $app_name to be up"
   while ! is_app_ready_by_labels $namespace ${app_labels[@]}; do
     if ((--num_tries == 0)); then
-      echo "Error bringing up $app_name" >&2
+      echo "error bringing up $app_name" >&2
       exit 1
     fi
     echo -n "." >&2
@@ -51,11 +54,10 @@ function kill_portfwds {
 }
 
 function create_portfwd {
-  local logsdir=$LAB_HOME/install/logs
   local ns=$1 app=${2#*/} apptype=${2%%/*}
-  local logfile=$logsdir/pfwd-$app.log
+  local logfile=$logs_dir/pfwd-$app.log
 
-  mkdir -p $logsdir
+  mkdir -p $logs_dir
 
   target::step "Forwarding ${@:2}"
   if [[ $apptype == pod ]]; then
@@ -93,6 +95,50 @@ function ensure_k8s_version {
     return 1
   fi
   return 0
+}
+
+function add_endpoint {
+  mkdir -p $endpoints_dir
+
+  local group_file=$endpoints_dir/$1
+  [ -z $group_file ] && touch $group_file
+
+  if ! cat $group_file | grep -q "^$2"; then
+    echo "$2,$3,$4" >> $group_file
+  fi
+}
+
+function clean_endpoints {
+  local group_file=$endpoints_dir/$1
+  if [ -z "$2" ] ; then
+    rm -f $group_file
+  else
+    sed -i "/$2/d" $group_file
+  fi
+}
+
+function print {
+  local group=$1
+  local endpoints=("${@:2}")
+
+  target::step "$group endpoints"
+
+  for endpoint in "${endpoints[@]}" ; do
+    IFS=',' read -ra parts <<< "$endpoint"
+
+    app="${parts[0]}"
+    url="${parts[1]}"
+
+    curl -s -o /dev/null $url
+ 
+    if [[ $? == 7 ]]; then
+      status="✗"
+    else
+      status="✔"
+    fi
+
+    printf "%s %14s: %s\n" $status "$app" $url
+  done
 }
 
 function get_first_command {

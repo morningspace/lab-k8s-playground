@@ -31,11 +31,17 @@ function istio::init {
 
   wait_for_app "istio-system" "istio" "app=istio-ingressgateway"
 
+  add_endpoint "istio" "Grafana" "http://$HOST_IP:3000" "HC"
+  add_endpoint "istio" "Kiali" "http://$HOST_IP:20001" "HC"
+  add_endpoint "istio" "Jaeger" "http://$HOST_IP:15032" "HC"
+  add_endpoint "istio" "Prometheus" "http://$HOST_IP:9090" "HC"
+
   popd
 }
 
 function istio::clean {
   pushd ~/.lab-k8s-cache/istio
+  clean_endpoints "istio"
   kubectl delete -f install/kubernetes/istio-demo.yaml
   popd
 }
