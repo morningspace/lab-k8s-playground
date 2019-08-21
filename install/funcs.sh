@@ -26,10 +26,10 @@ function wait_for_app {
   local app_name=$2
   local app_labels=("${@:3}")
   local num_tries=500
-  echo "* Waiting for $app_name to be up..."
+  target::step "Waiting for $app_name to be up"
   while ! is_app_ready_by_labels $namespace ${app_labels[@]}; do
     if ((--num_tries == 0)); then
-      echo "* Error bringing up $app_name" >&2
+      echo "Error bringing up $app_name" >&2
       exit 1
     fi
     echo -n "." >&2
@@ -72,7 +72,7 @@ function create_portfwd {
 
 function ensure_command {
   if command -v $1 >/dev/null 2>&1; then
-    echo "* $1 detected"
+    echo "$1 detected"
     return 0
   fi
   return 1
@@ -80,7 +80,7 @@ function ensure_command {
 
 function ensure_box {
   if [[ $(uname -s) == Linux ]]; then
-    echo "* vagrant box detected"
+    echo "vagrant box detected"
     return 0
   fi
   return 1
@@ -89,7 +89,7 @@ function ensure_box {
 function ensure_k8s_version {
   local valid="v1.12 v1.13 v1.14 v1.15"
   if [[ -z $K8S_VERSION || ! $valid =~ $K8S_VERSION ]]; then
-    echo "* Kubernetes version not supported, valid values: $valid"
+    echo "Kubernetes version not supported, valid values: $valid"
     return 1
   fi
   return 0
@@ -108,15 +108,14 @@ function target::command {
   if [[ $(type -t $target::$command) == function ]]; then
     $target::$command
   else
-    echo "* function $target::$command not found in $0"
+    echo "function $target::$command not found in $0"
   fi
 }
 
-c_yellow='\033[1;33m'
-c_no='\033[0m'
-
+# yellow => '\033[1;33m'
+# normal => '\033[0m'
 function target::step {
-  echo -e "$c_yellow» $@...$c_no"
+  echo -e "\033[1;33m» $@...\033[0m"
 }
 
 function target::log {

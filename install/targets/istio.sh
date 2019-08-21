@@ -17,6 +17,8 @@ function istio::init {
     mv ~/.lab-k8s-cache/istio{-$ISTIO_VERSION,}
   fi
 
+  target::step "start to install istio"
+
   pushd ~/.lab-k8s-cache/istio
 
   for yaml in install/kubernetes/helm/istio-init/files/crd*yaml; do

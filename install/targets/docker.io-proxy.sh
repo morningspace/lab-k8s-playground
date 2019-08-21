@@ -8,7 +8,7 @@ docker_compose="docker-compose -f docker-compose-registry-proxy.yml"
 
 function docker.io-proxy::up {
   if cat /etc/hosts | grep -q "# $host"; then
-    echo "* $host mapping detected"
+    target::log "$host mapping detected"
   else
     cat << EOF | sudo tee -a /etc/hosts
 # $host

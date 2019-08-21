@@ -6,6 +6,8 @@ source $LAB_HOME/install/funcs.sh
 HOST_IP=${HOST_IP:-127.0.0.1}
 
 function istio-bookinfo::init {
+  target::step "start to install istio-bookinfo"
+
   pushd ~/.lab-k8s-cache/istio
 
   kubectl config set-context --current --namespace=default
