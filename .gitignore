@@ -1,4 +1,5 @@
 install/*cache
 install/logs
+install/targets/endpoints
 .vagrant
 .env
