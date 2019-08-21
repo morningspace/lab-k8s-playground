@@ -54,7 +54,7 @@ else
 fi
 
 # launch targets
-echo "* targets to be launched: [${targets[@]}]"
+echo "Targets to be launched: [${targets[@]}]"
 start_time=$SECONDS
 for target in ${targets[@]} ; do
   command=${target/#*::}
@@ -67,7 +67,7 @@ for target in ${targets[@]} ; do
   if [[ -f $target_shell ]]; then
     $target_shell $command
   else
-    echo "* $target_shell not found"
+    echo "$target_shell not found"
   fi
 done
 elapsed_time=$(($SECONDS - $start_time))

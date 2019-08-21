@@ -7,7 +7,7 @@ host="registry-1.docker.io"
 
 function docker.io::up {
   if cat /etc/hosts | grep -q "# $host"; then
-    echo "* $host mapping detected"
+    target::log "$host mapping detected"
   else
     cat << EOF | sudo tee -a /etc/hosts
 # $host

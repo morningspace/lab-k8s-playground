@@ -19,7 +19,7 @@ case $K8S_VERSION in
 esac
 
 if [[ ! -f ~/.lab-k8s-cache/kubectl-$kubectl_version ]]; then
-  [[ -n $https_proxy ]] && echo "* https_proxy detected: $https_proxy"
+  [[ -n $https_proxy ]] && target::log "https_proxy detected: $https_proxy"
   os=$(uname -s | tr '[:upper:]' '[:lower:]')
   download_url=https://storage.googleapis.com/kubernetes-release/release/$kubectl_version/bin/$os/amd64/kubectl
   curl -sL $download_url -o ~/.lab-k8s-cache/kubectl-$kubectl_version
