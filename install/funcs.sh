@@ -101,7 +101,9 @@ function add_endpoint {
   mkdir -p $endpoints_dir
 
   local group_file=$endpoints_dir/$1
-  [ -z $group_file ] && touch $group_file
+  if [ ! -f $group_file ]; then
+    touch $group_file
+  fi
 
   if ! cat $group_file | grep -q "^$2"; then
     echo "$2,$3,$4" >> $group_file
@@ -112,32 +114,35 @@ function clean_endpoints {
   local group_file=$endpoints_dir/$1
   if [ -z "$2" ] ; then
     rm -f $group_file
-  else
+  elif [ -f "$group_file" ] ; then
     sed -i "/$2/d" $group_file
   fi
 }
 
-function print {
+function print_endpoints {
   local group=$1
   local endpoints=("${@:2}")
 
   target::step "$group endpoints"
 
+  local max_len=0
+  for endpoint in "${endpoints[@]}" ; do
+    IFS=',' read -ra parts <<< "$endpoint"
+    (( ${#parts[0]} > $max_len )) && max_len=${#parts[0]}
+  done
+
   for endpoint in "${endpoints[@]}" ; do
     IFS=',' read -ra parts <<< "$endpoint"
 
-    app="${parts[0]}"
-    url="${parts[1]}"
+    curl -s -k -o /dev/null ${parts[1]}
+    local ret=$?
+    case $ret in
+      0) status="✔";;
+      7|6|52) status="✗";;
+      *) status="?";;
+    esac
 
-    curl -s -o /dev/null $url
- 
-    if [[ $? == 7 ]]; then
-      status="✗"
-    else
-      status="✔"
-    fi
-
-    printf "%s %14s: %s\n" $status "$app" $url
+    printf "%s %`echo $max_len`s: %s %s\n" $status "${parts[@]}"
   done
 }
 

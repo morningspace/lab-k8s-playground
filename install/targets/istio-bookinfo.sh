@@ -19,7 +19,7 @@ function istio-bookinfo::init {
     "app=details,version=v1" "app=productpage,version=v1" "app=ratings,version=v1" \
     "app=reviews,version=v1" "app=reviews,version=v2" "app=reviews,version=v3"
 
-  add_endpoint "istio" "Istio Bookinfo" "http://$HOST_IP:31380/productpage" "HC"
+  add_endpoint "istio" "Istio Bookinfo" "http://$HOST_IP:31380/productpage"
 
   popd
 }
