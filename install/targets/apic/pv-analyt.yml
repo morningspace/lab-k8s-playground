@@ -5,7 +5,7 @@ metadata:
   name: apic-ana-data
 spec:
   capacity:
-    storage: @@data_storage_size_gb
+    storage: @@data_storage_size_gbGi
   storageClassName: apic-local-storage
   local:
     path: /var/lib/elasticsearch
@@ -26,7 +26,7 @@ metadata:
   name: apic-ana-master-data
 spec:
   capacity:
-    storage: @@master_storage_size_gb
+    storage: @@master_storage_size_gbGi
   storageClassName: apic-local-storage
   local:
     path: /var/lib/elasticsearch

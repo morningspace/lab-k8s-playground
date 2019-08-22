@@ -4,7 +4,7 @@ metadata:
   name: apic-ptl-db
 spec:
   capacity:
-    storage: @@db_storage_size_gb
+    storage: @@db_storage_size_gbGi
   storageClassName: apic-local-storage
   local:
     path: /var/lib/mysqldata
@@ -25,7 +25,7 @@ metadata:
   name: apic-ptl-dblogs
 spec:
   capacity:
-    storage: @@db_logs_storage_size_gb
+    storage: @@db_logs_storage_size_gbGi
   storageClassName: apic-local-storage
   local:
     path: /var/log/mysqllog
@@ -46,7 +46,7 @@ metadata:
   name: apic-ptl-web
 spec:
   capacity:
-    storage: @@www_storage_size_gb
+    storage: @@www_storage_size_gbGi
   storageClassName: apic-local-storage
   local:
     path: /web
@@ -67,7 +67,7 @@ metadata:
   name: apic-ptl-backups
 spec:
   capacity:
-    storage: @@backup_storage_size_gb
+    storage: @@backup_storage_size_gbGi
   storageClassName: apic-local-storage
   local:
     path: /var/aegir/backups
@@ -88,7 +88,7 @@ metadata:
   name: apic-ptl-admin
 spec:
   capacity:
-    storage: @@admin_storage_size_gb
+    storage: @@admin_storage_size_gbGi
   storageClassName: apic-local-storage
   local:
     path: /var/devportal
