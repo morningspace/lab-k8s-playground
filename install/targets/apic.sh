@@ -328,7 +328,18 @@ function apic::init {
   install_mgmt
   install_ingress
 
-  popd >/dev/null
+  # Gateway
+  add_endpoint "apic" "Gatway Management Endpoint" "https://$apic_gw_service"
+  add_endpoint "apic" "Gatway API Endpoint Base" "https://$api_gateway"
+  # Portoal
+  add_endpoint "apic" "Portal Management Endpoint" "https://$portal_admin"
+  add_endpoint "apic" "Portal Website URL" "https://$portal_www"
+  # Analytics
+  add_endpoint "apic" "Analytics Management Endpoint" "https://$analytics_client"
+  # Management
+  add_endpoint "apic" "Cloud Manager UI" "https://$cloud_admin_ui" "(default usr/pwd: admin/7iron-hide)"
+
+  # popd >/dev/null
 }
 
 function apic::validate {
@@ -354,6 +365,8 @@ function apic::validate {
 }
 
 function apic::clean {
+  clean_endpoints "apic"
+
   target::step "delete namespace $apic_ns"
   (kubectl get namespace | grep -q $apic_ns) && \
   kubectl delete namespace $apic_ns
@@ -368,27 +381,6 @@ function apic::clean {
 
   target::step "clean apic project"
   rm -rf $APIC_PROJECT_HOME
-}
-
-function apic::endpoints {
-  local endpoints=(
-    # Gateway
-    "Gatway Management Endpoint|https://$apic_gw_service"
-    "Gatway API Endpoint Base|https://$api_gateway"
-    # Portoal
-    "Portal Management Endpoint|https://$portal_admin"
-    "Portal Website URL|https://$portal_www"
-    # Analytics
-    "Analytics Management Endpoint|https://$analytics_client"
-    # Management
-    "Cloud Manager UI|https://$cloud_admin_ui (default usr/pwd: admin/7iron-hide)"
-  )
-  
-  for endpoint in "${endpoints[@]}" ; do
-    app=${endpoint/%|*}
-    url=${endpoint/#*|}
-    printf "%30s: %s\n" "$app" "$url"
-  done
 }
 
 function apic::portforward {
