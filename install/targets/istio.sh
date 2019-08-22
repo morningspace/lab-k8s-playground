@@ -31,10 +31,10 @@ function istio::init {
 
   wait_for_app "istio-system" "istio" "app=istio-ingressgateway"
 
-  add_endpoint "istio" "Grafana" "http://$HOST_IP:3000" "HC"
-  add_endpoint "istio" "Kiali" "http://$HOST_IP:20001" "HC"
-  add_endpoint "istio" "Jaeger" "http://$HOST_IP:15032" "HC"
-  add_endpoint "istio" "Prometheus" "http://$HOST_IP:9090" "HC"
+  add_endpoint "istio" "Grafana" "http://$HOST_IP:3000"
+  add_endpoint "istio" "Kiali" "http://$HOST_IP:20001"
+  add_endpoint "istio" "Jaeger" "http://$HOST_IP:15032"
+  add_endpoint "istio" "Prometheus" "http://$HOST_IP:9090"
 
   popd
 }
