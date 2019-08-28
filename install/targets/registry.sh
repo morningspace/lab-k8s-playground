@@ -108,8 +108,7 @@ EOF
     local mirrored=0
     if [[ $IS_IN_CHINA == 1 && ${registries_mirrored[@]} =~ $registry ]]; then
       registry=morningspace
-      repository=${repository/\//-}
-      image=$registry/$repository
+      image=$registry/${repository/\//-}
       mirrored=1
     fi
 
