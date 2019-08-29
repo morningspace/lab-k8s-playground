@@ -4,7 +4,7 @@ LAB_HOME=${LAB_HOME:-/vagrant}
 source $LAB_HOME/install/funcs.sh
 
 ensure_command "docker" && exit
-ensure_box || exit
+ensure_os Linux || exit
 
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"

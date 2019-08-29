@@ -3,8 +3,6 @@
 LAB_HOME=${LAB_HOME:-/vagrant}
 source $LAB_HOME/install/funcs.sh
 
-ensure_box && is_in_box=1 || is_in_box=0
-
 ########################
 # kubectl autocompletion
 ########################
@@ -57,7 +55,7 @@ fi
 ########################
 # kube-shell
 ########################
-if [[ $is_in_box == 1 ]]; then
+if ensure_os Linux; then
   target::step "start to install kube-shell"
   if [[ ! -f ~/.lab-k8s-cache/get-pip.py ]]; then
     curl -sLo ~/.lab-k8s-cache/get-pip.py https://bootstrap.pypa.io/get-pip.py
@@ -72,17 +70,20 @@ fi
 ########################
 # kubebox
 ########################
-if [[ $is_in_box == 1 ]]; then
-  target::step "start to install kubebox"
-  if [[ ! -f ~/.lab-k8s-cache/kubebox ]]; then
-    curl -sLo ~/.lab-k8s-cache/kubebox \
-      https://github.com/astefanutti/kubebox/releases/download/v0.5.0/kubebox-linux
-  fi
-  if ! ensure_command "kubebox"; then
-    sudo ln -sf ~/.lab-k8s-cache/kubebox /usr/local/bin/kubebox
-    sudo chmod +x /usr/local/bin/kubebox
-    target::log "kubebox installed"
-  fi
+target::step "start to install kubebox"
+os=$(uname -s)
+case $os in
+  "Linux") kubebox_cmd="kubebox-linux";;
+  "Darwin") kubebox_cmd="kubebox-macos";;
+esac
+if [[ ! -f ~/.lab-k8s-cache/kubebox ]]; then
+  curl -sLo ~/.lab-k8s-cache/kubebox \
+    https://github.com/astefanutti/kubebox/releases/download/v0.5.0/$kubebox_cmd
+fi
+if ! ensure_command "kubebox"; then
+  sudo ln -sf ~/.lab-k8s-cache/kubebox /usr/local/bin/kubebox
+  sudo chmod +x /usr/local/bin/kubebox
+  target::log "kubebox installed"
 fi
 
 ########################
