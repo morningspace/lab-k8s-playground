@@ -22,4 +22,18 @@ istio_images=(
   istio/examples-bookinfo-reviews-v3:1.12.0
 )
 
+ingress_images=(
+  # ingress
+  quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.25.1
+  k8s.gcr.io/defaultbackend-amd64:1.5
+)
+
+# Add your own images here, e.g.
+# my_images=(
+#   busybox
+# )
+#
+# Then, append to images array
+
 images+=(${istio_images[@]})
+images+=(${ingress_images[@]})
