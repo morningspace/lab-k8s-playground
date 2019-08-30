@@ -80,9 +80,9 @@ function ensure_command {
   return 1
 }
 
-function ensure_box {
-  if [[ $(uname -s) == Linux ]]; then
-    echo "vagrant box detected"
+function ensure_os {
+  if [[ $(uname -s) == $1 ]]; then
+    echo "OS: $1 detected"
     return 0
   fi
   return 1

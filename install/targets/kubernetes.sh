@@ -15,7 +15,7 @@ function kubernetes::init {
   DASHBOARD_URL=$HOME/.lab-k8s-cache/kubernetes-dashboard.yaml
   SKIP_SNAPSHOT=1
 
-  if ensure_box; then
+  if ensure_os Linux; then
     cat /etc/environment | grep -q "^# for kubeadm-dind-clusters$" || \
     cat << EOF | sudo tee -a /etc/environment
 # for kubeadm-dind-clusters

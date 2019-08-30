@@ -1,4 +1,4 @@
-images+=(
+istio_images=(
   # istio
   istio/citadel:1.2.2
   istio/galley:1.2.2
@@ -25,3 +25,19 @@ images+=(
   quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.25.0
   k8s.gcr.io/defaultbackend-amd64:1.5
 )
+
+ingress_images=(
+  # ingress
+  quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.25.1
+  k8s.gcr.io/defaultbackend-amd64:1.5
+)
+
+# Add your own images here, e.g.
+# my_images=(
+#   busybox
+# )
+#
+# Then, append to images array
+
+images+=(${istio_images[@]})
+images+=(${ingress_images[@]})
