@@ -7,7 +7,7 @@ docker_compose="docker-compose -f docker-compose-registry-proxy.yml"
 
 function registry-proxy::init {
   # set up private registries
-  ensure_box
+  ensure_os Linux
   if [[ $? == 0 && ! -f /etc/docker/daemon.json ]]; then
     cat << EOF | sudo tee /etc/docker/daemon.json
 {

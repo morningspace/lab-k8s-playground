@@ -76,7 +76,7 @@ function registry::init {
 
   # set up private registries
   my_registry=127.0.0.1:5000
-  ensure_box
+  ensure_os Linux
   if [[ $? == 0 && ! -f /etc/docker/daemon.json ]]; then
     cat << EOF | sudo tee /etc/docker/daemon.json
 {
@@ -116,16 +116,16 @@ EOF
       image=library/$repository
     fi
 
-    sudo docker pull $image
+    local target_image=$my_registry/$image
     if [[ ${registries_not_dockerhub[@]} =~ $registry || $mirrored == 1 ]]; then
-      sudo docker tag $image $my_registry/$repository
-      sudo docker push $my_registry/$repository
-      sudo docker rmi $my_registry/$repository
-    else
-      sudo docker tag $image $my_registry/$image
-      sudo docker push $my_registry/$image
-      sudo docker rmi $my_registry/$image
+      target_image=$my_registry/$repository
     fi
+
+    target::step "$image ➞ $target_image"
+    sudo docker pull $image
+    sudo docker tag $image $target_image
+    sudo docker push $target_image
+    sudo docker rmi $target_image
   done  
 
   docker-compose up -d --scale docker.io=0
