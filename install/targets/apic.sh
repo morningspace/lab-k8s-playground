@@ -26,14 +26,17 @@ function ensure_images {
     target::log "$APIC_INSTALL_HOME not found"
     exit 255
   else
-    ptl_images_tgz=$(ls $APIC_INSTALL_HOME/portal*gz)
-    mgmt_images_tgz=$(ls $APIC_INSTALL_HOME/management*gz)
-    analyt_images_tgz=$(ls $APIC_INSTALL_HOME/analytics*gz)
-    gwy_images_tgz=$(ls $APIC_INSTALL_HOME/idg*gz)
-    target::log "$ptl_images_tgz"
-    target::log "$mgmt_images_tgz"
-    target::log "$analyt_images_tgz"
-    target::log "$gwy_images_tgz"
+    ensure_tgz portal
+    ptl_images_tgz=$images_tgz
+    
+    ensure_tgz management
+    mgmt_images_tgz=$images_tgz
+
+    ensure_tgz analytics
+    analyt_images_tgz=$images_tgz
+
+    ensure_tgz idg
+    gwy_images_tgz=$images_tgz
   fi
 }
 
@@ -58,6 +61,16 @@ function ensure_namespace {
   else
     kubectl create namespace $apic_ns
   fi
+}
+
+function ensure_tgz {
+  images_tgz=$(ls $APIC_INSTALL_HOME/$1*gz)
+  [ $? != 0 ] && exit 255
+
+  target::log "validate $images_tgz"
+
+  tar -tzf $images_tgz >/dev/null
+  [ $? != 0 ] && target::log "$images_tgz is invalid" && exit 255
 }
 
 function init_project {
@@ -103,6 +116,7 @@ function load_images {
   load_image $gwy_image $image_repository:$image_tag
 
   target::step "load busybox image"
+  docker pull busybox:1.29-glibc
   load_image busybox:1.29-glibc busybox:1.29-glibc
 }
 
@@ -314,7 +328,6 @@ function install_ingress {
 
 function apic::init {
   ensure_nodes
-  ensure_images
   ensure_apicup
   ensure_namespace
 
@@ -322,8 +335,11 @@ function apic::init {
 
   pushd $APIC_PROJECT_HOME >/dev/null
 
-  [ -z $apic_skip_load_images ] && \
-  load_images
+  if [[ -z $apic_skip_load_images || $apic_skip_load_images == 0 ]]; then
+    ensure_images
+    load_images
+  fi
+
   install_gwy
   install_ptl
   install_analyt
