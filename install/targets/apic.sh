@@ -331,8 +331,8 @@ function apic::init {
   install_ingress
 
   # Gateway
-  add_endpoint "apic" "Gatway Management Endpoint" "https://$apic_gw_service"
-  add_endpoint "apic" "Gatway API Endpoint Base" "https://$api_gateway"
+  add_endpoint "apic" "Gateway Management Endpoint" "https://$apic_gw_service"
+  add_endpoint "apic" "Gateway API Endpoint Base" "https://$api_gateway"
   # Portoal
   add_endpoint "apic" "Portal Management Endpoint" "https://$portal_admin"
   add_endpoint "apic" "Portal Website URL" "https://$portal_www"
