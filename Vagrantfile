@@ -4,7 +4,7 @@ cpus = '6'
 memory = '8192'
 
 # targets to be run, can be customized as your need
-targets = "default helm tools"
+targets = "init default helm tools"
 
 # set Kubernetes version, supported versions: v1.12, v1.13, v1.14, v1.15
 k8s_version = "v1.14"
@@ -31,41 +31,6 @@ echo "$(cat #{user_home}/.ssh/authorized_keys)" >> #{user_home}/.ssh/id_rsa.pub
 echo 'StrictHostKeyChecking no\nUserKnownHostsFile /dev/null\nLogLevel QUIET' >> #{user_home}/.ssh/config
 SCRIPT
 
-configure_lab_env = <<SCRIPT
-# install web terminal
-apt-get install -y shellinabox
-
-# install bash completion
-apt-get install -y bash-completion
-
-# launch autocompletion
-cat << EOF >> #{user_home}/.bashrc
-
-source /usr/share/bash-completion/bash_completion
-
-# launch autocompletion
-source /vagrant/install/completion.sh
-EOF
-
-# configure env vars
-cat << EOF >> /etc/environment
-
-# environment variables for lab-k8s-playground
-export K8S_VERSION=#{k8s_version}
-export NUM_NODES=#{num_nodes}
-export HOST_IP=#{host_ip}
-export IS_IN_CHINA=#{is_in_china}
-export https_proxy=#{https_proxy}
-EOF
-
-# create link to launch.sh
-ln -sf /vagrant/install/launch.sh /usr/local/bin/launch
-
-# add self-signed ca cert for secured private registry access
-cp /vagrant/install/certs/lab-ca.pem.crt /usr/local/share/ca-certificates
-update-ca-certificates
-SCRIPT
-
 Vagrant.configure(2) do |config|
   config.vm.box = "bento/ubuntu-16.04"
   config.vm.box_version = "201906.18.0"
@@ -86,7 +51,6 @@ Vagrant.configure(2) do |config|
   config.vm.network "private_network", ip: "#{host_ip}"
 
   config.vm.provision "shell", inline: configure_ssh_keys, keep_color: true, name: "configure_ssh_keys"
-  config.vm.provision "shell", inline: configure_lab_env, keep_color: true, name: "configure_lab_env"
   config.vm.provision :shell do |s|
     s.path = 'install/launch.sh'
     s.name = 'launch_targets'
@@ -94,6 +58,7 @@ Vagrant.configure(2) do |config|
     s.keep_color = true
     s.args = "#{targets}"
     s.env = {
+      "LAB_HOME" => "/vagrant",
       "K8S_VERSION" => "#{k8s_version}",
       "NUM_NODES" => "#{num_nodes}",
       "HOST_IP" => "#{host_ip}",

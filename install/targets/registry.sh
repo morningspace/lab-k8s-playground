@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LAB_HOME=${LAB_HOME:-/vagrant}
+LAB_HOME=${LAB_HOME:-`pwd`}
 source $LAB_HOME/install/funcs.sh
 
 function registry::init {
@@ -76,14 +76,12 @@ function registry::init {
 
   # set up private registries
   my_registry=127.0.0.1:5000
-  ensure_os Linux
-  if [[ $? == 0 && ! -f /etc/docker/daemon.json ]]; then
+  if ensure_os Linux && [ ! -f /etc/docker/daemon.json ]; then
     cat << EOF | sudo tee /etc/docker/daemon.json
 {
   "insecure-registries" : ["$my_registry"]
 }
 EOF
-
     sudo systemctl daemon-reload
     sudo systemctl restart docker
     sudo systemctl show --property=Environment docker
@@ -93,9 +91,9 @@ EOF
   sudo docker network create net-registries
   sudo docker volume create vol-registries
 
-  # start to pull images
   pushd $LAB_HOME
 
+  target::step "take registry mr.io up"
   sudo docker-compose up -d mr.io
 
   sleep 5
@@ -128,20 +126,22 @@ EOF
     sudo docker rmi $target_image
   done  
 
-  docker-compose up -d --scale docker.io=0
+  sudo docker-compose up -d --scale docker.io=0
 
   popd
 }
 
 function registry::up {
   pushd $LAB_HOME
-  docker-compose up -d --scale docker.io=0
+  target::step "take registries up"
+  sudo docker-compose up -d --scale docker.io=0
   popd
 }
 
 function registry::down {
   pushd $LAB_HOME
-  docker-compose down
+  target::step "take registries down"
+  sudo docker-compose down
   popd
 }
 

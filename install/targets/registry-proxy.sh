@@ -1,9 +1,9 @@
 #!/bin/bash
 
-LAB_HOME=${LAB_HOME:-/vagrant}
+LAB_HOME=${LAB_HOME:-`pwd`}
 source $LAB_HOME/install/funcs.sh
 
-docker_compose="docker-compose -f docker-compose-registry-proxy.yml"
+docker_compose="sudo docker-compose -f docker-compose-registry-proxy.yml"
 
 function registry-proxy::init {
   # set up private registries
@@ -28,7 +28,7 @@ EOF
 
   REGISTRY_REMOTE=${REGISTRY_REMOTE:-$(netstat -rn | grep "^0.0.0.0 " | cut -d " " -f10)}
   echo "REGISTRY_PROXY_REMOTEURL=http://$REGISTRY_REMOTE:5000" >.env
-  sudo $docker_compose up -d --scale docker.io.proxy=0
+  $docker_compose up -d --scale docker.io.proxy=0
 
   popd
 }

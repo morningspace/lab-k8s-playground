@@ -11,7 +11,7 @@ The `launch` utility supports many pre-defined targets. The below list includes 
 |docker					| Handle docker installation
 |docker-compose	| Handle docker-compose installation
 |docker.io			| Launch a secured private registry to mimic Docker Hub
-|docker.io.proxy| Launch a secured private registry to mimic Docker Hub and work as a proxy that connects to its remote peer
+|docker.io-proxy| Launch a secured private registry to mimic Docker Hub and work as a proxy that connects to its remote peer
 |endpoints			| Print all endpoints that can be accessed in web browser with their healthiness states
 |helm						| Handle helm installation
 |istio					| Handle istio installation

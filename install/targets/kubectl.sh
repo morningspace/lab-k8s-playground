@@ -1,8 +1,9 @@
 #!/bin/bash
 
-LAB_HOME=${LAB_HOME:-/vagrant}
+LAB_HOME=${LAB_HOME:-`pwd`}
 source $LAB_HOME/install/funcs.sh
 
+target::step "start to install kubectl"
 ensure_command "kubectl" && exit
 ensure_k8s_version || exit
 
@@ -18,12 +19,17 @@ case $K8S_VERSION in
     kubectl_version="v1.15.1";;
 esac
 
-if [[ ! -f ~/.lab-k8s-cache/kubectl-$kubectl_version ]]; then
+os=$(uname -s | tr '[:upper:]' '[:lower:]')
+executable="kubectl-$kubectl_version-$os"
+
+if [[ ! -f ~/.launch-cache/$executable ]]; then
+  target::step "download kubectl"
   [[ -n $https_proxy ]] && target::log "https_proxy detected: $https_proxy"
-  os=$(uname -s | tr '[:upper:]' '[:lower:]')
   download_url=https://storage.googleapis.com/kubernetes-release/release/$kubectl_version/bin/$os/amd64/kubectl
-  curl -sL $download_url -o ~/.lab-k8s-cache/kubectl-$kubectl_version
+  curl -sSL $download_url -o ~/.launch-cache/$executable
+  sudo chmod +x ~/.launch-cache/$executable
 fi
 
-sudo ln -sf ~/.lab-k8s-cache/kubectl-$kubectl_version /usr/local/bin/kubectl
-sudo chmod +x /usr/local/bin/kubectl
+target::step "create link to kubectl"
+sudo ln -sf ~/.launch-cache/$executable /usr/bin/kubectl
+sudo ln -sf ~/.launch-cache/$executable /usr/sbin/kubectl

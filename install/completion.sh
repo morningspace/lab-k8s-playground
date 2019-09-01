@@ -1,6 +1,6 @@
 #!/bin/bash
 
-LAB_HOME=${LAB_HOME:-/vagrant}
+LAB_HOME=${LAB_HOME:-`pwd`}
 INSTALL_HOME=$LAB_HOME/install
 
 targets=(base default)

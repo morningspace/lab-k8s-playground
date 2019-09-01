@@ -1,8 +1,9 @@
 #!/bin/bash
 
-LAB_HOME=${LAB_HOME:-/vagrant}
+LAB_HOME=${LAB_HOME:-`pwd`}
 source $LAB_HOME/install/funcs.sh
 
+target::step "start to install helm"
 ensure_k8s_version || exit
 
 # set version per kubernetes version
@@ -18,19 +19,27 @@ case $K8S_VERSION in
 esac
 
 os=$(uname -s | tr '[:upper:]' '[:lower:]')
-helm_tgz="helm-$HELM_VERSION-$os-amd64.tar.gz"
-if [[ ! -f ~/.lab-k8s-cache/$helm_tgz ]]; then
-  curl -sL https://get.helm.sh/$helm_tgz -o ~/.lab-k8s-cache/$helm_tgz
+package="helm-$HELM_VERSION-$os-amd64"
+
+if [ ! -f ~/.launch-cache/$package.tar.gz ]; then
+  target::step "download helm"
+  curl -sSL https://get.helm.sh/$package.tar.gz -o ~/.launch-cache/$package.tar.gz
 fi
-tar -zxf ~/.lab-k8s-cache/$helm_tgz
 
-sudo mv ./$os-amd64/helm /usr/local/bin/helm
-rm -rf ./$os-amd64
+if [ ! -d ~/.launch-cache/$package ]; then
+  target::step "extract helm package"
+  mkdir ~/.launch-cache/$package
+  tar -zxf ~/.launch-cache/$package.tar.gz -C ~/.launch-cache/$package
+fi
 
+target::step "create link to helm"
+sudo ln -sf ~/.launch-cache/$package/$os-amd64/helm /usr/bin/helm
+sudo ln -sf ~/.launch-cache/$package/$os-amd64/helm /usr/sbin/helm
+
+target::step "run helm init"
 if [[ $IS_IN_CHINA == 1 ]]; then
-  tiller_image="mr.io/kubernetes-helm-tiller:$HELM_VERSION"
   stable_repo="https://kubernetes.oss-cn-hangzhou.aliyuncs.com/charts"
-  helm init -i $tiller_image --stable-repo-url $stable_repo
+  helm init --stable-repo-url $stable_repo
 
   cat ~/.bashrc | grep -q "^# helm hacks$" || \
   cat << EOF >>~/.bashrc

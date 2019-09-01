@@ -97,6 +97,14 @@ function ensure_k8s_version {
   return 0
 }
 
+function detect_os {
+  local os=$(uname -s | tr '[:upper:]' '[:lower:]')
+  if [ $os == "linux" ] && [ -r /etc/os-release ] ; then
+    os="$(. /etc/os-release && echo "$ID")"
+  fi
+  echo $os
+}
+
 function add_endpoint {
   mkdir -p $endpoints_dir
 
@@ -134,6 +142,7 @@ function print_endpoints {
   for endpoint in "${endpoints[@]}" ; do
     IFS=',' read -ra parts <<< "$endpoint"
 
+    parts[1]=${parts[1]/@@HOST_IP/$HOST_IP}
     curl -s -k -o /dev/null ${parts[1]}
     local ret=$?
     case $ret in
