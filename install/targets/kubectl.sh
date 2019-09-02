@@ -3,7 +3,7 @@
 LAB_HOME=${LAB_HOME:-`pwd`}
 source $LAB_HOME/install/funcs.sh
 
-target::step "start to install kubectl"
+target::step "Start to install kubectl"
 ensure_command "kubectl" && exit
 ensure_k8s_version || exit
 
@@ -23,13 +23,13 @@ os=$(uname -s | tr '[:upper:]' '[:lower:]')
 executable="kubectl-$kubectl_version-$os"
 
 if [[ ! -f ~/.launch-cache/$executable ]]; then
-  target::step "download kubectl"
+  target::step "Download kubectl"
   [[ -n $https_proxy ]] && target::log "https_proxy detected: $https_proxy"
   download_url=https://storage.googleapis.com/kubernetes-release/release/$kubectl_version/bin/$os/amd64/kubectl
   curl -sSL $download_url -o ~/.launch-cache/$executable
   sudo chmod +x ~/.launch-cache/$executable
 fi
 
-target::step "create link to kubectl"
+target::step "Create link to kubectl"
 sudo ln -sf ~/.launch-cache/$executable /usr/bin/kubectl
 sudo ln -sf ~/.launch-cache/$executable /usr/sbin/kubectl

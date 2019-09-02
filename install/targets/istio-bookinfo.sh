@@ -6,7 +6,7 @@ source $LAB_HOME/install/funcs.sh
 HOST_IP=${HOST_IP:-127.0.0.1}
 
 function istio-bookinfo::init {
-  target::step "start to install istio-bookinfo"
+  target::step "Start to install istio-bookinfo"
 
   pushd ~/.launch-cache/istio
 

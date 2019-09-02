@@ -6,7 +6,7 @@ source $LAB_HOME/install/funcs.sh
 ########################
 # kubectl autocompletion
 ########################
-target::step "start to install kubectl autocompletion"
+target::step "Start to install kubectl autocompletion"
 if cat ~/.bashrc | grep -q "^# kubectl autocompletion$"; then
   target::log "kubectl autocompletion detected"
 else
@@ -21,7 +21,7 @@ fi
 ########################
 # kubectl aliases
 ########################
-target::step "start to install kubectl aliases"
+target::step "Start to install kubectl aliases"
 if [[ ! -f ~/.launch-cache/.kubectl_aliases ]]; then
   curl -sSLo ~/.launch-cache/.kubectl_aliases \
     https://raw.githubusercontent.com/ahmetb/kubectl-aliases/master/.kubectl_aliases
@@ -41,7 +41,7 @@ fi
 ########################
 # kubens
 ########################
-target::step "start to install kubens"
+target::step "Start to install kubens"
 if [[ ! -f ~/.launch-cache/kubens ]]; then
   curl -sSLo ~/.launch-cache/kubens \
     https://raw.githubusercontent.com/ahmetb/kubectx/master/kubens
@@ -57,7 +57,7 @@ fi
 # kube-shell
 ########################
 if [ $(uname -s) == Linux ]; then
-  target::step "start to install kube-shell"
+  target::step "Start to install kube-shell"
   if [[ ! -f ~/.launch-cache/get-pip.py ]]; then
     curl -sSLo ~/.launch-cache/get-pip.py https://bootstrap.pypa.io/get-pip.py
   fi
@@ -71,7 +71,7 @@ fi
 ########################
 # kubebox
 ########################
-target::step "start to install kubebox"
+target::step "Start to install kubebox"
 case $(uname -s) in
   "Linux") kubebox_cmd="kubebox-linux";;
   "Darwin") kubebox_cmd="kubebox-macos";;
@@ -90,7 +90,7 @@ fi
 ########################
 # kubetail
 ########################
-target::step "start to install kubetail"
+target::step "Start to install kubetail"
 if [[ ! -f ~/.launch-cache/kubetail ]]; then
   curl -sSLo ~/.launch-cache/kubetail \
     https://raw.githubusercontent.com/johanhaleby/kubetail/master/kubetail

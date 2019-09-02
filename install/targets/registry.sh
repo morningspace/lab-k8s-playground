@@ -76,7 +76,7 @@ function registry::init {
 
   my_registry=127.0.0.1:5000
   if ensure_os Linux && [ ! -f /etc/docker/daemon.json ]; then
-    target::step "set up insecure registries"
+    target::step "Set up insecure registries"
 
     cat << EOF | sudo tee /etc/docker/daemon.json
 {
@@ -88,14 +88,14 @@ EOF
     sudo systemctl show --property=Environment docker
   fi
 
-  target::step "set up registries network and volume"
+  target::step "Set up registries network and volume"
   sudo docker network inspect net-registries &>/dev/null || \
   sudo docker network create net-registries
   sudo docker volume create vol-registries
 
   pushd $LAB_HOME
 
-  target::step "take registry mr.io up"
+  target::step "Take registry mr.io up"
   sudo docker-compose up -d mr.io
 
   sleep 5
@@ -128,40 +128,48 @@ EOF
     sudo docker rmi $target_image
   done  
 
-  target::step "take other registries up"
-  sudo docker-compose up -d
+  target::step "Take other registries up"
+  sudo docker-compose up -d --scale socat=0
 
   popd
 }
 
 function registry::up {
   pushd $LAB_HOME
-  target::step "take all registries up"
-  sudo docker-compose up -d
+  target::step "Take all registries up"
+  sudo docker-compose up -d --scale socat=0
   popd
 }
 
 function registry::down {
   pushd $LAB_HOME
-  target::step "take all registries down"
+  target::step "Take all registries down"
   sudo docker-compose down
   popd
 }
 
 docker_io_host="registry-1.docker.io"
 function registry::docker.io {
-  target::step "set up docker.io"
+  pushd $LAB_HOME
 
   if cat /etc/hosts | grep -q "# $docker_io_host"; then
-    target::log "$docker_io_host mapping detected in /etc/hosts, removing it..."
+    target::step "Disable local docker.io"
+    sudo docker-compose stop socat
+
+    target::step "Remove $docker_io_host mapping from /etc/hosts"
     sudo sed -i.bak "/$docker_io_host/d" /etc/hosts
   else
-    target::log "$docker_io_host mapping not detected, adding it..."
+    target::step "Enable local docker.io"
+    sudo COMPOSE_IGNORE_ORPHANS=True docker-compose up -d socat
+
+    target::step "Add $docker_io_host mapping into /etc/hosts"
     cat << EOF | sudo tee -a /etc/hosts
 # $docker_io_host
 127.0.0.1	$docker_io_host
 EOF
   fi
+
+  popd
 }
 
 target::command $@

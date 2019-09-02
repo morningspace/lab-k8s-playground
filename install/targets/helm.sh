@@ -3,7 +3,7 @@
 LAB_HOME=${LAB_HOME:-`pwd`}
 source $LAB_HOME/install/funcs.sh
 
-target::step "start to install helm"
+target::step "Start to install helm"
 ensure_k8s_version || exit
 
 # set version per kubernetes version
@@ -22,21 +22,21 @@ os=$(uname -s | tr '[:upper:]' '[:lower:]')
 package="helm-$HELM_VERSION-$os-amd64"
 
 if [ ! -f ~/.launch-cache/$package.tar.gz ]; then
-  target::step "download helm"
+  target::step "Download helm"
   curl -sSL https://get.helm.sh/$package.tar.gz -o ~/.launch-cache/$package.tar.gz
 fi
 
 if [ ! -d ~/.launch-cache/$package ]; then
-  target::step "extract helm package"
+  target::step "Extract helm package"
   mkdir ~/.launch-cache/$package
   tar -zxf ~/.launch-cache/$package.tar.gz -C ~/.launch-cache/$package
 fi
 
-target::step "create link to helm"
+target::step "Create link to helm"
 sudo ln -sf ~/.launch-cache/$package/$os-amd64/helm /usr/bin/helm
 sudo ln -sf ~/.launch-cache/$package/$os-amd64/helm /usr/sbin/helm
 
-target::step "run helm init"
+target::step "Run helm init"
 if [[ $IS_IN_CHINA == 1 ]]; then
   stable_repo="https://kubernetes.oss-cn-hangzhou.aliyuncs.com/charts"
   helm init --stable-repo-url $stable_repo

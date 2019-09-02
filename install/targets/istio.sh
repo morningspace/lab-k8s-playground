@@ -12,17 +12,17 @@ esac
 
 function istio::init {
   if [ ! -f ~/.launch-cache/$package.tar.gz ]; then
-    target::step "download istio"
+    target::step "Download istio"
     download_url=https://github.com/istio/istio/releases/download/$ISTIO_VERSION/$package.tar.gz
     curl -sSL $download_url -o ~/.launch-cache/$package.tar.gz
   fi
   if [ ! -d ~/.launch-cache/istio ]; then
-    target::step "extract istio package"
+    target::step "Extract istio package"
     tar -zxf ~/.launch-cache/$package.tar.gz -C ~/.launch-cache/
     mv ~/.launch-cache/istio{-$ISTIO_VERSION,}
   fi
 
-  target::step "start to install istio"
+  target::step "Start to install istio"
   pushd ~/.launch-cache/istio
 
   for yaml in install/kubernetes/helm/istio-init/files/crd*yaml; do

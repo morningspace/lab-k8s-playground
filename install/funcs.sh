@@ -29,7 +29,7 @@ function wait_for_app {
   local app_name=$2
   local app_labels=("${@:3}")
   local num_tries=500
-  target::step "waiting for $app_name to be up"
+  target::step "Waiting for $app_name to be up"
   while ! is_app_ready_by_labels $namespace ${app_labels[@]}; do
     if ((--num_tries == 0)); then
       echo "error bringing up $app_name" >&2
