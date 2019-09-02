@@ -6,6 +6,7 @@ APIC_INSTALL_HOME=$INSTALL_HOME/.launch-cache/apic
 APIC_PROJECT_HOME=$APIC_INSTALL_HOME/lab-project
 APIC_DEPLOY_HOME=$INSTALL_HOME/targets/apic
 HOST_IP=${HOST_IP:-127.0.0.1}
+docker_io_host="registry-1.docker.io"
 
 source $INSTALL_HOME/funcs.sh
 source $APIC_DEPLOY_HOME/settings.sh
@@ -101,13 +102,13 @@ function load_images {
   $INSTALL_HOME/launch.sh registry::docker.io
 
   target::step "load portal images"
-  $apicup registry-upload portal $ptl_images_tgz registry-1.docker.io
+  $apicup registry-upload portal $ptl_images_tgz $docker_io_host
 
   target::step "load management images"
-  $apicup registry-upload management $mgmt_images_tgz registry-1.docker.io
+  $apicup registry-upload management $mgmt_images_tgz $docker_io_host
 
   target::step "load analytics images"
-  $apicup registry-upload analytics $analyt_images_tgz registry-1.docker.io
+  $apicup registry-upload analytics $analyt_images_tgz $docker_io_host
 
   $INSTALL_HOME/launch.sh registry::docker.io
 
@@ -401,11 +402,9 @@ function apic::clean {
   rm -rf $APIC_PROJECT_HOME
 }
 
-docker_io_host="registry-1.docker.io"
 function apic::portforward {
-  pushd $LAB_HOME >/dev/null
-  sudo docker-compose stop $docker_io_host
-  popd >/dev/null
+  target::step "try to stop the fake $docker_io_host if running"
+  sudo docker stop $docker_io_host
 
   kill_portfwds "443:443"
   create_portfwd $apic_ns service/ingress-nginx-ingress-controller 443:443
