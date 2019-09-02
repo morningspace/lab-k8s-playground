@@ -1,24 +1,26 @@
 #!/bin/bash
 
-LAB_HOME=${LAB_HOME:-/vagrant}
+LAB_HOME=${LAB_HOME:-`pwd`}
 INSTALL_HOME=$LAB_HOME/install
 source $INSTALL_HOME/funcs.sh
 
 function kubernetes::init {
-  if [[ ! -f ~/.lab-k8s-cache/kubernetes-dashboard.yaml ]]; then
-    download_url=https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy/recommended/kubernetes-dashboard.yaml
-    curl -sL $download_url -o ~/.lab-k8s-cache/kubernetes-dashboard.yaml
+  if [[ ! -f ~/.launch-cache/kubernetes-dashboard.yaml ]]; then
+    target::step "download kubernetes dashboard yaml"
+    download_url=https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy/alternative/kubernetes-dashboard.yaml
+    curl -sSL $download_url -o ~/.launch-cache/kubernetes-dashboard.yaml
   fi
 
   DIND_CUSTOM_VOLUMES=$INSTALL_HOME/certs:/certs
   DIND_CA_CERT_URL=file:////certs/lab-ca.pem.crt
-  DASHBOARD_URL=$HOME/.lab-k8s-cache/kubernetes-dashboard.yaml
+  DASHBOARD_URL=$HOME/.launch-cache/kubernetes-dashboard.yaml
   SKIP_SNAPSHOT=1
 
-  if ensure_os Linux; then
-    cat /etc/environment | grep -q "^# for kubeadm-dind-clusters$" || \
-    cat << EOF | sudo tee -a /etc/environment
-# for kubeadm-dind-clusters
+  if ! cat ~/.bashrc | grep -q "^# For kubeadm-dind-clusters$" ; then
+    target::step "update .bashrc"
+    cat << EOF >> ~/.bashrc
+
+# For kubeadm-dind-clusters
 export DIND_CUSTOM_VOLUMES=$DIND_CUSTOM_VOLUMES
 export DIND_CA_CERT_URL=$DIND_CA_CERT_URL
 export DASHBOARD_URL=$DASHBOARD_URL
@@ -28,19 +30,19 @@ EOF
 
   pushd $LAB_HOME
 
-  sudo -E \
-    K8S_VERSION=$K8S_VERSION \
+  target::step "start to init kubernetes cluster"
+  [ $(uname -s) == "Linux" ] && run_cmd="sg docker -c" || run_cmd="eval"
+  $run_cmd \
+   "K8S_VERSION=$K8S_VERSION \
     NUM_NODES=$NUM_NODES \
     HOST_IP=$HOST_IP \
     DIND_CUSTOM_VOLUMES=$DIND_CUSTOM_VOLUMES \
     DIND_CA_CERT_URL=$DIND_CA_CERT_URL \
     DASHBOARD_URL=$DASHBOARD_URL \
     SKIP_SNAPSHOT=$SKIP_SNAPSHOT \
-  ./dind-cluster-wrapper.sh up
+  ./dind-cluster-wrapper.sh up"
 
   if [[ $? == 0 ]]; then
-    sudo chown -R $USER ~/.kube
-
     cat <<EOF | kubectl replace -f -
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
@@ -61,18 +63,22 @@ EOF
 }
 
 function kubernetes::up {
+  target::step "take kubernetes cluster up"
   pushd $LAB_HOME; SKIP_SNAPSHOT= ./dind-cluster-wrapper.sh up; popd
 }
 
 function kubernetes::down {
+  target::step "take kubernetes cluster down"
   pushd $LAB_HOME; SKIP_SNAPSHOT= ./dind-cluster-wrapper.sh down; popd
 }
 
 function kubernetes::clean {
+  target::step "clean kubernetes cluster"
   pushd $LAB_HOME; SKIP_SNAPSHOT= ./dind-cluster-wrapper.sh clean; popd
 }
 
 function kubernetes::snapshot {
+  target::step "create snapshot for kubernetes cluster"
   pushd $LAB_HOME; SKIP_SNAPSHOT= ./dind-cluster-wrapper.sh snapshot; popd
 }
 

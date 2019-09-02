@@ -401,7 +401,12 @@ function apic::clean {
   rm -rf $APIC_PROJECT_HOME
 }
 
+docker_io_host="registry-1.docker.io"
 function apic::portforward {
+  pushd $LAB_HOME >/dev/null
+  sudo docker-compose stop $docker_io_host
+  popd >/dev/null
+
   kill_portfwds "443:443"
   create_portfwd $apic_ns service/ingress-nginx-ingress-controller 443:443
 }

@@ -144,7 +144,7 @@ Then, re-launch the target `registry` to update registries, so that newly added 
 
 As I mentioned earlier, if we setup private registries to store all images required to launch the cluster, you can even run the cluster in offline mode! By default, most of the pre-defined private registries have been launched to mimic their public peers such as `k8s.gcr.io`, `gcr.io`, `quay.io`. You can also run below command to launch a specific private registry to mimic [Docker Hub](https://hub.docker.com).
 ```shell
-$ launch docker.io
+$ launch registry::docker.io
 ```
 
 After it's finished, you can turn off your network completely, then re-launch some targets such as `kubernetes` to bring the cluster back in offline mode, e.g. let's re-launch kubernetes with helm installed as below:

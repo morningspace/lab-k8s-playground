@@ -28,12 +28,13 @@ ingress_images=(
   k8s.gcr.io/defaultbackend-amd64:1.5
 )
 
+images+=(${istio_images[@]})
+images+=(${ingress_images[@]})
+
 # Add your own images here, e.g.
 # my_images=(
 #   busybox
 # )
-#
-# Then, append to images array
 
-images+=(${istio_images[@]})
-images+=(${ingress_images[@]})
+# Then, append to images array
+# images+=(${my_images[@]})

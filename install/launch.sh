@@ -1,24 +1,19 @@
 #!/bin/bash
 
-LAB_HOME=${LAB_HOME:-/vagrant}
+LAB_HOME=${LAB_HOME:-`pwd`}
 INSTALL_HOME=$LAB_HOME/install
-
-# configure lab cache
-mkdir -p $INSTALL_HOME/.lab-k8s-cache
-ln -sf $INSTALL_HOME/.lab-k8s-cache $HOME/.lab-k8s-cache
 
 # base targets
 base=(
+  "init"
   "docker"
   "docker-compose"
   "kubectl"
 )
 
 # default targets
-default=(
-  "docker"
-  "docker-compose"
-  "kubectl"
+default=(${base[@]})
+default+=(
   "registry"
   "kubernetes"
 )
@@ -43,15 +38,15 @@ EOF
 fi
 
 # resolve targets
-if [[ $1 == base ]]; then
-  targets=${base[@]}
-  targets+=(${@:2})
-elif [[ $1 == default ]]; then
-  targets=${default[@]}
-  targets+=(${@:2})
-else
-  targets=$@
-fi
+for target in $@ ; do
+  if [ $target == "base" ]; then
+    targets+=(${base[@]})
+  elif [ $target == "default" ]; then
+    targets+=(${default[@]})
+  else
+    targets+=($target)
+  fi
+done
 
 # launch targets
 echo "Targets to be launched: [${targets[@]}]"
@@ -65,7 +60,7 @@ for target in ${targets[@]} ; do
   echo "####################################"
   target_shell="$INSTALL_HOME/targets/$target.sh"
   if [[ -f $target_shell ]]; then
-    $target_shell $command
+    LAB_HOME=$LAB_HOME $target_shell $command
   else
     echo "$target_shell not found"
   fi

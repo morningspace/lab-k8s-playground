@@ -3,7 +3,7 @@
 # Sample target
 
 # Load funcs.sh for helper functions
-LAB_HOME=${LAB_HOME:-/vagrant}
+LAB_HOME=${LAB_HOME:-`pwd`}
 source $LAB_HOME/install/funcs.sh
 
 # The first command function
