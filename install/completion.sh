@@ -22,7 +22,7 @@ launch_completions() {
     local shell=${input%::*}
     if [[ ${shells[@]} =~ $shell ]]; then
       input=${input#*::}
-      local pattern="^function $shell::\w\+ {$"
+      local pattern="^function $shell::\S\+ {$"
       local file="$INSTALL_HOME/targets/$shell.sh"
       if [[ -f $file ]]; then
         local funcs=($(grep "$pattern" $file | awk '{print $2}'))

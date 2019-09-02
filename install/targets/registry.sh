@@ -74,9 +74,10 @@ function registry::init {
     quay.io
   )
 
-  # set up private registries
   my_registry=127.0.0.1:5000
   if ensure_os Linux && [ ! -f /etc/docker/daemon.json ]; then
+    target::step "set up insecure registries"
+
     cat << EOF | sudo tee /etc/docker/daemon.json
 {
   "insecure-registries" : ["$my_registry"]
@@ -87,6 +88,7 @@ EOF
     sudo systemctl show --property=Environment docker
   fi
 
+  target::step "set up registries network and volume"
   sudo docker network inspect net-registries &>/dev/null || \
   sudo docker network create net-registries
   sudo docker volume create vol-registries
@@ -126,23 +128,40 @@ EOF
     sudo docker rmi $target_image
   done  
 
-  sudo docker-compose up -d --scale docker.io=0
+  target::step "take other registries up"
+  sudo docker-compose up -d
 
   popd
 }
 
 function registry::up {
   pushd $LAB_HOME
-  target::step "take registries up"
-  sudo docker-compose up -d --scale docker.io=0
+  target::step "take all registries up"
+  sudo docker-compose up -d
   popd
 }
 
 function registry::down {
   pushd $LAB_HOME
-  target::step "take registries down"
+  target::step "take all registries down"
   sudo docker-compose down
   popd
+}
+
+docker_io_host="registry-1.docker.io"
+function registry::docker.io {
+  target::step "set up docker.io"
+
+  if cat /etc/hosts | grep -q "# $docker_io_host"; then
+    target::log "$docker_io_host mapping detected in /etc/hosts, removing it..."
+    sudo sed -i.bak "/$docker_io_host/d" /etc/hosts
+  else
+    target::log "$docker_io_host mapping not detected, adding it..."
+    cat << EOF | sudo tee -a /etc/hosts
+# $docker_io_host
+127.0.0.1	$docker_io_host
+EOF
+  fi
 }
 
 target::command $@

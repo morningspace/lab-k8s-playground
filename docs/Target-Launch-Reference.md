@@ -10,16 +10,14 @@ The `launch` utility supports many pre-defined targets. The below list includes 
 |default				| As an alias to a group of targets, it will launch target base, registry, and kubernetes
 |docker					| Handle docker installation
 |docker-compose	| Handle docker-compose installation
-|docker.io			| Launch a secured private registry to mimic Docker Hub
-|docker.io-proxy| Launch a secured private registry to mimic Docker Hub and work as a proxy that connects to its remote peer
 |endpoints			| Print all endpoints that can be accessed in web browser with their healthiness states
 |helm						| Handle helm installation
 |istio					| Handle istio installation
 |istio-bookinfo	| Handle istio demo app, bookinfo, installation
 |kubectl				| Handle kubectl installation
 |kubernetes			| Manipulate kubernetes cluster launch
-|registry				| Launch a group of private registries provisioned with images used by the cluster
-|registry-proxy	| Launch a group of private registries to work as proxies that connect to their remote peers
+|registry				| Launch a group of private registries provisioned with images used by the cluster (Can also mimic Docker Hub)
+|registry-proxy	| Launch a group of private registries to work as proxies that connect to their remote peers (Can also mimic Docker Hub)
 |tools					| Handle kubernetes related tools installation
 
 ## Run target commands
