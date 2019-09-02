@@ -66,8 +66,6 @@ services:
       REGISTRY_HTTP_TLS_CERTIFICATE: /certs/registry-1.docker.io.crt
       REGISTRY_HTTP_TLS_KEY: /certs/registry-1.docker.io.key
       REGISTRY_PROXY_REMOTEURL: ${REGISTRY_PROXY_REMOTEURL}
-    ports:
-      - "443:443"
     volumes:
       - ./install/certs:/certs
       - vol-registries:/var/lib/registry

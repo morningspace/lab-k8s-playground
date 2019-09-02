@@ -61,11 +61,18 @@ services:
       REGISTRY_STORAGE_DELETE_ENABLED: "true"
       REGISTRY_HTTP_TLS_CERTIFICATE: /certs/registry-1.docker.io.crt
       REGISTRY_HTTP_TLS_KEY: /certs/registry-1.docker.io.key
-    ports:
-      - "443:443"
     volumes:
       - ./install/certs:/certs
       - vol-registries:/var/lib/registry
+    networks:
+      - net-registries
+
+  socat:
+    image: alpine/socat
+    command:
+      tcp-listen:443,fork tcp-connect:registry-1.docker.io:443
+    ports:
+      - "443:443"
     networks:
       - net-registries
 

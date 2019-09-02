@@ -51,20 +51,4 @@ function registry-proxy::down {
   popd
 }
 
-docker_io_host="registry-1.docker.io"
-function registry::docker.io {
-  target::step "set up docker.io"
-
-  if cat /etc/hosts | grep -q "# $docker_io_host"; then
-    target::log "$docker_io_host mapping detected in /etc/hosts, removing it..."
-    sudo sed -i.bak "/$docker_io_host/d" /etc/hosts
-  else
-    target::log "$docker_io_host mapping not detected, adding it..."
-    cat << EOF | sudo tee -a /etc/hosts
-# $docker_io_host
-127.0.0.1	$docker_io_host
-EOF
-  fi
-}
-
 target::command $@

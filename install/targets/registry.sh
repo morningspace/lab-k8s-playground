@@ -129,7 +129,7 @@ EOF
   done  
 
   target::step "take other registries up"
-  sudo docker-compose up -d
+  sudo docker-compose up -d --scale socat=0
 
   popd
 }
@@ -137,7 +137,7 @@ EOF
 function registry::up {
   pushd $LAB_HOME
   target::step "take all registries up"
-  sudo docker-compose up -d
+  sudo docker-compose up -d --scale socat=0
   popd
 }
 
@@ -150,18 +150,26 @@ function registry::down {
 
 docker_io_host="registry-1.docker.io"
 function registry::docker.io {
-  target::step "set up docker.io"
+  pushd $LAB_HOME
 
   if cat /etc/hosts | grep -q "# $docker_io_host"; then
-    target::log "$docker_io_host mapping detected in /etc/hosts, removing it..."
+    target::step "disable local docker.io"
+    sudo docker-compose stop socat
+
+    target::step "remove $docker_io_host mapping from /etc/hosts"
     sudo sed -i.bak "/$docker_io_host/d" /etc/hosts
   else
-    target::log "$docker_io_host mapping not detected, adding it..."
+    target::step "enable local docker.io"
+    sudo COMPOSE_IGNORE_ORPHANS=True docker-compose up -d socat
+
+    target::step "add $docker_io_host mapping into /etc/hosts"
     cat << EOF | sudo tee -a /etc/hosts
 # $docker_io_host
 127.0.0.1	$docker_io_host
 EOF
   fi
+
+  popd
 }
 
 target::command $@
