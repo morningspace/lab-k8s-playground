@@ -5,16 +5,15 @@ INSTALL_HOME=$LAB_HOME/install
 
 # base targets
 base=(
+  "init"
   "docker"
   "docker-compose"
   "kubectl"
 )
 
 # default targets
-default=(
-  "docker"
-  "docker-compose"
-  "kubectl"
+default=(${base[@]})
+default+=(
   "registry"
   "kubernetes"
 )

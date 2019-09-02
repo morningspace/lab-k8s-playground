@@ -4,7 +4,7 @@ cpus = '6'
 memory = '8192'
 
 # targets to be run, can be customized as your need
-targets = "init default helm tools"
+targets = "default helm tools"
 
 # set Kubernetes version, supported versions: v1.12, v1.13, v1.14, v1.15
 k8s_version = "v1.14"

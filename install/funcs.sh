@@ -179,5 +179,5 @@ function target::step {
 }
 
 function target::log {
-  echo "$1"
+  echo "$@"
 }

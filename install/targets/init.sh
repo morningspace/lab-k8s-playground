@@ -26,7 +26,7 @@ ubuntu)
 centos)
   target::step "install basic tools"
   sudo yum install -y epel-release
-  sudo yum install -y shellinabox bash-completion
+  sudo yum install -y shellinabox bash-completion net-tools
   # https://github.com/shellinabox/shellinabox/issues/327
   sudo sed -i \
     's/^#\s*PasswordAuthentication yes$/PasswordAuthentication yes/g;

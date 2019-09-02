@@ -37,6 +37,8 @@ net.bridge.bridge-nf-call-ip6tables = 1
 EOF
       sudo sysctl -p
     fi
+    sudo systemctl enable docker.service
+    sudo systemctl daemon-reload
     sudo systemctl restart docker
     ;;
   esac

@@ -31,19 +31,18 @@ EOF
   pushd $LAB_HOME
 
   target::step "start to init kubernetes cluster"
-  sudo -E \
-    K8S_VERSION=$K8S_VERSION \
+  [ $(uname -s) == "Linux" ] && run_cmd="sg docker -c" || run_cmd="eval"
+  $run_cmd \
+   "K8S_VERSION=$K8S_VERSION \
     NUM_NODES=$NUM_NODES \
     HOST_IP=$HOST_IP \
     DIND_CUSTOM_VOLUMES=$DIND_CUSTOM_VOLUMES \
     DIND_CA_CERT_URL=$DIND_CA_CERT_URL \
     DASHBOARD_URL=$DASHBOARD_URL \
     SKIP_SNAPSHOT=$SKIP_SNAPSHOT \
-  ./dind-cluster-wrapper.sh up
+  ./dind-cluster-wrapper.sh up"
 
   if [[ $? == 0 ]]; then
-    sudo chown -R $USER ~/.kube
-
     cat <<EOF | kubectl replace -f -
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
