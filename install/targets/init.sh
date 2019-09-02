@@ -13,18 +13,18 @@ source $INSTALL_HOME/funcs.sh
 
 case "$(detect_os)" in
 ubuntu)
-  target::step "install basic tools"
+  target::step "Install basic tools"
   sudo apt-get install -y shellinabox bash-completion
 
   # path to bash completion
   bash_completion="/usr/share/bash-completion/bash_completion"
 
-  target::step "add self-signed ca cert"
+  target::step "Add self-signed ca cert"
   sudo cp $INSTALL_HOME/certs/lab-ca.pem.crt /usr/local/share/ca-certificates/
   sudo update-ca-certificates
   ;;
 centos)
-  target::step "install basic tools"
+  target::step "Install basic tools"
   sudo yum install -y epel-release
   sudo yum install -y shellinabox bash-completion net-tools
   # https://github.com/shellinabox/shellinabox/issues/327
@@ -41,23 +41,23 @@ centos)
   # path to bash completion
   bash_completion="/usr/share/bash-completion/bash_completion"
 
-  target::step "add self-signed ca cert"
+  target::step "Add self-signed ca cert"
   sudo cp $INSTALL_HOME/certs/lab-ca.pem.crt /etc/pki/ca-trust/source/anchors/
   sudo update-ca-trust
   ;;
 darwin)
-  target::step "install basic tools"
+  target::step "Install basic tools"
   brew install shellinabox bash-completion
 
   # path to bash completion
   bash_completion="$(brew --prefix)/etc/bash_completion"
 
-  target::step "add self-signed ca cert"
+  target::step "Add self-signed ca cert"
   sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain $INSTALL_HOME/certs/lab-ca.pem.crt
   ;;
 esac
 
-target::step "update .bashrc"
+target::step "Update .bashrc"
 if [ ! -f ~/.bashrc ] || ! $(cat ~/.bashrc | grep -q "^# For playground$") ; then
   cat << EOF >> ~/.bashrc
 
@@ -78,7 +78,7 @@ fi
 EOF
 fi
 
-target::step "update .bash_profile"
+target::step "Update .bash_profile"
 if [ ! -f ~/.bash_profile ] || ! $(cat ~/.bash_profile | grep -q "~/.bashrc") ; then
   cat << EOF >> ~/.bash_profile
 
@@ -89,10 +89,10 @@ fi
 EOF
 fi
 
-target::step "create link to launch.sh"
+target::step "Create link to launch.sh"
 sudo ln -sf $INSTALL_HOME/launch.sh /usr/bin/launch
 sudo ln -sf $INSTALL_HOME/launch.sh /usr/sbin/launch
 
-target::step "configure launch cache"
+target::step "Configure launch cache"
 mkdir -p $INSTALL_HOME/.launch-cache
 ln -sf $INSTALL_HOME/.launch-cache $HOME/.launch-cache

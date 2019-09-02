@@ -6,7 +6,7 @@ source $INSTALL_HOME/funcs.sh
 
 function kubernetes::init {
   if [[ ! -f ~/.launch-cache/kubernetes-dashboard.yaml ]]; then
-    target::step "download kubernetes dashboard yaml"
+    target::step "Download kubernetes dashboard yaml"
     download_url=https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy/alternative/kubernetes-dashboard.yaml
     curl -sSL $download_url -o ~/.launch-cache/kubernetes-dashboard.yaml
   fi
@@ -17,7 +17,7 @@ function kubernetes::init {
   SKIP_SNAPSHOT=1
 
   if ! cat ~/.bashrc | grep -q "^# For kubeadm-dind-clusters$" ; then
-    target::step "update .bashrc"
+    target::step "Update .bashrc"
     cat << EOF >> ~/.bashrc
 
 # For kubeadm-dind-clusters
@@ -30,7 +30,7 @@ EOF
 
   pushd $LAB_HOME
 
-  target::step "start to init kubernetes cluster"
+  target::step "Start to init kubernetes cluster"
   [ $(uname -s) == "Linux" ] && run_cmd="sg docker -c" || run_cmd="eval"
   $run_cmd \
    "K8S_VERSION=$K8S_VERSION \
@@ -63,22 +63,22 @@ EOF
 }
 
 function kubernetes::up {
-  target::step "take kubernetes cluster up"
+  target::step "Take kubernetes cluster up"
   pushd $LAB_HOME; SKIP_SNAPSHOT= ./dind-cluster-wrapper.sh up; popd
 }
 
 function kubernetes::down {
-  target::step "take kubernetes cluster down"
+  target::step "Take kubernetes cluster down"
   pushd $LAB_HOME; SKIP_SNAPSHOT= ./dind-cluster-wrapper.sh down; popd
 }
 
 function kubernetes::clean {
-  target::step "clean kubernetes cluster"
+  target::step "Clean kubernetes cluster"
   pushd $LAB_HOME; SKIP_SNAPSHOT= ./dind-cluster-wrapper.sh clean; popd
 }
 
 function kubernetes::snapshot {
-  target::step "create snapshot for kubernetes cluster"
+  target::step "Create snapshot for kubernetes cluster"
   pushd $LAB_HOME; SKIP_SNAPSHOT= ./dind-cluster-wrapper.sh snapshot; popd
 }
 
