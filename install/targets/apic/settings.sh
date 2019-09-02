@@ -1,5 +1,5 @@
 # general
-apic_ns=apic
+apic_ns=apiconnect
 apic_skip_load_images=
 max_map_count=262144
 
