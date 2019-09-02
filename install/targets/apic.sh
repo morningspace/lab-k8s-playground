@@ -2,7 +2,7 @@
 
 LAB_HOME=${LAB_HOME:-/vagrant}
 INSTALL_HOME=$LAB_HOME/install
-APIC_INSTALL_HOME=$INSTALL_HOME/.lab-k8s-cache/apic
+APIC_INSTALL_HOME=$INSTALL_HOME/.launch-cache/apic
 APIC_PROJECT_HOME=$APIC_INSTALL_HOME/lab-project
 APIC_DEPLOY_HOME=$INSTALL_HOME/targets/apic
 HOST_IP=${HOST_IP:-127.0.0.1}
@@ -98,7 +98,7 @@ function load_image {
 function load_images {
   target::step "load apic images into private registry"
 
-  $INSTALL_HOME/targets/docker.io.sh up
+  $INSTALL_HOME/launch.sh registry::docker.io
 
   target::step "load portal images"
   $apicup registry-upload portal $ptl_images_tgz registry-1.docker.io
@@ -109,7 +109,7 @@ function load_images {
   target::step "load analytics images"
   $apicup registry-upload analytics $analyt_images_tgz registry-1.docker.io
 
-  $INSTALL_HOME/targets/docker.io.sh down
+  $INSTALL_HOME/launch.sh registry::docker.io
 
   target::step "load gateway image"
   local gwy_image=$(docker load -i $gwy_images_tgz | grep -o ibmcom/datapower.*)
