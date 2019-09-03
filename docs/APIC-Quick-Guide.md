@@ -1,6 +1,6 @@
 # Quick Guide to Launch APIC Playground
 
-This guide will work you through steps to launch an all-in-one playground for [IBM API Connect(APIC)](https://www.ibm.com/support/knowledgecenter/en/SSMNED_2018/mapfiles/getting_started.html) in a Kubernetes cluster with 3 worker nodes on a single machine!
+This guide will work you through the steps to launch [IBM API Connect(APIC)](https://www.ibm.com/support/knowledgecenter/en/SSMNED_2018/mapfiles/getting_started.html) on top of the all-in-one Kubernetes playground for a cluster with 3 worker nodes on a single machine!
 
 ## Step 1. Prepare the playground
 
@@ -37,7 +37,7 @@ $ export HOST_IP=<your_host_ip> # The IP of the host running apic
 $ vi $LAB_HOME/install/targets/apic/settings.sh # Change hostnames, etc.
 ```
 
-You can set `apic_skip_load_images` to `1` in `settings.sh` after the first launch, to skip the step of loading apic images into local private registry because you don't have to repeat that if the registry has already been provisioned. Skipping this can make the launch faster.
+You can set `apic_skip_load_images` to `1` in `settings.sh` after the first launch, to skip the step of loading apic images into local private registry because you don't have to repeat that if the registry has already been provisioned. To skip this can make the launch faster.
 
 If you are interested in apic settings customization, please check [Appendix: Customize apic settings](#appendix-customize-apic-settings)
 
@@ -56,6 +56,7 @@ $ launch registry::up kubernetes helm apic
 
 ## Step 5. Expose apic endpoints
 
+You can expose apic endpoints outside the cluster:
 ```shell
 $ launch apic::portforward
 ```
