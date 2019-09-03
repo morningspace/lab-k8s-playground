@@ -1,0 +1,258 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>The All-in-One Kubernetes Playground</title>
+
+    <link rel="shortcut icon" type="image/png" href="https://kubernetes.io/images/favicon.png">
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/night.css">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section>
+              <h3>The All-in-One</h3>
+              <h2>Kubernetes Playground</h2>
+              <h3>Quick Launch</h3>
+              <a href="https://github.com/morningspace/lab-k8s-playground">lab-k8s-playground</a> on GitHub
+              <p>
+                <a class="github-button" href="https://github.com/morningspace/lab-k8s-playground/subscription" data-icon="octicon-eye" data-size="large" aria-label="Watch morningspace/lab-k8s-playground on GitHub">Watch</a>
+                <a class="github-button" href="https://github.com/morningspace/lab-k8s-playground" data-icon="octicon-star" data-size="large" aria-label="Star morningspace/lab-k8s-playground on GitHub">Star</a>
+                <a class="github-button" href="https://github.com/morningspace/lab-k8s-playground/fork" data-icon="octicon-repo-forked" data-size="large" aria-label="Fork morningspace/lab-k8s-playground on GitHub">Fork</a>
+              </p>
+              <p><i>by MorningSpace</i></p>
+              <p><i>Sep, 2019</i></p>
+            </section>
+            <section>
+              <section data-markdown>
+                ## What's the background?
+              </section>
+            </section>
+            <section>
+              <section data-markdown>
+                ## How it looks?
+              </section>
+              <section data-markdown>
+                ### Demo: Applications
+                ![](https://github.com/morningspace/lab-k8s-playground/raw/master/docs/demo-apps.gif)
+              </section>
+              <section data-markdown>
+                ### Demo: Tooling
+                ![](https://github.com/morningspace/lab-k8s-playground/raw/master/docs/demo-tools.gif)
+              </section>
+              <section data-markdown>
+                ### Demo: Offline
+                ![](https://github.com/morningspace/lab-k8s-playground/raw/master/docs/demo-offline.gif)
+              </section>
+            </section>
+            <section>
+              <section data-markdown>
+                ## What’s behind?
+                ### kubeadm + DIND
+              </section>
+            </section>
+            <section>
+              <section data-markdown>
+                ## How to launch?
+              </section>
+              <section>
+                <h2>Inside vagrant box</h2>
+
+<p style="background-color: #111; padding: 1em; text-align: left; font-size: 20px">
+<code style="box-sizing: border-box; font-family: Monaco, Consolas, &quot;Lucida Console&quot;, monospace;">
+  <span style="box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(255, 0, 134);">$ </span>git clone <a data-cke-saved-href="https://github.com/morningspace/lab-k8s-playground.git" href="https://github.com/morningspace/lab-k8s-playground.git" target="_blank">https://github.com/morningspace/lab-k8s-playground.git</a><br style="outline: none;">
+  <span style="box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(255, 0, 134);">$ </span>vagrant up<br style="outline: none;">
+</code>
+</p>
+              </section>
+              <section>
+                <h2>Outside vagrant box</h2>
+
+<p style="background-color: #111; padding: 1em; text-align: left; font-size: 20px">
+<code style="box-sizing: border-box; font-family: Monaco, Consolas, &quot;Lucida Console&quot;, monospace;">
+  <span style="box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(255, 0, 134);">$ </span>git clone <a data-cke-saved-href="https://github.com/morningspace/lab-k8s-playground.git" href="https://github.com/morningspace/lab-k8s-playground.git" target="_blank">https://github.com/morningspace/lab-k8s-playground.git</a><br style="outline: none;">
+  <span style="box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(255, 0, 134);">$ </span>./install/launch.sh init<br style="outline: none;">
+  <span style="box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(255, 0, 134);">$ </span><span style="box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(255, 255, 255);">.</span>&nbsp;~/.bashrc <span style="box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(119, 119, 119);"># or re-login from terminal to auto-reload .bashrc</span><br style="outline: none;">
+  <span style="box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(255, 0, 134);">$ </span>launch default<br style="outline: none;">
+</code>
+</p>
+              </section>
+            </section>
+            <section>
+              <section data-markdown>
+                ## What else I can do?
+              </section>
+              <section>
+                <h2>Launch Utility</h2>
+
+<p style="background-color: #111; padding: 1em; text-align: left; font-size: 20px">
+<code style="box-sizing: border-box; font-family: Monaco, Consolas, &quot;Lucida Console&quot;, monospace;">
+  <span style="box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(255, 0, 134);">$ </span>launch<br><br>Usage: launch <span style="box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(31, 170, 170);">[</span>targets<span style="box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(31, 170, 170);">]</span><br><br>&nbsp;&nbsp;Targets are separated by space and launch in order of appearance one by one.<br><br>&nbsp;&nbsp;Special pre-defined targets:<br>&nbsp;&nbsp;<span style="box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(119, 119, 119);">*</span>&nbsp;base &nbsp; &nbsp; &nbsp;will launch target docker, docker-compose, and kubectl<br>&nbsp;&nbsp;<span style="box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(119, 119, 119);">*</span>&nbsp;default &nbsp; will launch target base, registry, and kubernetes<br><br>&nbsp;&nbsp;e.g.<br>&nbsp;&nbsp;launch default tools istio<br>&nbsp;&nbsp;launch kubernetes</code>
+</p>
+              </section>
+              <section data-markdown>
+                ## Live Demo
+                ### Launch APIConnect
+              </section>
+            </section>
+            <section>
+              <section data-markdown>
+                ## What if images changed?
+              </section>
+              <section>
+                <h2>Update private reigstry</h2>
+
+<p style="background-color: #111; padding: 1em; text-align: left; font-size: 20px">
+<code style="box-sizing: border-box; font-family: Monaco, Consolas, &quot;Lucida Console&quot;, monospace;">
+  <span style="box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(255, 0, 134);">$ </span>vi ./install/targets/images.list<br style="outline: none;">
+  <span style="box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(255, 0, 134);">$ </span>launch registry<br style="outline: none;">
+</code>
+</p>
+              </section>
+              <section data-markdown>
+                ## Live Demo
+                ### Add busybox image to private registry
+              </section>
+            </section>
+            <section>
+              <section data-markdown>
+                ## Can I share my private registry with others?
+              </section>
+              <section>
+                <h2>Use reigstry proxy</h2>
+
+<p style="background-color: #111; padding: 1em; text-align: left; font-size: 20px">
+<code style="box-sizing: border-box; font-family: Monaco, Consolas, &quot;Lucida Console&quot;, monospace;">
+  <span style="box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(255, 0, 134);">$ </span><span style="box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(255, 255, 255);">export </span><span style="box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(255, 0, 134);">REGISTRY_REMOTE</span><span style="box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(31, 170, 170);">=</span>&lt;your_remote_registry_ip&gt;<br>
+  <span style="box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(255, 0, 134);">$ </span>launch registry-proxy</code>
+</code>
+</p>
+              </section>
+            </section>
+            <section>
+              <section data-markdown>
+                ## Can I launch without network?
+              </section>
+              <section data-markdown>
+                ## Live Demo
+                ### Launch Istio and its Bookinfo without network connectivity
+                *With the help of target registry::docker.io*
+              </section>
+            </section>
+            <section>
+              <section data-markdown>
+                ## Can I customize the playground?
+              </section>
+              <section data-markdown>
+                ## Variant ways you can choose
+                * Kubernetes version: `K8S_VERSION`
+                * Number of cluster nodes: `NUM_NODES`
+                * Launch cluster from snapshot:
+                  * `launch kubernetes::snapshot`
+                  * `launch kubernetes::down`
+                  * `launch kubernetes::up`
+                * Launch different targets: `launch target1 target2`
+                * Special optimization for users in China: `IS_IN_CHINA`
+                * Write your own targets
+              </section>
+            </section>
+            <section>
+              <section data-markdown>
+                ## What's next?
+              </section>
+              <section>
+<p style="background-color: #111; padding: 1em; text-align: left; font-size: 20px">
+<code style="outline: none; box-sizing: border-box; font-family: Monaco, Consolas, &quot;Lucida Console&quot;, monospace; background-color: #111">
+<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(119, 119, 119);"># Just for fun;-)</span><br style="outline: none;">
+<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(119, 119, 119);"># Choose one case then click the link after cat</span><br style="outline: none;">
+<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(173, 0, 161);">function<span>&nbsp;</span></span>where_to_start<span>&nbsp;</span><span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(31, 170, 170);">{</span><br style="outline: none;">
+&nbsp;&nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(173, 0, 161);">case</span>&nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(255, 0, 134);">$I_want</span>&nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(173, 0, 161);">in</span><br style="outline: none;">
+&nbsp;&nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(0, 201, 24);">"to learn what it provides in general"</span><span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s;">)</span><br style="outline: none;">
+&nbsp;&nbsp; &nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s;">cat</span>&nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(55, 119, 230);">"<a href="https://github.com/morningspace/lab-k8s-playground/blob/master/docs/All-in-One-Playground-Overview.md" rel="noopener" target="_blank">All-in-One&nbsp;K8S&nbsp;Playground&nbsp;Overview</a>"</span><br style="outline: none;">
+&nbsp;&nbsp; &nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s;">;;</span><br style="outline: none;">
+&nbsp;&nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(0, 201, 24);">"to get started quickly"</span><span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s;">)</span><br style="outline: none;">
+&nbsp;&nbsp; &nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s;">cat</span>&nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(55, 119, 230);">"<a href="https://github.com/morningspace/lab-k8s-playground/blob/master/docs/All-in-One-Playground-Usage-Guide.md" rel="noopener" target="_blank">All-in-One&nbsp;K8S&nbsp;Playground&nbsp;Usage&nbsp;Guide</a>"</span><br style="outline: none;">
+&nbsp;&nbsp; &nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s;">cat</span>&nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(55, 119, 230);">"<a href="http://morningspace.github.io/tech/all-in-one-k8s-playground" rel="noopener" target="_blank">All-in-One&nbsp;K8S&nbsp;Playground 中文使用指南</a>"</span><br style="outline: none;">
+&nbsp;&nbsp; &nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s;">;;</span><br style="outline: none;">
+&nbsp;&nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(0, 201, 24);">"to understand what's behind"</span><span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s;">)</span><br style="outline: none;">
+&nbsp;&nbsp; &nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s;">cat</span>&nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(55, 119, 230);">"<a href="https://morningspace.github.io/tech/k8s-run" rel="noopener" target="_blank">Launch&nbsp;multi-node&nbsp;k8s&nbsp;cluster&nbsp;locally&nbsp;in&nbsp;one&nbsp;minute,&nbsp;and&nbsp;more...</a>"</span><br style="outline: none;">
+&nbsp;&nbsp; &nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s;">cat</span>&nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(55, 119, 230);">"<a href="https://v.youku.com/v_show/id_XNDI2Mzk1NDcyMA==.html?f=52221532" rel="noopener" target="_blank">视频教程 - Kubernetes实战:&nbsp;如何1分钟内在本地启动一个多节点集群</a>"</span><br style="outline: none;">
+&nbsp;&nbsp; &nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s;">;;</span><br style="outline: none;">
+&nbsp;&nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(0, 201, 24);">"to extend it by myself"</span><span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s;">)</span><br style="outline: none;">
+&nbsp;&nbsp; &nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s;">cat</span>&nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(55, 119, 230);">"<a href="https://github.com/morningspace/lab-k8s-playground/blob/master/docs/Launch-Utility-Usage-Guide.md" rel="noopener" target="_blank">Launch&nbsp;Utility&nbsp;Usage&nbsp;Guide</a>"</span><br style="outline: none;">
+&nbsp;&nbsp; &nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s;">cat</span>&nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(55, 119, 230);">"<a href="https://github.com/morningspace/lab-k8s-playground/blob/master/install/targets/sample.sh" rel="noopener" target="_blank">A Sample Target for Demo Purpose</a>"</span><br style="outline: none;">
+&nbsp;&nbsp; &nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s;">;;</span><br style="outline: none;">
+&nbsp;&nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(0, 201, 24);">"to contribute back"</span><span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s;">)</span><br style="outline: none;">
+&nbsp;&nbsp; &nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(119, 119, 119);"># Feel free to click these buttons: <a class="github-button" href="https://github.com/morningspace/lab-k8s-playground/subscription" data-icon="octicon-eye" aria-label="Watch morningspace/lab-k8s-playground on GitHub">Watch</a> <a class="github-button" href="https://github.com/morningspace/lab-k8s-playground" data-icon="octicon-star" aria-label="Star morningspace/lab-k8s-playground on GitHub">Star</a> <a class="github-button" href="https://github.com/morningspace/lab-k8s-playground/fork" data-icon="octicon-repo-forked" aria-label="Fork morningspace/lab-k8s-playground on GitHub">Fork</a></span><br style="outline: none;">
+&nbsp;&nbsp; &nbsp;git clone<span>&nbsp;</span><a href="https://github.com/morningspace/lab-k8s-playground.git" rel="noopener" target="_blank">https://github.com/morningspace/lab-k8s-playground.git</a><br style="outline: none;">
+&nbsp;&nbsp; &nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s;">;;</span><br style="outline: none;">
+&nbsp;&nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(173, 0, 161);">esac</span><br style="outline: none;">
+<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(31, 170, 170);">}</span></code>
+</p>
+              </section>
+            </section>
+            <section>
+              <h3>晴耕小筑#晴耕实验室</h3>
+              <p><i>(MorningSpace Lab)</p>
+              <p><i>Created by MorningSpace</i></p>
+              <p><i><a href="https://git.io/fjiOY">github.com/morningspace/lab-k8s-playground</a></i></p>
+              <p><i><a href="https://git.io/fx3XN">morningspace.github.io</a></i></p>
+              <p>
+                <img src="https://morningspace.github.io/assets/images/qrcode-wechat.jpg" width="86px" />
+                <a href="http://i.youku.com/morningspace"><img src="https://morningspace.github.io/assets/images/qrcode-youku.png" width="86px" /></a>
+              </p>
+            </section>
+        </div>
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.js"></script>
+
+    <script>
+        // More info https://github.com/hakimel/reveal.js#configuration
+        Reveal.initialize({
+            history: true,
+            transition: 'convex',
+
+            // More info https://github.com/hakimel/reveal.js#dependencies
+            dependencies: [{
+                src: 'plugin/markdown/marked.js'
+            }, {
+                src: 'plugin/markdown/markdown.js'
+            }, {
+                src: 'plugin/notes/notes.js',
+                async: true
+            }, {
+                src: 'plugin/highlight/highlight.js',
+                async: true,
+                callback: function() {
+                    hljs.initHighlightingOnLoad();
+                }
+            }, {
+                src: 'plugin/zoom-js/zoom.js',
+                async: true
+            }]
+        });
+    </script>
+</body>
+
+</html>
