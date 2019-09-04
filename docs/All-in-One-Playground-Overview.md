@@ -51,12 +51,12 @@ For more details, please refer to ["How to access the playground?"](All-in-One-P
 
 ## Use
 
-You can do a lot of things by using the built-in "Launch Utility". You can even create snapshot for the current running cluster, then restore from it later very quickly.
+You can do a lot of things by using the built-in "Launch Utility". You can even use the "Launch Utility" to create snapshot for the current running cluster, then restore from it later very quickly.
 
-For more details, please refer to [What else can I do with the playground?](All-in-One-Playground-Usage-Guide.md#what-else-can-i-do-with-the-playground), [Restore cluster from snapshot](All-in-One-Playground-Usage-Guide.md#restore-cluster-from-snapshot), and ["Launch Utility Usage Guide"](Launch-Utility-Usage-Guide.md).
+For more details, please refer to ["What else can I do with the playground?"](All-in-One-Playground-Usage-Guide.md#what-else-can-i-do-with-the-playground), ["Restore cluster from snapshot"](All-in-One-Playground-Usage-Guide.md#restore-cluster-from-snapshot), and the ["Launch Utility Usage Guide"](Launch-Utility-Usage-Guide.md).
 
 ## Customize
 
-You can customize the playground before or after its launch in many aspects to meet your very specific requirement, e.g. the kubernetes version, the number of cluster nodes, the applications to be installed, the Docker images to be pulled.
+You can customize the playground before or after its launch in many aspects to meet your very specific requirement, e.g. to change the kubernetes version, the number of cluster nodes, the applications to be installed, and the Docker images to be pulled.
 
 For more details, please refer to ["Can I customize the playground?"](All-in-One-Playground-Usage-Guide.md#can-i-customize-the-playground), ["What if images are changed?"](All-in-One-Playground-Usage-Guide.md#what-if-images-are-changed).
