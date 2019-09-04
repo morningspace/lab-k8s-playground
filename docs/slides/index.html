@@ -32,7 +32,7 @@
             <section>
               <h3>The All-in-One</h3>
               <h2>Kubernetes Playground</h2>
-              <h3>Quick Launch</h3>
+              <h3>Introduction</h3>
               <a href="https://github.com/morningspace/lab-k8s-playground">lab-k8s-playground</a> on GitHub
               <p>
                 <a class="github-button" href="https://github.com/morningspace/lab-k8s-playground/subscription" data-icon="octicon-eye" data-size="large" aria-label="Watch morningspace/lab-k8s-playground on GitHub">Watch</a>
@@ -44,7 +44,7 @@
             </section>
             <section>
               <section data-markdown>
-                ## What's the background?
+                ## What’s the background?
               </section>
             </section>
             <section>
@@ -68,11 +68,13 @@
               <section data-markdown>
                 ## What’s behind?
                 ### kubeadm + DIND
+                *Run Docker inside Docker*
               </section>
             </section>
             <section>
               <section data-markdown>
-                ## How to launch?
+                ## How to launch
+                ## the playground?
               </section>
               <section>
                 <h2>Inside vagrant box</h2>
@@ -99,7 +101,8 @@
             </section>
             <section>
               <section data-markdown>
-                ## What else I can do?
+                ## What else I can do with
+                ## the playground?
               </section>
               <section>
                 <h2>Launch Utility</h2>
@@ -113,13 +116,24 @@
                 ## Live Demo
                 ### Launch APIConnect
               </section>
+              <section>
+                <h2>Launch cluster from snapshot</h2>
+
+<p style="background-color: #111; padding: 1em; text-align: left; font-size: 20px">
+<code style="box-sizing: border-box; font-family: Monaco, Consolas, &quot;Lucida Console&quot;, monospace;">
+  <span style="box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(255, 0, 134);">$ </span>launch kubernetes::snapshot<br style="outline: none;">
+  <span style="box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(255, 0, 134);">$ </span>launch kubernetes::down<br style="outline: none;">
+  <span style="box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(255, 0, 134);">$ </span>launch kubernetes::up<br style="outline: none;">
+</code>
+</p>
+              </section>
             </section>
             <section>
               <section data-markdown>
-                ## What if images changed?
+                ## What if images are changed?
               </section>
               <section>
-                <h2>Update private reigstry</h2>
+                <h2>Update private reigstries</h2>
 
 <p style="background-color: #111; padding: 1em; text-align: left; font-size: 20px">
 <code style="box-sizing: border-box; font-family: Monaco, Consolas, &quot;Lucida Console&quot;, monospace;">
@@ -135,7 +149,8 @@
             </section>
             <section>
               <section data-markdown>
-                ## Can I share my private registry with others?
+                ## Can I share private registries
+                ## with others?
               </section>
               <section>
                 <h2>Use reigstry proxy</h2>
@@ -150,7 +165,8 @@
             </section>
             <section>
               <section data-markdown>
-                ## Can I launch without network?
+                ## Can I launch the playground
+                ## without network?
               </section>
               <section data-markdown>
                 ## Live Demo
@@ -160,24 +176,22 @@
             </section>
             <section>
               <section data-markdown>
-                ## Can I customize the playground?
+                ## Can I customize
+                ## the playground?
               </section>
               <section data-markdown>
                 ## Variant ways you can choose
                 * Kubernetes version: `K8S_VERSION`
                 * Number of cluster nodes: `NUM_NODES`
-                * Launch cluster from snapshot:
-                  * `launch kubernetes::snapshot`
-                  * `launch kubernetes::down`
-                  * `launch kubernetes::up`
                 * Launch different targets: `launch target1 target2`
                 * Special optimization for users in China: `IS_IN_CHINA`
                 * Write your own targets
+                * ...
               </section>
             </section>
             <section>
               <section data-markdown>
-                ## What's next?
+                ## What’s next?
               </section>
               <section>
 <p style="background-color: #111; padding: 1em; text-align: left; font-size: 20px">
