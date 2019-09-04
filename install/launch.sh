@@ -5,7 +5,6 @@ INSTALL_HOME=$LAB_HOME/install
 
 # base targets
 base=(
-  "init"
   "docker"
   "docker-compose"
   "kubectl"

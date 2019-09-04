@@ -6,38 +6,32 @@
 
 # Kubernetes Playground
 
-Keywords: Kubernetes, Container, Vagrant
+Keywords: Kubernetes, Container, DIND, Vagrant
 
 ## Overview
 
-This lab project is a playground for you to play with Kubernetes.
+This lab project is a playground for you to play with Kubernetes easily and efficiently.
 
-It can launch a multi-node cluster on your local machine in less than one minute even without network connection! 
+It includes an `All-in-One Playground` that can launch a multi-node cluster with configurable Kubernetes version on your local machine in minutes even without network connectivity!
 
-It also supports to maintain multi-version Kubernetes clusters in parallel on your machine even includes the latest snapshot built from Kubernetes source!
+* If you want to try the `All-in-One Playground`, please refer to ["The All-in-One Kubernetes Playground Overview"](/docs/All-in-One-Playground-Overview.md).
+* If you want to know what is the magic behind, please refer to ["Launch multi-node Kubernetes cluster locally in one minute, and more..."](https://morningspace.github.io/tech/k8s-run/), and the video series on [YouTube](https://www.youtube.com/watch?v=0uVdF3Inv48&list=PLVQM6jLkNkfqHgd0aX7TnjioOiQrqsXIa) or [YouKu](https://v.youku.com/v_show/id_XNDI2Mzk1NDcyMA==.html?f=52221532).
+* If you want to start in a funny way, please take look at this [`special function`](https://morningspace.github.io/lab-k8s-playground/docs/slides/#/10/1) written in shell script and taken from the online ["Introduction Slides"](https://morningspace.github.io/lab-k8s-playground/docs/slides).
 
-The project also has a [Vagrant box](/Vagrantfile) that integrates a lot of popular Kubernetes applications and tools with best practices to make your daily work with Kubernetes more efficiently.
-
-For more details:
-* Please check ["Launch multi-node Kubernetes cluster locally in one minute, and more..."](https://morningspace.github.io/tech/k8s-run/),  also the video tutorials on [YouTube](https://www.youtube.com/watch?v=0uVdF3Inv48&list=PLVQM6jLkNkfqHgd0aX7TnjioOiQrqsXIa) or [YouKu](https://v.youku.com/v_show/id_XNDI2Mzk1NDcyMA==.html?f=52221532), if you want to know how to run this project in general.
-* Please check ["Vagrant Box Overview"](/docs/Vagrant-Box-Overview.md), if you want to know what the Vagrant box can provide with us in general, ["Vagrant Box Getting Started"](/docs/Vagrant-Box-Getting-Started.md) for detailed steps on how to use the box, and ["Target Launch Reference"](/docs/Target-Launch-Reference.md) on more advanced use of the box.
-
-More tools and samples will be coming soon...
+More cool features will be coming soon... Have Fun!
 
 ## Demos
 
-Below are some demos. For more details on how to use the box, please check ["Vagrant Box Overview"](/docs/Vagrant-Box-Overview.md) and ["Vagrant Box Getting Started"](/docs/Vagrant-Box-Getting-Started.md).
+Below are demos created based on the `All-in-One Playground`.
 
-Run Kubernetes tools from both OS and web terminals.
-
-![](/docs/demo-tools.gif)
-
-Use Dashboard, Grafana, Kiali, Jaeger when run Istio Bookinfo demo app.
+> Use Dashboard, Grafana, Kiali, Jaeger when run Istio Bookinfo demo app.
 
 ![](/docs/demo-apps.gif)
 
-Re-launch cluster in offline mode
+> Run Kubernetes-related command line tools from both normal terminal and web terminal.
+
+![](/docs/demo-tools.gif)
+
+> Re-launch Kubernetes cluster and deploy Helm where there is no network connectivity.
 
 ![](/docs/demo-offline.gif)
-
-Have Fun!

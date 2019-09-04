@@ -90,7 +90,8 @@ function ensure_os {
 
 function ensure_k8s_version {
   local valid="v1.12 v1.13 v1.14 v1.15"
-  if [[ -z $K8S_VERSION || ! $valid =~ $K8S_VERSION ]]; then
+  K8S_VERSION=${K8S_VERSION:-v1.14}
+  if [[ ! $valid =~ $K8S_VERSION ]]; then
     echo "Kubernetes version not supported, valid values: $valid"
     return 1
   fi
