@@ -65,12 +65,12 @@ $ launch registry::<tab><tab>
 down  init  up
 ```
 
-Typing two `<tab>` after `::` will list all available commands of target `registry`.
+Typing two `<tab>`s after `::` will list all available commands of target `registry`.
 
 ## Define your own target
 
-You can even define your own target for your specific installation requirement. Each target is essentially an executable script written in shell. They are all saved in `$LAB_HOME/install/targets`. Here, `$LAB_HOME` is the repository root directory.
+You can even define your own target for your specific installation requirement. Each target is essentially an executable script written in shell. You can do whatever in your shell script. Just one rule for such script that runs as a target. That is to put your script in directory `$LAB_HOME/install/targets` so that can be detected by `Launch Utility`. Here, `$LAB_HOME` is the repository root directory.
 
 Write you own target then save it. Next time when you run `launch` command, you should be able to see your target in the auto-completion list. That means it has been detected by `Launch Utility` and you can launch it now.
 
-You can also add commands to the target. There is a [sample target](/install/targets/sample.sh) for you to take as reference. Just follow the naming convention `<target>::<command>` to name your function which can be recognized as target command by `Launch Utility`. Function that does not follow this naming convention will be treated as normal function.
+Optionally, you can also define commands for your target. There is a [sample target](/install/targets/sample.sh) for you to take as reference. Just follow the naming convention `<target>::<command>` to name your function which can be recognized as target command by `Launch Utility`. Function that does not follow this naming convention will be treated as normal function.
