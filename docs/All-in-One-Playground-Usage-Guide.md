@@ -1,15 +1,15 @@
 # The All-in-One Kubernetes Playground Usage Guide
 
-This guide will work you through the steps to launch the All-in-One Kubernetes Playground with mult-node cluster on a single machine!
+This guide will work you through the steps to launch the All-in-One Kubernetes Playground with a mult-node cluster on a single machine!
 
 ## How to launch the playground?
 
-Let's first clone the repository and go to its root directory:
+Let's first clone the repository and go into its root directory:
 ```shell
 $ git https://github.com/morningspace/lab-k8s-playground.git
 ```
 
-When you have [Vagrant](https://www.vagrantup.com/) and its provider e.g. [VirtualBox](https://www.virtualbox.org/) installed, to start the playground is quite easy, just run below command:
+When you have [Vagrant](https://www.vagrantup.com/) and its provider e.g. [VirtualBox](https://www.virtualbox.org/) installed, to launch the playground is quite easy, just run below command:
 ```shell
 $ vagrant up
 ```
@@ -50,13 +50,13 @@ If you launch the playground on your host, you can talk to the cluster directly.
 $ vagrant ssh
 ```
 
-You can also login using web terminal. Use the host IP or the box IP that launches the playground to access it. e.g. The default box IP is `192.168.56.100`, so the URL is https://192.168.56.100:4200. Please refer to ["Customize the playground"](#customize-the-playground) on how to change the box IP.
+You can also login using web terminal. To access it, use the host IP or the box IP that launches the playground, e.g. the default box IP is `192.168.56.100`, so the web terminal URL is https://192.168.56.100:4200. Please refer to ["Customize the playground"](#customize-the-playground) on how to change the box IP.
 
 After login, you can use [kubectl](https://kubernetes.io/docs/reference/kubectl) to access the cluster, use [helm](https://helm.sh) to deploy applications, or other pre-installed tools, e.g. [kubens](https://github.com/ahmetb/kubectx), [kubectl aliases](https://github.com/ahmetb/kubectl-aliases) to make your access to the cluster much easier. Here is a demo that run variant command line tools from both normal and web terminals.
 
 ![](demo-tools.gif)
 
-If you launch the playground inside box, when you finish your work and want to swith to other things, you can run below command to suspend the box:
+If you launch the playground inside the box, when you finish the work and want to swith to other context, you can run below command to suspend the box:
 ```shell
 $ vagrant suspend
 ```
@@ -244,15 +244,15 @@ is_in_china = 0
 https_proxy = ""
 ```
 
-Or check and update `.bashrc` in user home directory if you use your host to launch the playground directly.
+Or refer to the `.bashrc` in user home directory if you use your host to launch the playground directly.
 
 ### Special care for users in China
 
-The setting `is_in_china` in Vagrantfile or the corresponding environment variable `IS_IN_CHINA` is specific to users in China who may not have network access to some sites required by Kubernetes when launch the cluster, e.g. images on `k8s.gcr.io` and `gcr.io` are usually inaccessible from China. Set `is_in_china` in Vagrantfile or `IS_IN_CHINA` from terminal to 1, then launch targets will resolve the problem, e.g.:
+The setting `is_in_china` in Vagrantfile or the corresponding environment variable `IS_IN_CHINA` is specific to users in China who may not have network access to some sites required by Kubernetes when launch the cluster, e.g. public container registries `k8s.gcr.io` and `gcr.io` are usually not accessible from China. Set `is_in_china` in Vagrantfile or `IS_IN_CHINA` from terminal to 1 before you launch targets, this will resolve the problem, e.g.:
 ```shell
 $ IS_IN_CHINA=1 launch registry kubernetes helm
 ```
 
 ### Write your own target
 
-You can even write your own target to extend the Launch Utility as your needs. Please refer to ["Launch Utility Usage Guide"](Launch-Utility-Usage-Guide.md) for more details.
+You can even write your own target to extend the Launch Utility as your need. Please refer to ["Launch Utility Usage Guide"](Launch-Utility-Usage-Guide.md) for more details.
