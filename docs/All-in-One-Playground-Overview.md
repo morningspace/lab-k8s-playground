@@ -1,6 +1,6 @@
 # The All-in-One Kubernetes Playground Overview
 
-> This is the very high level overview of the All-in-One Kubernetes Playground. For more details on how to use the playground, please refer to ["The All-in-One Kubernetes Playground Usage Guide"](All-in-One-Playground-Usage-Guide.md).
+> This is the very high level overview of the All-in-One Kubernetes Playground. For more details on how to use the playground, please refer to ["The All-in-One Kubernetes Playground Usage Guide"](All-in-One-Playground-Usage-Guide.md) or ["All-in-One K8S Playground中文使用指南"](https://morningspace.github.io/tech/all-in-one-k8s-playground/).
 
 This playground includes a set of shell scripts that can help you launch a multi-node Kubernetes cluster on a single machine in minutes in a repeatable manner.
 
