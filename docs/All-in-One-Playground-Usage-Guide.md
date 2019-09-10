@@ -6,8 +6,12 @@ This guide will work you through the steps to launch the All-in-One Kubernetes P
 
 Let's first clone the repository and go into its root directory:
 ```shell
-$ git https://github.com/morningspace/lab-k8s-playground.git
+$ git clone https://github.com/morningspace/lab-k8s-playground.git
 ```
+
+Then you have two options to install the playground.
+
+### Vagrant box
 
 When you have [Vagrant](https://www.vagrantup.com/) and its provider e.g. [VirtualBox](https://www.virtualbox.org/) installed, to launch the playground is quite easy, just run below command:
 ```shell
@@ -16,7 +20,9 @@ $ vagrant up
 
 By default, it will provision the box and launch a three-node Kubernetes cluster.
 
-You can also launch the playground on your host directly by running below command in repository root directory to initialize the environment at first:
+### Host machine
+
+You can also launch the playground on your host machine directly by running below command in repository root directory to initialize the environment at first:
 ```shell
 $ ./install/launch.sh init
 ```
