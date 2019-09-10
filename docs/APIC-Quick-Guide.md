@@ -1,6 +1,6 @@
 # Quick Guide to Launch APIC Playground
 
-This guide will work you through the steps to launch [IBM API Connect(APIC)](https://www.ibm.com/support/knowledgecenter/en/SSMNED_2018/mapfiles/getting_started.html) on top of the all-in-one Kubernetes playground for a cluster with 3 worker nodes on a single machine!
+This guide will work you through the steps to launch [IBM API Connect(APIC)](https://www.ibm.com/support/knowledgecenter/en/SSMNED_2018/mapfiles/getting_started.html) on top of the All-in-One Kubernetes Playground for a cluster with 3 worker nodes on a single machine!
 
 ## Step 1. Prepare the playground
 
@@ -12,6 +12,8 @@ $ ./install/launch.sh init
 $ . ~/.bashrc
 $ git checkout apic
 ```
+
+> The Playground can be launched on either Ubuntu, CentOS, or MacOS.
 
 ## Step 2. Prepare apic installation packages
 
@@ -25,7 +27,7 @@ management-images-kubernetes_lts_v2018.4.1.4.tgz
 portal-images-kubernetes_lts_v2018.4.1.4.tgz
 ```
 
-Here, `$LAB_HOME` refers to the repository root directory.
+> Here, `$LAB_HOME` refers to the repository root directory.
 
 ## Step 3. Review and change apic settings
 
@@ -43,11 +45,23 @@ If you are interested in apic settings customization, please check [Appendix: Cu
 
 ## Step 4. Launch kubernetes, helm, and apic
 
+Run command to launch kubernetes and install helm:
 ```shell
-$ launch default helm apic
+$ launch default helm
+```
+
+> After finished, you can run `kubectl version` and `helm version` to verify if everything works fine.
+
+> Run `export IS_IN_CHINA=1` before `launch` if you are located in China who cannot pull images from Google website that are required by the cluster.
+
+Then, deploy apic: 
+```shell
+$ launch apic
 ```
 
 It takes time to finish the launch which depends on your system configuration, e.g., on my virtual machine, it usually takes less than 15 minutes to finish all the work before I can use.
+
+> After finished, you can run `kubectl get pods -n apiconnect` to verify if all apic pods are deployed correctly.
 
 If you want to destroy the current cluster for whatever reason and re-launch a new one, please run below command:
 ```shell
@@ -61,7 +75,7 @@ You can expose apic endpoints outside the cluster:
 $ launch apic::portforward
 ```
 
-You can also add the host IP and hostname mapping into `/etc/hosts` on your local machine so that you can access apic UI from web browser. e.g.:
+Then add the host IP and hostname mapping into `/etc/hosts` on your local machine so that you can access apic UI from web browser. e.g.:
 ```shell
 $ cat /etc/hosts
 ...
