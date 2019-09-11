@@ -1,15 +1,17 @@
 #!/bin/bash
 
 # What we do here?
-# - shellinabox: centos, ubuntu, macos?
-# - bash completion: centos, ubuntu, macos
-# - ca cert: centos, ubuntu, macos
-# - .bashrc, env vars: centos, ubuntu, macos
-# - lab cache: centos, ubuntu, macos
+# - shellinabox: centos, rhel, ubuntu, macos?
+# - bash completion: centos, rhel, ubuntu, macos
+# - ca cert: centos, rhel, ubuntu, macos
+# - .bashrc, env vars: centos, rhel, ubuntu, macos
+# - lab cache: centos, rhel, ubuntu, macos
 
 LAB_HOME=${LAB_HOME:-`pwd`}
 INSTALL_HOME=$LAB_HOME/install
 source $INSTALL_HOME/funcs.sh
+
+ensure_os || exit
 
 case "$(detect_os)" in
 ubuntu)
@@ -23,7 +25,7 @@ ubuntu)
   sudo cp $INSTALL_HOME/certs/lab-ca.pem.crt /usr/local/share/ca-certificates/
   sudo update-ca-certificates
   ;;
-centos)
+centos|rhel)
   target::step "Install basic tools"
   sudo yum install -y epel-release
   sudo yum install -y shellinabox bash-completion net-tools
