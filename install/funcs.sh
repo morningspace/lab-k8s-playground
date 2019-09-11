@@ -80,6 +80,16 @@ function ensure_command {
   return 1
 }
 
+function ensure_os {
+  local valid="darwin ubuntu centos rhel"
+  local detected=$(detect_os)
+  if [[ ! $valid =~ $detected ]]; then
+    echo "OS $detected not supported, supported OS: $valid"
+    return 1
+  fi
+  return 0
+}
+
 function ensure_os_linux {
   [[ $(uname -s) == Linux ]] && return 0 || return 255
 }
