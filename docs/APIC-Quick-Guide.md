@@ -4,11 +4,25 @@ This guide will work you through the steps to launch [IBM API Connect(APIC)](htt
 
 ## Step 1. Prepare the playground
 
-Clone the playground repository, go into the repository root directory, run command to init the environment, reload `.bashrc` to enable bash completion and other features in current login session, then switch to git branch `apic`:
+Clone the playground repository, go into the repository root directory, run command to init the environment:
 ```shell
 $ git clone https://github.com/morningspace/lab-k8s-playground.git
 $ cd lab-k8s-playground
 $ ./install/launch.sh init
+```
+
+After finished, specify host IP, k8s version, number of worker nodes in `~/.bashrc`:
+```shell
+# The IP of the host that runs apic
+export HOST_IP=<your_host_ip>
+# The Kubernetes version, default is v1.14
+export K8S_VERSION=v1.15
+# The number of worker nodes, must be 3
+export NUM_NODES=3
+```
+
+Reload `.bashrc` to apply your change, enable bash completion and other features in current login session, then switch to git branch `apic`:
+```shell
 $ . ~/.bashrc
 $ git checkout apic
 ```
@@ -31,12 +45,9 @@ portal-images-kubernetes_lts_v2018.4.1.4.tgz
 
 ## Step 3. Review and change apic settings
 
-Specify k8s version, number of worker nodes, host IP, apic hostnames and other settings as needed, e.g.:
+Specify apic hostnames and other settings in below file as needed:
 ```shell
-$ export K8S_VERSION=v1.15
-$ export NUM_NODES=3 # Number of worker nodes, must be 3
-$ export HOST_IP=<your_host_ip> # The IP of the host running apic
-$ vi $LAB_HOME/install/targets/apic/settings.sh # Change hostnames, etc.
+$ vi $LAB_HOME/install/targets/apic/settings.sh
 ```
 
 You can set `apic_skip_load_images` to `1` in `settings.sh` after the first launch, to skip the step of loading apic images into local private registry because you don't have to repeat that if the registry has already been provisioned. To skip this can make the launch faster.
