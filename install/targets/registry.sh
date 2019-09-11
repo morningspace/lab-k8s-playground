@@ -75,7 +75,7 @@ function registry::init {
   )
 
   my_registry=127.0.0.1:5000
-  if ensure_os Linux && [ ! -f /etc/docker/daemon.json ]; then
+  if ensure_os_linux && [ ! -f /etc/docker/daemon.json ]; then
     target::step "Set up insecure registries"
 
     cat << EOF | sudo tee /etc/docker/daemon.json

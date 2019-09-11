@@ -80,12 +80,8 @@ function ensure_command {
   return 1
 }
 
-function ensure_os {
-  if [[ $(uname -s) == $1 ]]; then
-    echo "OS: $1 detected"
-    return 0
-  fi
-  return 1
+function ensure_os_linux {
+  [[ $(uname -s) == Linux ]] && return 0 || return 255
 }
 
 function ensure_k8s_version {
