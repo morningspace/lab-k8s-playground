@@ -55,7 +55,15 @@ If you run the playground on laptop or local machine, and you want to keep your 
 
 If you run the playground in a VM, then you probably don't need Vagrant box, since it may not be necessary to run one VM, the box, in another VM, which is nested virtualization.
 
-Currently, the playground can be launched in `Ubuntu`, `CentOS`, `RHEL`, `MacOS`.
+### Which OS shall I use?
+
+The playground can be launched in:
+* `Ubuntu`
+* `CentOS`
+* `RHEL`
+* `MacOS`
+
+When lauch the playground in Vagrant box, although the [Vagrantfile](/Vagrantfile) uses Ubuntu, you can change it to use other OS.
 
 ## How to access the playground?
 
