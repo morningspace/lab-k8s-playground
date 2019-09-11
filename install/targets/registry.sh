@@ -172,4 +172,21 @@ EOF
   popd
 }
 
+function registry::mr.io {
+  pushd $LAB_HOME
+
+  if cat /etc/hosts | grep -q "# mr.io"; then
+    target::step "Remove mr.io mapping from /etc/hosts"
+    sudo sed -i.bak "/mr.io/d" /etc/hosts
+  else
+    target::step "Add mr.io mapping into /etc/hosts"
+    cat << EOF | sudo tee -a /etc/hosts
+# mr.io
+127.0.0.1	mr.io
+EOF
+  fi
+
+  popd
+}
+
 target::command $@

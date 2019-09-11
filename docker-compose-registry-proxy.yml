@@ -46,7 +46,7 @@ services:
     hostname: mr.io
     container_name: mr.io
     environment:
-      REGISTRY_HTTP_ADDR: 0.0.0.0:80
+      # REGISTRY_HTTP_ADDR: 0.0.0.0:80
       REGISTRY_STORAGE_DELETE_ENABLED: "true"
       REGISTRY_PROXY_REMOTEURL: ${REGISTRY_PROXY_REMOTEURL}
     ports:
