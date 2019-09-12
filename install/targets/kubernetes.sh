@@ -31,7 +31,11 @@ EOF
   pushd $LAB_HOME
 
   target::step "Start to init kubernetes cluster"
-  [ $(uname -s) == "Linux" ] && run_cmd="sg docker -c" || run_cmd="eval"
+  if ensure_os_linux && grep -q "^docker:" /etc/group; then
+    run_cmd="sg docker -c"
+  else
+    run_cmd="eval"
+  fi  
   $run_cmd \
    "K8S_VERSION=$K8S_VERSION \
     NUM_NODES=$NUM_NODES \
