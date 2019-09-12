@@ -141,7 +141,7 @@ function install_mgmt {
     ingress-type=ingress \
     mode=dev \
     namespace=$apic_ns \
-    registry=mr.io \
+    registry=mr.io:5000 \
     storage-class=apic-local-storage \
     create-crd=false \
     platform-api=$platform_api \
@@ -183,7 +183,7 @@ function install_gwy {
     ingress-type=ingress \
     mode=dev \
     namespace=$apic_ns \
-    registry=mr.io \
+    registry=mr.io:5000 \
     storage-class=apic-local-storage \
     api-gateway=$api_gateway \
     apic-gw-service=$apic_gw_service \
@@ -236,7 +236,7 @@ function install_analyt {
     ingress-type=ingress \
     mode=dev \
     namespace=$apic_ns \
-    registry=mr.io \
+    registry=mr.io:5000 \
     storage-class=apic-local-storage \
     analytics-ingestion=$analytics_ingestion \
     analytics-client=$analytics_client \
@@ -286,7 +286,7 @@ function install_ptl {
     ingress-type=ingress \
     mode=dev \
     namespace=$apic_ns \
-    registry=mr.io \
+    registry=mr.io:5000 \
     storage-class=apic-local-storage \
     portal-admin=$portal_admin \
     portal-www=$portal_www \
