@@ -75,7 +75,7 @@ function registry::init {
   )
 
   my_registry=127.0.0.1:5000
-  if ensure_os Linux && [ ! -f /etc/docker/daemon.json ]; then
+  if ensure_os_linux && [ ! -f /etc/docker/daemon.json ]; then
     target::step "Set up insecure registries"
 
     cat << EOF | sudo tee /etc/docker/daemon.json
@@ -166,6 +166,23 @@ function registry::docker.io {
     cat << EOF | sudo tee -a /etc/hosts
 # $docker_io_host
 127.0.0.1	$docker_io_host
+EOF
+  fi
+
+  popd
+}
+
+function registry::mr.io {
+  pushd $LAB_HOME
+
+  if cat /etc/hosts | grep -q "# mr.io"; then
+    target::step "Remove mr.io mapping from /etc/hosts"
+    sudo sed -i.bak "/mr.io/d" /etc/hosts
+  else
+    target::step "Add mr.io mapping into /etc/hosts"
+    cat << EOF | sudo tee -a /etc/hosts
+# mr.io
+127.0.0.1	mr.io
 EOF
   fi
 

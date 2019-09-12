@@ -5,7 +5,7 @@ source $LAB_HOME/install/funcs.sh
 
 target::step "Start to install docker"
 ensure_command "docker" && exit
-ensure_os Linux || exit
+ensure_os_linux || exit
 
 curl -sSL https://get.docker.com/ | sh
 

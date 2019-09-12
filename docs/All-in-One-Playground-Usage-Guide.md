@@ -49,9 +49,25 @@ $ launch default
 
 Here, we use `launch` instead of `launch.sh`. After reload `.bashrc`, you can run `launch` anywhere. It doesn't have to be the repository root directory.
 
+### Vagrant box or host machine?
+
+If you run the playground on laptop or local machine, and you want to keep your machine always in clean state, then you can launch the playground in Vagrant box, otherwise you can use host machine which can be much faster since it doesn't need to provision a guest OS on your host machine.
+
+If you run the playground in a VM, then you probably don't need Vagrant box, since it may not be necessary to run one VM, the box, in another VM, which is nested virtualization.
+
+### Which OS shall I use?
+
+The playground can be launched in:
+* `Ubuntu`
+* `CentOS`
+* `RHEL`
+* `MacOS`
+
+When lauch the playground in Vagrant box, although the [Vagrantfile](/Vagrantfile) uses Ubuntu, you can change it to use other OS.
+
 ## How to access the playground?
 
-If you launch the playground on your host, you can talk to the cluster directly. If it's inside the box, then you can run below command to login to the box from terminal:
+If you launch the playground on your host machine, you can talk to the cluster directly. If it's inside the box, then you can run below command to login to the box from terminal:
 ```shell
 $ vagrant ssh
 ```
@@ -250,7 +266,7 @@ is_in_china = 0
 https_proxy = ""
 ```
 
-Or refer to the `.bashrc` in user home directory if you use your host to launch the playground directly.
+Or refer to the `.bashrc` in user home directory if you use your host machine to launch the playground directly.
 
 ### Special care for users in China
 
