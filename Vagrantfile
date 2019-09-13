@@ -8,6 +8,8 @@ targets = "init default helm tools"
 
 # set Kubernetes version, supported versions: v1.12, v1.13, v1.14, v1.15
 k8s_version = "v1.14"
+# set Kubernetes provider, supported providers: dind-cluster, okd
+k8s_provider = "dind-cluster"
 # set number of worker nodes
 num_nodes = 2
 # set host ip of the box
@@ -60,6 +62,7 @@ Vagrant.configure(2) do |config|
     s.env = {
       "LAB_HOME" => "/vagrant",
       "K8S_VERSION" => "#{k8s_version}",
+      "K8S_PROVIDER" => "#{k8s_provide}"
       "NUM_NODES" => "#{num_nodes}",
       "HOST_IP" => "#{host_ip}",
       "IS_IN_CHINA" => "#{is_in_china}",

@@ -10,22 +10,25 @@ ensure_k8s_version || exit
 # set version per kubernetes version
 case $K8S_VERSION in
   "v1.12")
-    kubectl_version="v1.12.10";;
+    KUBECTL_VERSION="v1.12.10";;
   "v1.13")
-    kubectl_version="v1.13.8";;
+    KUBECTL_VERSION="v1.13.8";;
   "v1.14")
-    kubectl_version="v1.14.4";;
+    KUBECTL_VERSION="v1.14.4";;
   "v1.15")
-    kubectl_version="v1.15.1";;
+    KUBECTL_VERSION="v1.15.1";;
+  *)
+    target::log "noop"
+    exit
 esac
 
 os=$(uname -s | tr '[:upper:]' '[:lower:]')
-executable="kubectl-$kubectl_version-$os"
+executable="kubectl-$KUBECTL_VERSION-$os"
 
 if [[ ! -f ~/.launch-cache/$executable ]]; then
   target::step "Download kubectl"
   [[ -n $https_proxy ]] && target::log "https_proxy detected: $https_proxy"
-  download_url=https://storage.googleapis.com/kubernetes-release/release/$kubectl_version/bin/$os/amd64/kubectl
+  download_url=https://storage.googleapis.com/kubernetes-release/release/$KUBECTL_VERSION/bin/$os/amd64/kubectl
   curl -sSL $download_url -o ~/.launch-cache/$executable
   sudo chmod +x ~/.launch-cache/$executable
 fi
