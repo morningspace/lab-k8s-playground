@@ -11,4 +11,4 @@ spec:
   accessModes:
   - ReadWriteOnce
   hostPath:
-    path: /var/db
+    path: @@apic_pv_homevar/db

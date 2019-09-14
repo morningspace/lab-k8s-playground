@@ -11,4 +11,4 @@ spec:
   accessModes:
   - ReadWriteOnce
   hostPath:
-    path: /drouter/ramdisk2/mnt/raid-volume/raid0/local
+    path: @@apic_pv_homedrouter/ramdisk2/mnt/raid-volume/raid0/local

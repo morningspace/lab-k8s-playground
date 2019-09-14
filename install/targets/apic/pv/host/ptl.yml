@@ -11,7 +11,7 @@ spec:
   accessModes:
   - ReadWriteOnce
   hostPath:
-    path: /var/lib/mysqldata
+    path: @@apic_pv_homevar/lib/mysqldata
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -26,7 +26,7 @@ spec:
   accessModes:
   - ReadWriteOnce
   hostPath:
-    path: /var/log/mysqllog
+    path: @@apic_pv_homevar/log/mysqllog
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -41,7 +41,7 @@ spec:
   accessModes:
   - ReadWriteOnce
   hostPath:
-    path: /web
+    path: @@apic_pv_homeweb
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -56,7 +56,7 @@ spec:
   accessModes:
   - ReadWriteOnce
   hostPath:
-    path: /var/aegir/backups
+    path: @@apic_pv_homevar/aegir/backups
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -71,4 +71,4 @@ spec:
   accessModes:
   - ReadWriteOnce
   hostPath:
-    path: /var/devportal
+    path: @@apic_pv_homevar/devportal

@@ -44,7 +44,7 @@ sudo ln -sf ~/.launch-cache/$package/$os-amd64/helm /usr/sbin/helm
 target::step "Run helm init"
 if [[ $IS_IN_CHINA == 1 ]]; then
   stable_repo="https://kubernetes.oss-cn-hangzhou.aliyuncs.com/charts"
-  helm init --stable-repo-url $stable_repo
+  helm init --stable-repo-url $stable_repo $@
 
   cat ~/.bashrc | grep -q "^# helm hacks$" || \
   cat << EOF >>~/.bashrc
@@ -59,5 +59,5 @@ function helm() {
 }
 EOF
 else
-  helm init
+  helm init $@
 fi

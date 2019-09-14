@@ -12,7 +12,7 @@ spec:
   accessModes:
   - ReadWriteOnce
   hostPath:
-    path: /var/lib/elasticsearch
+    path: @@apic_pv_homevar/lib/elasticsearch-data
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -27,4 +27,4 @@ spec:
   accessModes:
   - ReadWriteOnce
   hostPath:
-    path: /var/lib/elasticsearch
+    path: @@apic_pv_homevar/lib/elasticsearch-master
