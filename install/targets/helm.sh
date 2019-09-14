@@ -16,6 +16,9 @@ case $K8S_VERSION in
     HELM_VERSION="v2.14.2";;
   "v1.15")
     HELM_VERSION="v2.14.2";;
+  *)
+    target::log "noop"
+    exit;;
 esac
 
 os=$(uname -s | tr '[:upper:]' '[:lower:]')

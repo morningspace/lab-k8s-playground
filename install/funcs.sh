@@ -95,6 +95,8 @@ function ensure_os_linux {
 }
 
 function ensure_k8s_version {
+  [[ $K8S_PROVIDER == okd ]] && return 0
+
   local valid="v1.12 v1.13 v1.14 v1.15"
   K8S_VERSION=${K8S_VERSION:-v1.14}
   if [[ ! $valid =~ $K8S_VERSION ]]; then
@@ -104,12 +106,45 @@ function ensure_k8s_version {
   return 0
 }
 
+function ensure_k8s_provider {
+  local valid="dind-cluster okd"
+
+  K8S_PROVIDER=${K8S_PROVIDER:-dind-cluster}
+  if [[ ! $valid =~ $K8S_PROVIDER ]]; then
+    echo "Kubernetes provider not supported, valid values: $valid"
+    return 1
+  fi
+
+  if [[ -n $1 && $1 != $K8S_PROVIDER ]]; then
+    echo "Kubernetes provider must be $1, but is $K8S_PROVIDER"
+    return 1
+  fi
+
+  return 0
+}
+
 function detect_os {
   local os=$(uname -s | tr '[:upper:]' '[:lower:]')
   if [ $os == "linux" ] && [ -r /etc/os-release ] ; then
     os="$(. /etc/os-release && echo "$ID")"
   fi
   echo $os
+}
+
+function get_insecure_registries {
+  if [[ $K8S_PROVIDER == okd ]]; then
+    echo "127.0.0.1:5000 172.30.0.0/16"
+  else
+    echo "127.0.0.1:5000"
+  fi
+}
+
+function get_insecure_registries_text {
+  if [[ $K8S_PROVIDER == okd ]]; then
+    echo '"127.0.0.1:5000", "172.30.0.0/16"'
+  else
+    echo '"127.0.0.1:5000"'
+  fi
 }
 
 function add_endpoint {

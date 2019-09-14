@@ -60,6 +60,10 @@ function registry::init {
     # helm
     gcr.io/kubernetes-helm/tiller:v2.14.2
     );;
+  *)
+    images=(
+    # nothing
+    );;
   esac
 
   # registries having mirrors on docker hub
@@ -74,13 +78,14 @@ function registry::init {
     quay.io
   )
 
-  my_registry=127.0.0.1:5000
+  insecure_registries=($(get_insecure_registries))
+  my_registry=${insecure_registries[0]}
   if ensure_os_linux && [ ! -f /etc/docker/daemon.json ]; then
     target::step "Set up insecure registries"
 
     cat << EOF | sudo tee /etc/docker/daemon.json
 {
-  "insecure-registries" : ["$my_registry"]
+  "insecure-registries" : [$(get_insecure_registries_text)]
 }
 EOF
     sudo systemctl daemon-reload
