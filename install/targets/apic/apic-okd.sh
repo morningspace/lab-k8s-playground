@@ -20,27 +20,31 @@ function ensure_nodes {
 }
 
 function prepare_env {
+  target::step "Prepare environment"
+
   oc login -u system:admin
 
   # Create namespace
   oc create namespace $apic_ns
   
-  # Install Helm client
+  target::step "Install Helm client"
   export HELM_VERSION="v2.10.0"
   export TILLER_NAMESPACE="$apic_ns"
   $INSTALL_HOME/targets/helm.sh --client-only
   
-  # Install Tiller
+  target::step "Install Tiller"
   oc process -f https://github.com/openshift/origin/raw/master/examples/helm/tiller-template.yaml \
     -p TILLER_NAMESPACE=$TILLER_NAMESPACE -p HELM_VERSION=$HELM_VERSION | \
   oc create -n "$apic_ns" -f -
   oc create clusterrolebinding tiller-binding --clusterrole=cluster-admin --user=system:serviceaccount:$TILLER_NAMESPACE:tiller
 
-  # Assign SCC permissions
+  target::step "Assign SCC permissions"
   oc adm policy add-scc-to-group anyuid system:serviceaccounts:$apic_ns
 }
 
 function prepare_pv {
+  target::step "Prepare persistent volumes"
+
   # mgmt
   mkdir -p $apic_pv_home/var/db
   chown 105 $apic_pv_home/var/db
@@ -83,8 +87,12 @@ function apic-okd::validate {
 }
 
 function apic-okd::clean {
+  target::step "Clean apic pv"
   rm -rf $apic_pv_home
+
+  target::step "Delete tiller role binding"
   oc delete clusterrolebinding tiller-binding
+
   apic-k8s::clean
 }
 
