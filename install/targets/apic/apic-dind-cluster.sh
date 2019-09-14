@@ -18,7 +18,7 @@ source $INSTALL_HOME/funcs.sh
 source $APIC_DEPLOY_HOME/settings.sh
 
 function ensure_nodes {
-  target::step "ensure cluster nodes"
+  target::step "Ensure cluster nodes"
 
   if [[ $NUM_NODES != 3 ]]; then
     target::log "NUM_NODES must be 3, current value $NUM_NODES"
@@ -27,7 +27,7 @@ function ensure_nodes {
 }
 
 function ensure_images {
-  target::step "ensure apic packaged images"
+  target::step "Ensure apic packaged images"
 
   if [[ ! -d $APIC_INSTALL_HOME ]]; then
     target::log "$APIC_INSTALL_HOME not found"
@@ -48,7 +48,7 @@ function ensure_images {
 }
 
 function ensure_apicup {
-  target::step "ensure apicup"
+  target::step "Ensure apicup"
 
   if [[ ! -d $APIC_INSTALL_HOME ]]; then
     target::log "$APIC_INSTALL_HOME not found"
@@ -61,7 +61,7 @@ function ensure_apicup {
 }
 
 function ensure_namespace {
-  target::step "ensure namespace $apic_ns"
+  target::step "Ensure namespace $apic_ns"
 
   if kubectl get namespace | grep -q $apic_ns ; then
     target::log "namespace $apic_ns detected"
@@ -81,7 +81,7 @@ function ensure_tgz {
 }
 
 function init_project {
-  target::step "init apic project"
+  target::step "Init apic project"
 
   if [[ -d $APIC_PROJECT_HOME ]]; then
     target::log "$APIC_PROJECT_HOME detected"
@@ -103,26 +103,26 @@ function load_image {
 }
 
 function load_images {
-  target::step "load apic images into private registry"
+  target::step "Load apic images into private registry"
 
   $INSTALL_HOME/launch.sh registry::docker.io
 
-  target::step "load portal images"
+  target::step "Load portal images"
   $apicup registry-upload portal $ptl_images_tgz $docker_io_host
 
-  target::step "load management images"
+  target::step "Load management images"
   $apicup registry-upload management $mgmt_images_tgz $docker_io_host
 
-  target::step "load analytics images"
+  target::step "Load analytics images"
   $apicup registry-upload analytics $analyt_images_tgz $docker_io_host
 
   $INSTALL_HOME/launch.sh registry::docker.io
 
-  target::step "load gateway image"
+  target::step "Load gateway image"
   local gwy_image=$(docker load -i $gwy_images_tgz | grep -o ibmcom/datapower.*)
   load_image $gwy_image $image_repository:$image_tag
 
-  target::step "load busybox image"
+  target::step "Load busybox image"
   docker pull busybox:1.29-glibc
   load_image busybox:1.29-glibc busybox:1.29-glibc
 }
@@ -144,7 +144,7 @@ function prepare_pv {
 }
 
 function install_mgmt {
-  target::step "install management subsystem"
+  target::step "Install management subsystem"
 
   # create pv
   cat $APIC_DEPLOY_HOME/pv/$pv_type/mgmt.yml | \
@@ -186,7 +186,7 @@ function install_mgmt {
 }
 
 function install_gwy {
-  target::step "install gateway subsystem"
+  target::step "Install gateway subsystem"
 
   # create pv
   cat $APIC_DEPLOY_HOME/pv/$pv_type/gwy.yml | \
@@ -231,7 +231,7 @@ function install_gwy {
 }
 
 function install_analyt {
-  target::step "install analytics subsystem"
+  target::step "Install analytics subsystem"
 
   # adjust vm.max_map_count
   if ! $(sysctl vm.max_map_count|grep -q $max_map_count) ; then
@@ -280,7 +280,7 @@ function install_analyt {
 }
 
 function install_ptl {
-  target::step "install portal subsystem"
+  target::step "Install portal subsystem"
 
   # create pv
   cat $APIC_DEPLOY_HOME/pv/$pv_type/ptl.yml | \
@@ -325,7 +325,7 @@ function install_ptl {
 }
 
 function install_ingress {
-  target::step "install ingress controller"
+  target::step "Install ingress controller"
 
   helm upgrade -i ingress stable/nginx-ingress \
     --namespace $apic_ns \
@@ -386,16 +386,16 @@ function apic-k8s::validate {
 
   pushd $APIC_PROJECT_HOME >/dev/null
 
-  target::step "validate gateway subsystem"
+  target::step "Validate gateway subsystem"
   $apicup subsys get gwy --validate
 
-  target::step "validate portal subsystem"
+  target::step "Validate portal subsystem"
   $apicup subsys get ptl --validate
 
-  target::step "validate analytics subsystem"
+  target::step "Validate analytics subsystem"
   $apicup subsys get analyt --validate
 
-  target::step "validate management subsystem"
+  target::step "Validate management subsystem"
   $apicup subsys get mgmt --validate
 
   popd >/dev/null
@@ -404,24 +404,24 @@ function apic-k8s::validate {
 function apic-k8s::clean {
   clean_endpoints "apic"
 
-  target::step "delete namespace $apic_ns"
+  target::step "Delete namespace $apic_ns"
   (kubectl get namespace | grep -q $apic_ns) && \
   kubectl delete namespace $apic_ns
   
-  target::step "delete CRDs"
+  target::step "Delete CRDs"
   local crds=($(kubectl get crd -o name | grep .apic.ibm.com))
   [ -n "$crds" ] && kubectl delete crd "${crds[@]##*/}"
 
-  target::step "delete PVs"
+  target::step "Delete PVs"
   local pvs=($(kubectl get pv -o name | grep persistentvolume/apic-))
   [ -n "$pvs" ] && kubectl delete pv "${pvs[@]##*/}"
 
-  target::step "clean apic project"
+  target::step "Clean apic project"
   rm -rf $APIC_PROJECT_HOME
 }
 
 function apic-k8s::portforward {
-  target::step "try to stop the fake $docker_io_host if running"
+  target::step "Try to stop the fake $docker_io_host if running"
   sudo docker stop $docker_io_host
 
   kill_portfwds "443:443"
