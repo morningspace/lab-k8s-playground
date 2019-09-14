@@ -95,7 +95,7 @@ function ensure_os_linux {
 }
 
 function ensure_k8s_version {
-  [[ $K8S_PROVIDER == okd ]] && return 0
+  [[ $K8S_PROVIDER == okd ]] && K8S_VERSION= &&return 0
 
   local valid="v1.12 v1.13 v1.14 v1.15"
   K8S_VERSION=${K8S_VERSION:-v1.14}

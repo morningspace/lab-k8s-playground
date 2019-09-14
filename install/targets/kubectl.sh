@@ -18,7 +18,7 @@ case $K8S_VERSION in
   "v1.15")
     KUBECTL_VERSION="v1.15.1";;
   *)
-    target::log "noop"
+    target::log "Nothing happened"
     exit
 esac
 

@@ -52,7 +52,7 @@ function okd::init {
 function okd::up {
   target::step "Take kubernetes cluster up"
   mkdir -p $OKD_INSTALL_HOME
-  oc cluster up --public-hostname=$HOST_IP --base-dir=$OKD_INSTALL_HOME --write-config=true
+  oc cluster up --public-hostname=$HOST_IP --base-dir=$OKD_INSTALL_HOME --write-config=false
 }
 
 function okd::down {
@@ -67,7 +67,7 @@ function okd::clean {
 }
 
 function okd::snapshot {
-  target::log "Not supported"
+  target::log "Snapshot not supported"
 }
 
 target::command $@

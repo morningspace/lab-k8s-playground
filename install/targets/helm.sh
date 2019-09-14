@@ -6,8 +6,9 @@ source $LAB_HOME/install/funcs.sh
 target::step "Start to install helm"
 ensure_k8s_version || exit
 
-# set version per kubernetes version
-case $K8S_VERSION in
+if [[ -z $HELM_VERSION ]]; then
+  # set version per kubernetes version
+  case $K8S_VERSION in
   "v1.12")
     HELM_VERSION="v2.12.3";;
   "v1.13")
@@ -17,9 +18,10 @@ case $K8S_VERSION in
   "v1.15")
     HELM_VERSION="v2.14.2";;
   *)
-    target::log "noop"
+    target::log "Nothing happened"
     exit;;
-esac
+  esac
+fi
 
 os=$(uname -s | tr '[:upper:]' '[:lower:]')
 package="helm-$HELM_VERSION-$os-amd64"
