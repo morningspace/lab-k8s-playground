@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: apic-gwy-tms
+  labels:
+    type: local
+spec:
+  storageClassName: apic-local-storage
+  capacity:
+    storage: @@tms_peering_storage_size_gbGi
+  accessModes:
+  - ReadWriteOnce
+  hostPath:
+    path: /drouter/ramdisk2/mnt/raid-volume/raid0/local
