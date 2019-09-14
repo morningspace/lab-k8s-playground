@@ -21,18 +21,17 @@ function ensure_nodes {
 
 function prepare_env {
   target::step "Prepare environment"
-
   oc login -u system:admin
 
-  # Create namespace
+  target::step "Create namespace $apic_ns"
   oc create namespace $apic_ns
   
-  target::step "Install Helm client"
+  target::step "Install helm client"
   export HELM_VERSION="v2.10.0"
   export TILLER_NAMESPACE="kube-system"
   $INSTALL_HOME/targets/helm.sh --client-only
   
-  target::step "Install Tiller"
+  target::step "Install tiller"
   oc process -f https://github.com/openshift/origin/raw/master/examples/helm/tiller-template.yaml \
     -p TILLER_NAMESPACE=$TILLER_NAMESPACE -p HELM_VERSION=$HELM_VERSION | \
   oc create -n $TILLER_NAMESPACE -f -
@@ -43,7 +42,7 @@ function prepare_env {
 }
 
 function prepare_pv {
-  target::step "Prepare persistent volumes"
+  target::step "Prepare apic persistent volumes"
 
   # mgmt
   mkdir -p $apic_pv_home/var/db
@@ -87,13 +86,13 @@ function apic-okd::validate {
 }
 
 function apic-okd::clean {
-  target::step "Clean apic pv"
-  rm -rf $apic_pv_home
-
   target::step "Delete tiller role binding"
   oc delete clusterrolebinding tiller-binding
 
   apic-k8s::clean
+
+  target::step "Clean apic persistent volumes"
+  rm -rf $apic_pv_home
 }
 
 target::command $@
