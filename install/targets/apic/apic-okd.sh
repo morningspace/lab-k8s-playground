@@ -29,13 +29,13 @@ function prepare_env {
   
   target::step "Install Helm client"
   export HELM_VERSION="v2.10.0"
-  export TILLER_NAMESPACE="$apic_ns"
+  export TILLER_NAMESPACE="kube-system"
   $INSTALL_HOME/targets/helm.sh --client-only
   
   target::step "Install Tiller"
   oc process -f https://github.com/openshift/origin/raw/master/examples/helm/tiller-template.yaml \
     -p TILLER_NAMESPACE=$TILLER_NAMESPACE -p HELM_VERSION=$HELM_VERSION | \
-  oc create -n "$apic_ns" -f -
+  oc create -n $TILLER_NAMESPACE -f -
   oc create clusterrolebinding tiller-binding --clusterrole=cluster-admin --user=system:serviceaccount:$TILLER_NAMESPACE:tiller
 
   target::step "Assign SCC permissions"
