@@ -67,6 +67,7 @@ subjects:
 EOF
   fi
 
+  clean_endpoints "common"
   add_endpoints
 }
 
