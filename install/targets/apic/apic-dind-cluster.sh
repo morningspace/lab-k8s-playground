@@ -79,11 +79,6 @@ function apic-dind-cluster::clean {
 }
 
 function apic-dind-cluster::portforward {
-  local docker_io_host="registry-1.docker.io"
-
-  target::step "Try to stop the fake $docker_io_host if running"
-  sudo docker stop $docker_io_host
-
   kill_portfwds "443:443"
   create_portfwd $apic_ns service/ingress-nginx-ingress-controller 443:443
 }
