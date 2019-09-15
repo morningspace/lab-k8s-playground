@@ -1,47 +1,19 @@
 #!/bin/bash
 
-LAB_HOME=${LAB_HOME:-/vagrant}
+LAB_HOME=${LAB_HOME:-`pwd`}
 INSTALL_HOME=$LAB_HOME/install
-APIC_DEPLOY_HOME=$INSTALL_HOME/targets/apic
-HOST_IP=${HOST_IP:-127.0.0.1}
 
-apic_domain="$HOST_IP.xip.io"
-ingress_type="route"
-my_registry="127.0.0.1:5000"
-pv_type="host"
-apic_pv_home="$INSTALL_HOME/.launch-cache/apic/pv/"
+apic_domain=${HOST_IP:-127.0.0.1}.xip.io
+apic_pv_type=host
+apic_pv_home=$INSTALL_HOME/.launch-cache/apic/pv/
+apic_ingress_type=route
+apic_registry=127.0.0.1:5000
 
-. $INSTALL_HOME/funcs.sh
-. $APIC_DEPLOY_HOME/settings.sh
-. $APIC_DEPLOY_HOME/apic-dind-cluster.sh
+. $LAB_HOME/install/targets/apic/apic-base.sh
 
-function ensure_nodes {
-  :
-}
+function on_before_init {
+  oc login -u system:admin >/dev/null
 
-function prepare_env {
-  target::step "Prepare environment"
-  oc login -u system:admin
-
-  target::step "Create namespace $apic_ns"
-  oc create namespace $apic_ns
-  
-  target::step "Install helm client"
-  export HELM_VERSION="v2.10.0"
-  export TILLER_NAMESPACE="kube-system"
-  $INSTALL_HOME/targets/helm.sh --client-only
-  
-  target::step "Install tiller"
-  oc process -f https://github.com/openshift/origin/raw/master/examples/helm/tiller-template.yaml \
-    -p TILLER_NAMESPACE=$TILLER_NAMESPACE -p HELM_VERSION=$HELM_VERSION | \
-  oc create -n $TILLER_NAMESPACE -f -
-  oc create clusterrolebinding tiller-binding --clusterrole=cluster-admin --user=system:serviceaccount:$TILLER_NAMESPACE:tiller
-
-  target::step "Assign SCC permissions"
-  oc adm policy add-scc-to-group anyuid system:serviceaccounts:$apic_ns
-}
-
-function prepare_pv {
   target::step "Prepare apic persistent volumes"
 
   # mgmt
@@ -70,29 +42,56 @@ function prepare_pv {
 
   mkdir -p $apic_pv_home/var/devportal
   chown 200 $apic_pv_home/var/devportal
+
+  target::step "Ensure namespace $apic_ns"
+
+  if oc get namespace | grep -q $apic_ns ; then
+    target::log "namespace $apic_ns detected"
+  else
+    oc create namespace $apic_ns
+  fi
+
+  target::step "Install helm client"
+
+  export HELM_VERSION="v2.10.0"
+  export TILLER_NAMESPACE="$apic_ns"
+  $INSTALL_HOME/targets/helm.sh --client-only
+  
+  target::step "Install tiller"
+
+  oc process -f https://github.com/openshift/origin/raw/master/examples/helm/tiller-template.yaml \
+    -p TILLER_NAMESPACE=$TILLER_NAMESPACE -p HELM_VERSION=$HELM_VERSION | \
+  oc create -n $TILLER_NAMESPACE -f -
+  oc create clusterrolebinding tiller-binding --clusterrole=cluster-admin --user=system:serviceaccount:$TILLER_NAMESPACE:tiller
+
+  target::step "Assign SCC permissions"
+
+  oc adm policy add-scc-to-group anyuid system:serviceaccounts:$apic_ns
 }
 
-function install_ingress {
-  :
+function on_before_clean {
+  oc login -u system:admin >/dev/null
+
+  target::step "Delete tiller role binding"
+  local rolebinding=$(oc get clusterrolebinding tiller-binding -o name 2>/dev/null)
+  [ -n "$rolebinding" ] && oc delete clusterrolebinding tiller-binding
+}
+
+function on_after_clean {
+  target::step "Clean apic persistent volumes"
+  rm -rf $apic_pv_home
 }
 
 function apic-okd::init {
-  prepare_env
-  apic-k8s::init
+  init
 }
 
 function apic-okd::validate {
-  apic-k8s::validate
+  validate
 }
 
 function apic-okd::clean {
-  target::step "Delete tiller role binding"
-  oc delete clusterrolebinding tiller-binding
-
-  apic-k8s::clean
-
-  target::step "Clean apic persistent volumes"
-  rm -rf $apic_pv_home
+  clean
 }
 
 target::command $@

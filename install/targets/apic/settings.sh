@@ -1,8 +1,12 @@
 # general
 apic_ns=apiconnect
 apic_skip_load_images=
-max_map_count=262144
 apic_domain=${apic_domain:-morningspace.com}
+apic_pv_type=${apic_pv_type:-local}
+apic_pv_home=${apic_pv_home:-/}
+apic_ingress_type=${apic_ingress_type:-ingress}
+apic_registry=${apic_registry:-"mr.io:5000"}
+max_map_count=262144
 
 # management subsystem
 platform_api=api.$apic_domain
@@ -17,8 +21,8 @@ cassandra_volume_size_gb=5
 # gateway subsystem
 api_gateway=gw.$apic_domain
 apic_gw_service=gwd.$apic_domain
-image_repository=datapower-api-gateway
-image_tag=2018.4.1.4-307525-release
+gwy_image_repository=datapower-api-gateway
+gwy_image_tag=2018.4.1.4-307525-release
 # tms_peering_storage_size_gb=2
 tms_peering_storage_size_gb=5
 # max_memory_gb=1
