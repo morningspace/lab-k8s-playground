@@ -6,12 +6,7 @@ source $INSTALL_HOME/funcs.sh
 
 endpoints_dir=$INSTALL_HOME/targets/endpoints
 
-apiserver_port=$($INSTALL_HOME/dind-cluster.sh apiserver-port 2>/dev/null)
-endpoints=(
-  "Web terminal,https://$HOST_IP:4200"
-  "Dashboard,http://$HOST_IP:$apiserver_port/api/v1/namespaces/kube-system/services/http:kubernetes-dashboard:/proxy"
-)
-print_endpoints "common" "${endpoints[@]}"
+add_endpoint "common" "Web terminal" "https://$HOST_IP:4200"
 
 if [[ -d $endpoints_dir ]]; then
   groups=($(ls $endpoints_dir))

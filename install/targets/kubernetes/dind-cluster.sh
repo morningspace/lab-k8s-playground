@@ -6,6 +6,12 @@ source $INSTALL_HOME/funcs.sh
 
 ensure_k8s_provider "dind-cluster" || exit
 
+function add_endpoints {
+  local apiserver_port=$($INSTALL_HOME/dind-cluster.sh apiserver-port 2>/dev/null)
+  local dashboard_endpoint="http://$HOST_IP:$apiserver_port/api/v1/namespaces/kube-system/services/http:kubernetes-dashboard:/proxy"
+  add_endpoint "common" "Dashboard" $dashboard_endpoint
+}
+
 function dind-cluster::init {
   if [[ ! -f ~/.launch-cache/kubernetes-dashboard.yaml ]]; then
     target::step "Download kubernetes dashboard yaml"
@@ -16,7 +22,6 @@ function dind-cluster::init {
   DIND_CUSTOM_VOLUMES=$INSTALL_HOME/certs:/certs
   DIND_CA_CERT_URL=file:////certs/lab-ca.pem.crt
   DASHBOARD_URL=$HOME/.launch-cache/kubernetes-dashboard.yaml
-  SKIP_SNAPSHOT=1
 
   if ! cat ~/.bashrc | grep -q "^# For kubeadm-dind-clusters$" ; then
     target::step "Update .bashrc"
@@ -26,11 +31,8 @@ function dind-cluster::init {
 export DIND_CUSTOM_VOLUMES=$DIND_CUSTOM_VOLUMES
 export DIND_CA_CERT_URL=$DIND_CA_CERT_URL
 export DASHBOARD_URL=$DASHBOARD_URL
-export SKIP_SNAPSHOT=$SKIP_SNAPSHOT
 EOF
   fi
-
-  pushd $LAB_HOME
 
   target::step "Start to init kubernetes cluster"
   if ensure_os_linux && grep -q "^docker:" /etc/group; then
@@ -45,8 +47,9 @@ EOF
     DIND_CUSTOM_VOLUMES=$DIND_CUSTOM_VOLUMES \
     DIND_CA_CERT_URL=$DIND_CA_CERT_URL \
     DASHBOARD_URL=$DASHBOARD_URL \
-    SKIP_SNAPSHOT=$SKIP_SNAPSHOT \
-  ./dind-cluster-wrapper.sh up"
+    SKIP_SNAPSHOT= \
+  $LAB_HOME/dind-cluster-wrapper.sh up"
+  add_endpoints
 
   if [[ $? == 0 ]]; then
     cat <<EOF | kubectl replace -f -
@@ -64,28 +67,26 @@ subjects:
   namespace: kube-system
 EOF
   fi
-
-  popd
 }
 
 function dind-cluster::up {
   target::step "Take kubernetes cluster up"
-  pushd $LAB_HOME; SKIP_SNAPSHOT= ./dind-cluster-wrapper.sh up; popd
+  SKIP_SNAPSHOT= $LAB_HOME/dind-cluster-wrapper.sh up; add_endpoints
 }
 
 function dind-cluster::down {
   target::step "Take kubernetes cluster down"
-  pushd $LAB_HOME; SKIP_SNAPSHOT= ./dind-cluster-wrapper.sh down; popd
+  SKIP_SNAPSHOT= $LAB_HOME/dind-cluster-wrapper.sh down
 }
 
 function dind-cluster::clean {
   target::step "Clean kubernetes cluster"
-  pushd $LAB_HOME; SKIP_SNAPSHOT= ./dind-cluster-wrapper.sh clean; popd
+  SKIP_SNAPSHOT= $LAB_HOME/dind-cluster-wrapper.sh clean; clean_endpoints "common"
 }
 
 function dind-cluster::snapshot {
   target::step "Create snapshot for kubernetes cluster"
-  pushd $LAB_HOME; SKIP_SNAPSHOT= ./dind-cluster-wrapper.sh snapshot; popd
+  SKIP_SNAPSHOT= $LAB_HOME/dind-cluster-wrapper.sh snapshot
 }
 
 target::command $@
