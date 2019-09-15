@@ -59,10 +59,14 @@ function on_before_init {
   
   target::step "Install tiller"
 
-  oc process -f https://github.com/openshift/origin/raw/master/examples/helm/tiller-template.yaml \
-    -p TILLER_NAMESPACE=$TILLER_NAMESPACE -p HELM_VERSION=$HELM_VERSION | \
-  oc create -n $TILLER_NAMESPACE -f -
-  oc create clusterrolebinding tiller-binding --clusterrole=cluster-admin --user=system:serviceaccount:$TILLER_NAMESPACE:tiller
+  if kubectl get deploy/tiller -o name -n $TILLER_NAMESPACE 2>/dev/null | grep -q tiller; then
+    target::log "Deployment tiller detected"
+  else
+    oc process -f https://github.com/openshift/origin/raw/master/examples/helm/tiller-template.yaml \
+      -p TILLER_NAMESPACE=$TILLER_NAMESPACE -p HELM_VERSION=$HELM_VERSION | \
+    oc create -n $TILLER_NAMESPACE -f -
+    oc create clusterrolebinding tiller-binding --clusterrole=cluster-admin --user=system:serviceaccount:$TILLER_NAMESPACE:tiller
+  fi
 
   target::step "Assign SCC permissions"
 
