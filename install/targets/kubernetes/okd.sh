@@ -33,7 +33,7 @@ function okd::init {
   if [ ! -d ~/.launch-cache/$package ]; then
     target::step "Extract openshift package"
     mkdir ~/.launch-cache/$package
-    tar -zxf ~/.launch-cache/$package_file -C ~/.launch-cache/$package
+    tar -zxf ~/.launch-cache/$package_file -C ~/.launch-cache/
   fi
 
   target::step "Create link to oc"
