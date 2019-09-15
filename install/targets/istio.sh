@@ -4,7 +4,6 @@ LAB_HOME=${LAB_HOME:-`pwd`}
 source $LAB_HOME/install/funcs.sh
 
 ISTIO_VERSION="1.2.2"
-HOST_IP=${HOST_IP:-127.0.0.1}
 case $(uname -s) in
   "Linux") package="istio-$ISTIO_VERSION-linux";;
   "Darwin") package="istio-$ISTIO_VERSION-osx";;

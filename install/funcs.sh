@@ -3,6 +3,8 @@
 logs_dir=$LAB_HOME/install/logs
 endpoints_dir=$LAB_HOME/install/targets/endpoints
 
+HOST_IP=${HOST_IP:-127.0.0.1}
+
 function is_app_ready {
   local out
   if ! out="$(kubectl get pod -n $1 -l "$2" -o jsonpath='{ .items[*].status.conditions[?(@.type == "Ready")].status }' 2>/dev/null)"; then

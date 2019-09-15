@@ -66,8 +66,4 @@ function okd::clean {
   okd::down
 }
 
-function okd::snapshot {
-  target::log "Snapshot not supported"
-}
-
 target::command $@

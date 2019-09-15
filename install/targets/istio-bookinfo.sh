@@ -3,8 +3,6 @@
 LAB_HOME=${LAB_HOME:-`pwd`}
 source $LAB_HOME/install/funcs.sh
 
-HOST_IP=${HOST_IP:-127.0.0.1}
-
 function istio-bookinfo::init {
   target::step "Start to install istio-bookinfo"
 

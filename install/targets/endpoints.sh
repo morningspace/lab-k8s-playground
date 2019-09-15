@@ -4,7 +4,6 @@ LAB_HOME=${LAB_HOME:-`pwd`}
 INSTALL_HOME=$LAB_HOME/install
 source $INSTALL_HOME/funcs.sh
 
-HOST_IP=${HOST_IP:-127.0.0.1}
 endpoints_dir=$INSTALL_HOME/targets/endpoints
 
 apiserver_port=$($INSTALL_HOME/dind-cluster.sh apiserver-port 2>/dev/null)

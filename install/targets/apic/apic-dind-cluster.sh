@@ -35,6 +35,13 @@ function on_before_init {
   else
     kubectl create namespace $apic_ns
   fi
+
+  target::step "Ensure kubectl"
+
+  kubectl version --short 2>/dev/null | grep Client
+  rm $(which kubectl) 2>/dev/null
+  $INSTALL_HOME/targets/kubectl.sh
+  kubectl version --short 2>/dev/null | grep Client
 }
 
 function on_after_init {
@@ -57,19 +64,19 @@ function on_after_init {
     kubectl apply -f -
 }
 
-function apic-k8s::init {
+function apic-dind-cluster::init {
   init
 }
 
-function apic-k8s::validate {
+function apic-dind-cluster::validate {
   validate
 }
 
-function apic-k8s::clean {
+function apic-dind-cluster::clean {
   clean
 }
 
-function apic-k8s::portforward {
+function apic-dind-cluster::portforward {
   local docker_io_host="registry-1.docker.io"
 
   target::step "Try to stop the fake $docker_io_host if running"

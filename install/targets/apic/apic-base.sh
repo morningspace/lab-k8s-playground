@@ -9,7 +9,6 @@ APIC_DEPLOY_HOME=$INSTALL_HOME/targets/apic
 . $INSTALL_HOME/funcs.sh
 . $APIC_DEPLOY_HOME/settings.sh
 
-HOST_IP=${HOST_IP:-127.0.0.1}
 apic_pv_home_text="${apic_pv_home////\\/}"
 
 function ensure_apicup {
@@ -144,7 +143,7 @@ function install_mgmt {
 
   $apicup subsys install mgmt --plan-dir=mgmt-install-plan
 
-  target::log "done"
+  target::log "[done]"
 }
 
 function install_gwy {
@@ -190,7 +189,7 @@ function install_gwy {
 
   $apicup subsys install gwy --plan-dir=gwy-install-plan
 
-  target::log "done"
+  target::log "[done]"
 }
 
 function install_analyt {
@@ -240,7 +239,7 @@ function install_analyt {
 
   $apicup subsys install analyt --plan-dir=analyt-install-plan
 
-  target::log "done"
+  target::log "[done]"
 }
 
 function install_ptl {
@@ -286,7 +285,7 @@ function install_ptl {
 
   $apicup subsys install ptl --plan-dir=ptl-install-plan
 
-  target::log "done"
+  target::log "[done]"
 }
 
 function add_endpoints {
@@ -307,6 +306,8 @@ function on_before_init {
 }
 
 function init {
+  on_before_init
+
   ensure_apicup
 
   if [[ -z $apic_skip_load_images || $apic_skip_load_images == 0 ]]; then
@@ -314,9 +315,10 @@ function init {
     load_images
   fi
 
+  init_project
+
   pushd $APIC_PROJECT_HOME >/dev/null
 
-  init_project
   install_gwy
   install_ptl
   install_analyt
@@ -324,6 +326,8 @@ function init {
   add_endpoints
 
   popd >/dev/null
+
+  on_after_init
 }
 
 function on_after_init {
