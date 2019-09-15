@@ -49,7 +49,6 @@ EOF
     DASHBOARD_URL=$DASHBOARD_URL \
     SKIP_SNAPSHOT= \
   $LAB_HOME/dind-cluster-wrapper.sh up"
-  add_endpoints
 
   if [[ $? == 0 ]]; then
     cat <<EOF | kubectl replace -f -
@@ -67,6 +66,8 @@ subjects:
   namespace: kube-system
 EOF
   fi
+
+  add_endpoints
 }
 
 function dind-cluster::up {
