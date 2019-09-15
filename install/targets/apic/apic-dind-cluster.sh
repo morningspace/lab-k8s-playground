@@ -39,8 +39,7 @@ function on_before_init {
   target::step "Ensure kubectl"
 
   kubectl version --short 2>/dev/null | grep Client
-  rm $(which kubectl) 2>/dev/null
-  $INSTALL_HOME/targets/kubectl.sh
+  $INSTALL_HOME/targets/kubectl.sh --force
   kubectl version --short 2>/dev/null | grep Client
 }
 

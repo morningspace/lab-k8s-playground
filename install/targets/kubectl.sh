@@ -4,7 +4,11 @@ LAB_HOME=${LAB_HOME:-`pwd`}
 source $LAB_HOME/install/funcs.sh
 
 target::step "Start to install kubectl"
-ensure_command "kubectl" && exit
+
+if ensure_command "kubectl"; then
+  [[ $@ =~ --force ]] && target::log "force to install" || exit
+fi
+  
 ensure_k8s_version || exit
 
 # set version per kubernetes version
