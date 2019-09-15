@@ -71,7 +71,7 @@ EOF
 
 function dind-cluster::up {
   target::step "Take kubernetes cluster up"
-  SKIP_SNAPSHOT= $LAB_HOME/dind-cluster-wrapper.sh up; add_endpoints
+  SKIP_SNAPSHOT= $LAB_HOME/dind-cluster-wrapper.sh up; clean_endpoints "common"; add_endpoints
 }
 
 function dind-cluster::down {
