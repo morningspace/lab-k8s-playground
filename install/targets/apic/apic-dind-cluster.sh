@@ -62,6 +62,9 @@ function on_after_init {
     sed -e "s/@@ingress_svc_ip/$ingress_svc_ip/g" | \
     sed -e "s/@@apic_hosts/$apic_hosts/g" | \
     kubectl apply -f -
+
+  # Management
+  add_endpoint "apic" "Cloud Manager UI" "https://$cloud_admin_ui" "(default usr/pwd: admin/7iron-hide)"
 }
 
 function apic-dind-cluster::init {

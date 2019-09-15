@@ -73,6 +73,11 @@ function on_before_init {
   oc adm policy add-scc-to-group anyuid system:serviceaccounts:$apic_ns
 }
 
+function on_after_init {
+  # Management
+  add_endpoint "apic" "Cloud Manager UI" "https://$cloud_admin_ui/admin" "(default usr/pwd: admin/7iron-hide)"
+}
+
 function on_before_clean {
   oc login -u system:admin >/dev/null
 

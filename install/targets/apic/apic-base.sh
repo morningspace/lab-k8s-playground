@@ -297,8 +297,6 @@ function add_endpoints {
   add_endpoint "apic" "Portal Website URL" "https://$portal_www"
   # Analytics
   add_endpoint "apic" "Analytics Management Endpoint" "https://$analytics_client"
-  # Management
-  add_endpoint "apic" "Cloud Manager UI" "https://$cloud_admin_ui" "(default usr/pwd: admin/7iron-hide)"
 }
 
 function on_before_init {
