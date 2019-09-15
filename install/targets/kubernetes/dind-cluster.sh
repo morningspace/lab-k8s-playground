@@ -12,6 +12,23 @@ function add_endpoints {
   add_endpoint "common" "Dashboard" $dashboard_endpoint
 }
 
+function dashboard_rolebinding {
+  cat <<EOF | kubectl replace -f -
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: dashboard-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: kubernetes-dashboard
+  namespace: kube-system
+EOF
+}
+
 function dind-cluster::init {
   if [[ ! -f ~/.launch-cache/kubernetes-dashboard.yaml ]]; then
     target::step "Download kubernetes dashboard yaml"
@@ -48,32 +65,18 @@ EOF
     DIND_CA_CERT_URL=$DIND_CA_CERT_URL \
     DASHBOARD_URL=$DASHBOARD_URL \
     SKIP_SNAPSHOT= \
-  $LAB_HOME/dind-cluster-wrapper.sh up"
-
-  if [[ $? == 0 ]]; then
-    cat <<EOF | kubectl replace -f -
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: ClusterRoleBinding
-metadata:
-  name: cluster-admin
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: cluster-admin
-subjects:
-- kind: ServiceAccount
-  name: kubernetes-dashboard
-  namespace: kube-system
-EOF
-  fi
-
-  clean_endpoints "common"
+  $LAB_HOME/dind-cluster-wrapper.sh up" && \
+  dashboard_rolebinding && \
+  clean_endpoints "common" && \
   add_endpoints
 }
 
 function dind-cluster::up {
   target::step "Take kubernetes cluster up"
-  SKIP_SNAPSHOT= $LAB_HOME/dind-cluster-wrapper.sh up; clean_endpoints "common"; add_endpoints
+  SKIP_SNAPSHOT= $LAB_HOME/dind-cluster-wrapper.sh up && \
+    dashboard_rolebinding && \
+    clean_endpoints "common" && \
+    add_endpoints
 }
 
 function dind-cluster::down {
@@ -83,7 +86,8 @@ function dind-cluster::down {
 
 function dind-cluster::clean {
   target::step "Clean kubernetes cluster"
-  SKIP_SNAPSHOT= $LAB_HOME/dind-cluster-wrapper.sh clean; clean_endpoints "common"
+  SKIP_SNAPSHOT= $LAB_HOME/dind-cluster-wrapper.sh clean && \
+    clean_endpoints "common"
 }
 
 function dind-cluster::snapshot {
