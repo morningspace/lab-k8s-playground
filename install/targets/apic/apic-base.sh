@@ -64,8 +64,7 @@ function load_image {
 function load_images {
   target::step "Load apic images into private registry"
 
-  local mr_io="mr.io:5000"
-  $INSTALL_HOME/launch.sh registry::mr.io
+  local mr_io="${HOSTNAME:-localhost}:5000"
 
   target::step "Load portal images"
   $apicup registry-upload portal $ptl_images_tgz $mr_io
@@ -75,8 +74,6 @@ function load_images {
 
   target::step "Load analytics images"
   $apicup registry-upload analytics $analyt_images_tgz $mr_io
-
-  $INSTALL_HOME/launch.sh registry::mr.io
 
   target::step "Load gateway image"
   local gwy_image=$(docker load -i $gwy_images_tgz | grep -o ibmcom/datapower.*)
