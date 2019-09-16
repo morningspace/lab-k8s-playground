@@ -15,6 +15,9 @@ if [[ -d $endpoints_dir ]]; then
     while IFS='' read -r line || [[ -n "$line" ]] ; do
       endpoints+=("$line")
     done < $endpoints_dir/$group
-    print_endpoints $group "${endpoints[@]}"
+
+    if [[ ${#endpoints[@]} != 0 ]]; then
+      print_endpoints $group "${endpoints[@]}"
+    fi
   done
 fi
