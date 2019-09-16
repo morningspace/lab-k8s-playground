@@ -77,9 +77,14 @@ function okd::clean {
 
   okd::down
 
-  # https://github.com/openshift/origin/pull/2629
-  findmnt -lo TARGET | grep openshift.local.volumes | xargs -r sudo umount
-  rm -rf $OKD_INSTALL_HOME
+  local os=$(detect_os)
+  if [[ $os == rhel || $os == centos ]]; then
+    # https://github.com/openshift/origin/pull/2629
+    findmnt -lo TARGET | grep openshift.local.volumes | xargs -r sudo umount
+    sudo rm -rf $OKD_INSTALL_HOME
+  else
+    rm -rf $OKD_INSTALL_HOME
+  fi
 }
 
 target::command $@
