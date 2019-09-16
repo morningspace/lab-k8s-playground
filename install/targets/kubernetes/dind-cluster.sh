@@ -67,7 +67,6 @@ EOF
     SKIP_SNAPSHOT= \
   $LAB_HOME/dind-cluster-wrapper.sh up" && \
   dashboard_rolebinding && \
-  clean_endpoints "common" && \
   add_endpoints
 }
 
@@ -75,7 +74,6 @@ function dind-cluster::up {
   target::step "Take kubernetes cluster up"
   SKIP_SNAPSHOT= $LAB_HOME/dind-cluster-wrapper.sh up && \
     dashboard_rolebinding && \
-    clean_endpoints "common" && \
     add_endpoints
 }
 
@@ -87,7 +85,7 @@ function dind-cluster::down {
 function dind-cluster::clean {
   target::step "Clean kubernetes cluster"
   SKIP_SNAPSHOT= $LAB_HOME/dind-cluster-wrapper.sh clean && \
-    clean_endpoints "common"
+    clean_endpoints "common" "Dashboard"
 }
 
 function dind-cluster::snapshot {

@@ -159,6 +159,8 @@ function add_endpoint {
 
   if ! cat $group_file | grep -q "^$2"; then
     echo "$2,$3,$4" >> $group_file
+  else
+    sed -i "s/^${2////\\/}.*$/${2////\\/},${3////\\/},${4////\\/}/g" $group_file
   fi
 }
 

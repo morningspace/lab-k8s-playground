@@ -56,7 +56,6 @@ function okd::up {
 
   oc cluster up --public-hostname=$HOST_IP --base-dir=$OKD_INSTALL_HOME --write-config=false
 
-  clean_endpoints "common"
   add_endpoint "common" "OKD Console" "https://$HOST_IP:8443/console"
 }
 
@@ -68,7 +67,7 @@ function okd::down {
 function okd::clean {
   target::step "Clean kubernetes cluster"
 
-  clean_endpoints "common"
+  clean_endpoints "common" "OKD Console"
 
   okd::down
 
