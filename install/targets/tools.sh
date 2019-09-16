@@ -71,17 +71,17 @@ fi
 ########################
 # kube-shell
 ########################
-if [ $(uname -s) == Linux ]; then
-  target::step "Start to install kube-shell"
-  if [[ ! -f ~/.launch-cache/get-pip.py ]]; then
-    curl -sSLo ~/.launch-cache/get-pip.py https://bootstrap.pypa.io/get-pip.py
-  fi
-  if ! ensure_command "kube-shell"; then
-    python3 ~/.launch-cache/get-pip.py --user
-    $HOME/.local/bin/pip3 install kube-shell --user
-    target::log "kube-shell installed"
-  fi
-fi
+# if [ $(uname -s) == Linux ]; then
+#   target::step "Start to install kube-shell"
+#   if [[ ! -f ~/.launch-cache/get-pip.py ]]; then
+#     curl -sSLo ~/.launch-cache/get-pip.py https://bootstrap.pypa.io/get-pip.py
+#   fi
+#   if ! ensure_command "kube-shell"; then
+#     python3 ~/.launch-cache/get-pip.py --user
+#     $HOME/.local/bin/pip3 install kube-shell --user
+#     target::log "kube-shell installed"
+#   fi
+# fi
 
 ########################
 # kubebox
