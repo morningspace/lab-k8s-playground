@@ -54,6 +54,21 @@ if ! ensure_command "kubens"; then
 fi
 
 ########################
+# kubectx
+########################
+target::step "Start to install kubectx"
+if [[ ! -f ~/.launch-cache/kubectx ]]; then
+  curl -sSLo ~/.launch-cache/kubectx \
+    https://raw.githubusercontent.com/ahmetb/kubectx/master/kubectx
+  sudo chmod +x ~/.launch-cache/kubectx
+fi
+if ! ensure_command "kubectx"; then
+  sudo ln -sf ~/.launch-cache/kubectx /usr/bin/kubectx
+  sudo ln -sf ~/.launch-cache/kubectx /usr/sbin/kubectx
+  target::log "kubectx installed"
+fi
+
+########################
 # kube-shell
 ########################
 if [ $(uname -s) == Linux ]; then
