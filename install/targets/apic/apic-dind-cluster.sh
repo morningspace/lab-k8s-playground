@@ -66,6 +66,11 @@ function on_after_init {
   add_endpoint "apic" "Cloud Manager UI" "https://$cloud_admin_ui" "(default usr/pwd: admin/7iron-hide)"
 }
 
+function on_before_clean {
+  # Management
+  clean_endpoints "apic" "Cloud Manager UI"
+}
+
 function apic-dind-cluster::init {
   init
 }

@@ -288,7 +288,7 @@ function install_ptl {
   target::log "[done]"
 }
 
-function add_endpoints {
+function add_apic_endpoints {
   # Gateway
   add_endpoint "apic" "Gateway Management Endpoint" "https://$apic_gw_service"
   add_endpoint "apic" "Gateway API Endpoint Base" "https://$api_gateway"
@@ -297,6 +297,17 @@ function add_endpoints {
   add_endpoint "apic" "Portal Website URL" "https://$portal_www"
   # Analytics
   add_endpoint "apic" "Analytics Management Endpoint" "https://$analytics_client"
+}
+
+function clean_apic_endpoints {
+  # Gateway
+  clean_endpoints "apic" "Gateway Management Endpoint"
+  clean_endpoints "apic" "Gateway API Endpoint Base"
+  # Portoal
+  clean_endpoints "apic" "Portal Management Endpoint"
+  clean_endpoints "apic" "Portal Website URL"
+  # Analytics
+  clean_endpoints "apic" "Analytics Management Endpoint"
 }
 
 function on_before_init {
@@ -321,7 +332,7 @@ function init {
   install_ptl
   install_analyt
   install_mgmt
-  add_endpoints
+  add_apic_endpoints
 
   popd >/dev/null
 
@@ -361,7 +372,7 @@ function on_before_clean {
 function clean {
   on_before_clean
 
-  clean_endpoints "apic"
+  clean_apic_endpoints
 
   target::step "Delete namespace $apic_ns"
   (kubectl get namespace | grep -q $apic_ns) && \

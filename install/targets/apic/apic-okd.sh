@@ -79,6 +79,9 @@ function on_after_init {
 }
 
 function on_before_clean {
+  # Management
+  clean_endpoints "apic" "Cloud Manager UI"
+
   oc login -u system:admin >/dev/null
 
   target::step "Delete tiller role binding"
