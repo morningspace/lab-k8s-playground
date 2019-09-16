@@ -51,9 +51,12 @@ function okd::init {
 
 function okd::up {
   target::step "Take kubernetes cluster up"
+
   mkdir -p $OKD_INSTALL_HOME
+
   oc cluster up --public-hostname=$HOST_IP --base-dir=$OKD_INSTALL_HOME --write-config=false
 
+  clean_endpoints "common"
   add_endpoint "common" "OKD Console" "https://$HOST_IP:8443/console"
 }
 
