@@ -6,7 +6,7 @@ INSTALL_HOME=$LAB_HOME/install
 
 ensure_k8s_provider "okd" || exit
 
-OKD_INSTALL_HOME=$INSTALL_HOME/.launch-cache/okd
+OKD_INSTALL_HOME=${OKD_INSTALL_HOME:-~/okd}
 OKD_VERSION=${OKD_VERSION:-v3.11.0}
 OKD_COMMIT=${OKD_COMMIT:-0cbc58b}
 
@@ -54,7 +54,13 @@ function okd::up {
 
   mkdir -p $OKD_INSTALL_HOME
 
-  oc cluster up --public-hostname=$HOST_IP --base-dir=$OKD_INSTALL_HOME --write-config=false
+  if ensure_os_linux && grep -q "^docker:" /etc/group; then
+    run_cmd="sg docker -c"
+  else
+    run_cmd="eval"
+  fi  
+
+  $run_cmd "oc cluster up --public-hostname=$HOST_IP --base-dir=$OKD_INSTALL_HOME --write-config=false"
 
   add_endpoint "common" "OKD Console" "https://$HOST_IP:8443/console"
 }
