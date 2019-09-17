@@ -1,6 +1,6 @@
 # The All-in-One Kubernetes Playground Usage Guide
 
-This guide will work you through the steps to launch the All-in-One Kubernetes Playground with a mult-node cluster on a single machine!
+This guide will work you through the steps to launch the [All-in-One Kubernetes Playground](https://github.com/morningspace/lab-k8s-playground/) with a single- or mult-node cluster on a single machine!
 
 ## How to launch the playground?
 
@@ -18,7 +18,7 @@ When you have [Vagrant](https://www.vagrantup.com/) and its provider e.g. [Virtu
 $ vagrant up
 ```
 
-By default, it will provision the box and launch a three-node Kubernetes cluster.
+By default, it will provision the box and launch a three-node standard Kubernetes cluster.
 
 ### Host machine
 
@@ -36,11 +36,15 @@ Before reload, there are some environment variables defined in `.bashrc` that yo
 ```shell
 # The IP of your host, default is 127.0.0.1
 export HOST_IP=
+# The Kubernetes provider, default is dind-cluster
+export K8S_PROVIDER=
 # The Kubernetes version, default is v1.14
 export K8S_VERSION=
 # The number of worker nodes, default is 2
 export NUM_NODES=
 ```
+
+> `K8S_PROVIDER` is used to specify which Kubernetes distribution you use to provision the playground. By default, it will launch a standard Kubernetes cluster. But it also supports other Kubernetes distribution, e.g. OpenShift. Please refer to ["Launch using OpenShift"](#launch-using-openshift) for more details.
 
 Finally, let's run below command to launch the cluster:
 ```shell
@@ -57,13 +61,32 @@ If you run the playground in a VM, then you probably don't need Vagrant box, sin
 
 ### Which OS shall I use?
 
-The playground can be launched in:
+The playground can be launched on:
 * `Ubuntu`
 * `CentOS`
 * `RHEL`
 * `MacOS`
 
 When lauch the playground in Vagrant box, although the [Vagrantfile](/Vagrantfile) uses Ubuntu, you can change it to use other OS.
+
+## Launch using OpenShift
+
+The playground supports both standard Kubernetes and OpenShift. This is configurable by using environment variable `K8S_PROVIDER`. The default value of `K8S_PROVIDER` is `dind-cluster`, which will launch a multi-node standard Kubernetes cluster on your host machine.
+
+To launch the playground using OpenShift, you just need to change the value of `K8S_PROVIDER` to `okd`. Then run below command to launch the cluster:
+```shell
+$ launch kubernetes
+```
+
+This will bring up a single node cluster running directly on your host machine.
+
+You can even run multiple clusters using different Kubernetes distributions on the same host machine! As an example, run below commands:
+```shell
+$ K8S_PROVIDER= launch kubernetes
+$ K8S_PROVIDER=okd launch kubernetes
+```
+
+This will bring up a multi-node standard Kubernetes cluster first, then a single node OpenShift cluster. Using [kubectx](https://github.com/ahmetb/kubectx), you can switch context between the two clusters easily. Then, run other command line tools, e.g. [kubectl](https://kubernetes.io/docs/reference/kubectl), to manage the cluster.
 
 ## How to access the playground?
 
@@ -74,7 +97,7 @@ $ vagrant ssh
 
 You can also login using web terminal. To access it, use the host IP or the box IP that launches the playground, e.g. the default box IP is `192.168.56.100`, so the web terminal URL is https://192.168.56.100:4200. Please refer to ["Customize the playground"](#customize-the-playground) on how to change the box IP.
 
-After login, you can use [kubectl](https://kubernetes.io/docs/reference/kubectl) to access the cluster, use [helm](https://helm.sh) to deploy applications, or other pre-installed tools, e.g. [kubens](https://github.com/ahmetb/kubectx), [kubectl aliases](https://github.com/ahmetb/kubectl-aliases) to make your access to the cluster much easier. Here is a demo that run variant command line tools from both normal and web terminals.
+If use the box, please use vagrant/vagrant as user/password when you login from web terminal. After login, you can use [kubectl](https://kubernetes.io/docs/reference/kubectl) to access the cluster, use [helm](https://helm.sh) to deploy applications, or other pre-installed tools, e.g. [kubens](https://github.com/ahmetb/kubectx), [kubectl aliases](https://github.com/ahmetb/kubectl-aliases) to make your access to the cluster much easier. Here is a demo that run variant command line tools from both normal and web terminals.
 
 ![](demo-tools.gif)
 
@@ -95,7 +118,7 @@ $ vagrant destroy
 
 ## What else can I do with the playground?
 
-You can adjust the playground after it is launched using the Launch Utility, i.e. the `launch` command that you have already used in previous sessions.
+You can adjust the playground after it is launched using the Launch Utility, i.e. the `launch` command that you have already used in previous sections.
 
 Usually, the command is followed by a few targets separated by space. It then launches the targets in order of appearance one by one, e.g. this is going to launch `kubernetes`, then `helm`:
 ```shell
@@ -137,7 +160,9 @@ Done. Please check /home/vagrant/lab-k8s-playground/install/logs/pfwd-istio-ingr
 Total elapsed time: 2 seconds
 ```
 
-After it's finished, run target `endpoints` to list all endpoints available in the playground with their healthiness status. Then, choose one of the endpoints and click to open it in browser:
+> This is only required when you launch standard Kubernetes cluster. For OpenShift, you can access the cluster right after it's launched without additional step.
+
+After it's finished, run target `endpoints` to list all endpoints available in the playground with their healthiness status. Then, choose one of them and open it in web browser:
 ```
 $ launch endpoints
 Targets to be launched: [endpoints]                                                                                                          
@@ -241,7 +266,7 @@ Here is a demo that I turned off Wi-Fi on my laptop, then went into the box, and
 
 By working through previous sections, you've already known how to use Launch Utility to customize the playground after it is launched.
 
-There are more settings for you to tune the playground when it is being provisioned, e.g., you can specify the Kubernetes version, number of cluster nodes, the IP of the host that runs the playground, etc.
+There are more settings for you to tune the playground when it is being provisioned, e.g., you can specify the Kubernetes distribution, Kubernetes version, number of cluster nodes, the IP of the host that runs the playground, etc.
 
 Please refer to [Vagrantfile](/Vagrantfile) if you use box to launch the playground:
 ```ruby
@@ -255,6 +280,8 @@ targets = "init default helm tools"
 
 # set Kubernetes version, supported versions: v1.12, v1.13, v1.14, v1.15
 k8s_version = "v1.14"
+# set Kubernetes provider, supported providers: dind-cluster, okd
+k8s_provider = "dind-cluster"
 # set number of worker nodes
 num_nodes = 2
 # set host ip of the box

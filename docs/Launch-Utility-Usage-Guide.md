@@ -21,6 +21,7 @@ The `Launch Utility` supports many pre-defined targets. They are listed as below
 
 | Target				| Description
 | ---- 					|:----
+|apic						| Deploy [IBM API Connect](https://www.ibm.com/cloud/api-connect) to the playground
 |base						| As a special target, will launch target docker, docker-compose, kubectl
 |default				| As a special target, will launch target base, registry, kubernetes
 |docker					| Install docker
@@ -47,14 +48,14 @@ Some targets may have multiple commands available for you to call, e.g. target `
 |down						| Stop the cluster but do not clean up the storage
 |init						| Initialize and bring up the cluster
 |snapshot				| Create snapshot for current running cluster
-|up							| Launch the cluster from snapshot
+|up							| Bring up the cluster
 
 To call a particular command when launch a target, use the below format:
 ```shell
 $ launch <target_name>::<command_name>
 ```
 
-For example, this is to launch a cluster from snapshot:
+For example, this is to bring up a cluster:
 ```shell
 $ launch kubernetes::up
 ```
@@ -62,7 +63,7 @@ $ launch kubernetes::up
 For the supported commands of other targets, you can explore by yourself using the `Launch Utility` auto-completion feature, e.g.:
 ```shell
 $ launch registry::<tab><tab>
-down  init  up
+docker.io  down       init       mr.io      up
 ```
 
 Typing two `<tab>`s after `::` will list all available commands of target `registry`.

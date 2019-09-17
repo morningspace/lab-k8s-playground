@@ -2,11 +2,25 @@
 
 > This is the very high level overview of the All-in-One Kubernetes Playground. For more details on how to use the playground, please refer to ["The All-in-One Kubernetes Playground Usage Guide"](All-in-One-Playground-Usage-Guide.md) or ["All-in-One K8S Playground中文使用指南"](https://morningspace.github.io/tech/all-in-one-k8s-playground/).
 
-This playground includes a set of shell scripts that can help you launch a multi-node Kubernetes cluster on a single machine in minutes in a repeatable manner.
+This playground includes a set of shell scripts that can help you launch a single- or multi-node Kubernetes cluster on a single machine in minutes in a repeatable manner.
+
+## OS
+
+The below OSs are supported by this playground:
+* Ubuntu
+* CentOS
+* RHEL
+* MacOS
+
+## Kubernetes Distributions
+
+The below Kubernetes distributions are supported by this playground:
+* [Kubernetes](https://kubernetes.io/): v1.12, v1.13, v1.14, v1.15
+* [OpenShift](https://www.openshift.com/): v3.11
 
 ## Applications
 
-The below applications are deployed along with the playground for you to evaluate and use:
+The below applications are deployed along with this playground for you to evaluate and use:
 * [Kubernetes dashboard](https://github.com/kubernetes/dashboard)
 * [Istio](https://istio.io) with demo app [bookinfo](https://istio.io/docs/examples/bookinfo)
 * [Grafana](https://grafana.com)
@@ -16,12 +30,12 @@ The below applications are deployed along with the playground for you to evaluat
 
 ## Tools
 
-The below Kubernetes-related command line tools are integrated with the playground for you to evaluate and use:
+The below Kubernetes-related command line tools are integrated with this playground for you to evaluate and use:
 * [kubectl](https://kubernetes.io/docs/reference/kubectl)
 * [helm](https://helm.sh)
 * [kubectl autocompletion](https://kubernetes.io/docs/tasks/tools/install-kubectl/#optional-kubectl-configurations)
 * [kubectl aliases](https://github.com/ahmetb/kubectl-aliases)
-* [kubens](https://github.com/ahmetb/kubectx)
+* [kubectx and kubens](https://github.com/ahmetb/kubectx)
 * [kubebox](https://github.com/astefanutti/kubebox)
 * [kubetail](https://github.com/johanhaleby/kubetail)
 * [kube-shell](https://github.com/cloudnativelabs/kube-shell)
@@ -57,6 +71,6 @@ For more details, please refer to ["What else can I do with the playground?"](Al
 
 ## Customize
 
-You can customize the playground before or after its launch in many aspects to meet your very specific requirement, e.g. to change the kubernetes version, the number of cluster nodes, the applications to be installed, and the Docker images to be pulled.
+You can customize the playground before or after its launch in many aspects to meet your very specific requirement, e.g. to change the Kubernetes distribution, Kubernetes version, the number of cluster nodes, the applications to be installed, and the Docker images to be pulled.
 
 For more details, please refer to ["Can I customize the playground?"](All-in-One-Playground-Usage-Guide.md#can-i-customize-the-playground), ["What if images are changed?"](All-in-One-Playground-Usage-Guide.md#what-if-images-are-changed).
