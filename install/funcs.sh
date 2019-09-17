@@ -169,7 +169,9 @@ function clean_endpoints {
   if [ -z "$2" ] ; then
     rm -f $group_file
   elif [ -f "$group_file" ] ; then
-    sed -i "/$2/d" $group_file
+    [[ $(detect_os) == darwin ]] && \
+      sed -i "" "/$2/d" $group_file || \
+      sed -i "/$2/d" $group_file
   fi
 }
 
