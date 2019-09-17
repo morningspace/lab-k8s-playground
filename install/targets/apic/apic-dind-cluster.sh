@@ -36,6 +36,8 @@ function on_before_init {
     kubectl create namespace $apic_ns
   fi
 
+  $INSTALL_HOME/targets/helm.sh
+
   target::step "Ensure kubectl"
 
   kubectl version --short 2>/dev/null | grep Client
