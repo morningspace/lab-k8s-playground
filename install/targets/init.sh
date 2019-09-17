@@ -68,10 +68,10 @@ export LAB_HOME=$LAB_HOME
 # Customize below settings as needed
 # The IP of your host, default is 127.0.0.1
 export HOST_IP=$HOST_IP
-# The Kubernetes version, default is v1.14
-export K8S_VERSION=$K8S_VERSION
 # The Kubernetes provider, default is dind-cluster
 export K8S_PROVIDER=$K8S_PROVIDER
+# The Kubernetes version, default is v1.14
+export K8S_VERSION=$K8S_VERSION
 # The number of worker nodes, default is 2
 export NUM_NODES=$NUM_NODES
 

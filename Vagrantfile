@@ -36,6 +36,8 @@ SCRIPT
 Vagrant.configure(2) do |config|
   config.vm.box = "bento/ubuntu-16.04"
   config.vm.box_version = "201906.18.0"
+  # config.vm.box = "centos/7"
+  # config.vm.box_version = "1905.1"
 
   config.vm.synced_folder ".", "/vagrant"
 
@@ -62,7 +64,7 @@ Vagrant.configure(2) do |config|
     s.env = {
       "LAB_HOME" => "/vagrant",
       "K8S_VERSION" => "#{k8s_version}",
-      "K8S_PROVIDER" => "#{k8s_provide}"
+      "K8S_PROVIDER" => "#{k8s_provider}",
       "NUM_NODES" => "#{num_nodes}",
       "HOST_IP" => "#{host_ip}",
       "IS_IN_CHINA" => "#{is_in_china}",
