@@ -39,6 +39,7 @@ function dind-cluster::init {
   DIND_CUSTOM_VOLUMES=$INSTALL_HOME/certs:/certs
   DIND_CA_CERT_URL=file:////certs/lab-ca.pem.crt
   DASHBOARD_URL=$HOME/.launch-cache/kubernetes-dashboard.yaml
+  SKIP_SNAPSHOT=1
 
   if ! cat ~/.bashrc | grep -q "^# For kubeadm-dind-clusters$" ; then
     target::step "Update .bashrc"
@@ -48,6 +49,7 @@ function dind-cluster::init {
 export DIND_CUSTOM_VOLUMES=$DIND_CUSTOM_VOLUMES
 export DIND_CA_CERT_URL=$DIND_CA_CERT_URL
 export DASHBOARD_URL=$DASHBOARD_URL
+export SKIP_SNAPSHOT=$SKIP_SNAPSHOT
 EOF
   fi
 
@@ -64,7 +66,7 @@ EOF
     DIND_CUSTOM_VOLUMES=$DIND_CUSTOM_VOLUMES \
     DIND_CA_CERT_URL=$DIND_CA_CERT_URL \
     DASHBOARD_URL=$DASHBOARD_URL \
-    SKIP_SNAPSHOT= \
+    SKIP_SNAPSHOT=$SKIP_SNAPSHOT \
   $LAB_HOME/dind-cluster-wrapper.sh up" && \
   dashboard_rolebinding && \
   add_endpoints

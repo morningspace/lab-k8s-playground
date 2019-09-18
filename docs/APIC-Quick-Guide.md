@@ -2,6 +2,8 @@
 
 This guide will work you through the steps to launch [IBM API Connect(APIC)](https://www.ibm.com/cloud/api-connect) on top of [Kubernetes](https://kubernetes.io/) or [OpenShift](https://www.openshift.com/) using the [All-in-One Kubernetes Playground](https://github.com/morningspace/lab-k8s-playground/) on a single machine!
 
+![](demo-apic.gif)
+
 ## Step 1. Prepare the playground
 
 Clone the playground repository, go into the repository root directory, run command to init the environment:
@@ -25,10 +27,9 @@ export NUM_NODES=3
 
 > You can choose different Kubernetes distributions to install APIC by specifiying `K8S_PROVIDER`, valid values include: `dind-cluster` for standard Kubernetes, `okd` for OpenShift. If you choose OpenShift, `K8S_VERSION` and `NUM_NODES` will be ignored.
 
-Reload `.bashrc` to apply your changes, enable bash completion and other features in current login session, then switch to git branch `apic`:
+Reload `.bashrc` to apply your changes, enable bash completion and other features in current login session:
 ```shell
 $ . ~/.bashrc
-$ git checkout apic
 ```
 
 > The Playground with APIC can be launched on either Ubuntu, CentOS, or RHEL.
@@ -60,9 +61,9 @@ You can set `apic_skip_load_images` to `1` in `settings.sh` after the first laun
 
 If you are interested in APIC settings customization, please check [Appendix: Customize APIC settings](#appendix-customize-apic-settings)
 
-## Step 4. Launch kubernetes and APIC
+## Step 4. Launch Kubernetes and APIC
 
-Run command to launch kubernetes:
+Run command to launch Kubernetes:
 ```shell
 $ launch default
 ```
