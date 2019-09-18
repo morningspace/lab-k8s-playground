@@ -403,9 +403,6 @@ function apic::clean {
 }
 
 function apic::portforward {
-  target::step "try to stop the fake $docker_io_host if running"
-  sudo docker stop $docker_io_host
-
   kill_portfwds "443:443"
   create_portfwd $apic_ns service/ingress-nginx-ingress-controller 443:443
 }
