@@ -1,0 +1,42 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: apic-ana-data
+spec:
+  capacity:
+    storage: @@data_storage_size_gbGi
+  storageClassName: apic-local-storage
+  local:
+    path: /var/lib/elasticsearch
+  nodeAffinity:
+      required:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: kubernetes.io/hostname
+            operator: In
+            values: ["kube-node-2"]
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: apic-ana-master-data
+spec:
+  capacity:
+    storage: @@master_storage_size_gbGi
+  storageClassName: apic-local-storage
+  local:
+    path: /var/lib/elasticsearch
+  nodeAffinity:
+      required:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: kubernetes.io/hostname
+            operator: In
+            values: ["kube-node-3"]
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain

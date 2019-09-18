@@ -1,0 +1,36 @@
+controller:
+  config:
+    hsts-max-age: "31536000"
+    keepalive: "32"
+    log-format: '{ "@timestamp": "$time_iso8601", "@version": "1", "clientip": "$remote_addr",
+      "tag": "ingress", "remote_user": "$remote_user", "bytes": $bytes_sent, "duration":
+      $request_time, "status": $status, "request": "$request_uri", "urlpath": "$uri",
+      "urlquery": "$args", "method": "$request_method", "referer": "$http_referer",
+      "useragent": "$http_user_agent", "software": "nginx", "version": "$nginx_version",
+      "host": "$host", "upstream": "$upstream_addr", "upstream-status": "$upstream_status"
+      }'
+    main-snippets: load_module "modules/ngx_stream_module.so"
+    proxy-body-size: "0"
+    proxy-buffering: "off"
+    server-name-hash-bucket-size: "128"
+    server-name-hash-max-size: "1024"
+    server-tokens: "False"
+    ssl-ciphers: HIGH:!aNULL:!MD5
+    ssl-prefer-server-ciphers: "True"
+    ssl-protocols: TLSv1.2
+    use-http2: "true"
+    worker-connections: "10240"
+    worker-cpu-affinity: auto
+    worker-processes: "1"
+    worker-rlimit-nofile: "65536"
+    worker-shutdown-timeout: 5m
+  daemonset:
+    useHostPort: false
+  extraArgs:
+    annotations-prefix: ingress.kubernetes.io
+    enable-ssl-passthrough: true
+  hostNetwork: true
+  kind: DaemonSet
+  name: controller
+rbac:
+  create: "true"
