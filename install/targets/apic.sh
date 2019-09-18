@@ -6,7 +6,6 @@ APIC_INSTALL_HOME=$INSTALL_HOME/.launch-cache/apic
 APIC_PROJECT_HOME=$APIC_INSTALL_HOME/lab-project
 APIC_DEPLOY_HOME=$INSTALL_HOME/targets/apic
 HOST_IP=${HOST_IP:-127.0.0.1}
-docker_io_host="registry-1.docker.io"
 
 source $INSTALL_HOME/funcs.sh
 source $APIC_DEPLOY_HOME/settings.sh
@@ -99,18 +98,16 @@ function load_image {
 function load_images {
   target::step "load apic images into private registry"
 
-  $INSTALL_HOME/launch.sh registry::docker.io
+  local mr_io="${HOSTNAME:-localhost}:5000"
 
   target::step "load portal images"
-  $apicup registry-upload portal $ptl_images_tgz $docker_io_host
+  $apicup registry-upload portal $ptl_images_tgz $mr_io
 
   target::step "load management images"
-  $apicup registry-upload management $mgmt_images_tgz $docker_io_host
+  $apicup registry-upload management $mgmt_images_tgz $mr_io
 
   target::step "load analytics images"
-  $apicup registry-upload analytics $analyt_images_tgz $docker_io_host
-
-  $INSTALL_HOME/launch.sh registry::docker.io
+  $apicup registry-upload analytics $analyt_images_tgz $mr_io
 
   target::step "load gateway image"
   local gwy_image=$(docker load -i $gwy_images_tgz | grep -o ibmcom/datapower.*)
