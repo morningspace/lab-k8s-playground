@@ -4,6 +4,23 @@ LAB_HOME=${LAB_HOME:-`pwd`}
 INSTALL_HOME=$LAB_HOME/install
 source $INSTALL_HOME/funcs.sh
 
+function dashboard_rolebinding {
+  cat <<EOF | kubectl replace -f -
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: dashboard-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: kubernetes-dashboard
+  namespace: kube-system
+EOF
+}
+
 function kubernetes::init {
   if [[ ! -f ~/.launch-cache/kubernetes-dashboard.yaml ]]; then
     target::step "Download kubernetes dashboard yaml"
@@ -28,8 +45,6 @@ export SKIP_SNAPSHOT=$SKIP_SNAPSHOT
 EOF
   fi
 
-  pushd $LAB_HOME
-
   target::step "Start to init kubernetes cluster"
   if ensure_os_linux && grep -q "^docker:" /etc/group; then
     run_cmd="sg docker -c"
@@ -44,46 +59,29 @@ EOF
     DIND_CA_CERT_URL=$DIND_CA_CERT_URL \
     DASHBOARD_URL=$DASHBOARD_URL \
     SKIP_SNAPSHOT=$SKIP_SNAPSHOT \
-  ./dind-cluster-wrapper.sh up"
-
-  if [[ $? == 0 ]]; then
-    cat <<EOF | kubectl replace -f -
-apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: ClusterRoleBinding
-metadata:
-  name: cluster-admin
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: cluster-admin
-subjects:
-- kind: ServiceAccount
-  name: kubernetes-dashboard
-  namespace: kube-system
-EOF
-  fi
-
-  popd
+  $LAB_HOME/dind-cluster-wrapper.sh up" && \
+  dashboard_rolebinding
 }
 
 function kubernetes::up {
   target::step "Take kubernetes cluster up"
-  pushd $LAB_HOME; SKIP_SNAPSHOT= ./dind-cluster-wrapper.sh up; popd
+  SKIP_SNAPSHOT= $LAB_HOME/dind-cluster-wrapper.sh up && \
+    dashboard_rolebinding
 }
 
 function kubernetes::down {
   target::step "Take kubernetes cluster down"
-  pushd $LAB_HOME; SKIP_SNAPSHOT= ./dind-cluster-wrapper.sh down; popd
+  SKIP_SNAPSHOT= $LAB_HOME/dind-cluster-wrapper.sh down
 }
 
 function kubernetes::clean {
   target::step "Clean kubernetes cluster"
-  pushd $LAB_HOME; SKIP_SNAPSHOT= ./dind-cluster-wrapper.sh clean; popd
+  SKIP_SNAPSHOT= $LAB_HOME/dind-cluster-wrapper.sh clean
 }
 
 function kubernetes::snapshot {
   target::step "Create snapshot for kubernetes cluster"
-  pushd $LAB_HOME; SKIP_SNAPSHOT= ./dind-cluster-wrapper.sh snapshot; popd
+  SKIP_SNAPSHOT= $LAB_HOME/dind-cluster-wrapper.sh snapshot
 }
 
 target::command $@
