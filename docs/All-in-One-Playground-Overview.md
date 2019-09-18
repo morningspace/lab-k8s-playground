@@ -13,6 +13,7 @@ The below applications are deployed along with the playground for you to evaluat
 * [Kiali](https://www.kiali.io)
 * [Jaeger](https://www.jaegertracing.io)
 * [Prometheus](https://prometheus.io)
+* [IBM API Connect](https://www.ibm.com/cloud/api-connect), for more details, please refer to [Quick Guide to Launch APIC Playground](APIC-Quick-Guide.md)
 
 ## Tools
 

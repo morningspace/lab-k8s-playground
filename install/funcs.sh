@@ -122,6 +122,10 @@ function add_endpoint {
 
   if ! cat $group_file | grep -q "^$2"; then
     echo "$2,$3,$4" >> $group_file
+  else
+    [[ $(detect_os) == darwin ]] && \
+      sed -i "" "s%^$2.*$%$2,$3,$4%g" $group_file || \
+      sed -i "s%^$2.*$%$2,$3,$4%g" $group_file
   fi
 }
 
@@ -130,7 +134,9 @@ function clean_endpoints {
   if [ -z "$2" ] ; then
     rm -f $group_file
   elif [ -f "$group_file" ] ; then
-    sed -i "/$2/d" $group_file
+    [[ $(detect_os) == darwin ]] && \
+      sed -i "" "/$2/d" $group_file || \
+      sed -i "/$2/d" $group_file
   fi
 }
 
