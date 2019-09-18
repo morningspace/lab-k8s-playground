@@ -2,6 +2,8 @@
 
 This guide will work you through the steps to launch [IBM API Connect(APIC)](https://www.ibm.com/support/knowledgecenter/en/SSMNED_2018/mapfiles/getting_started.html) on top of the All-in-One Kubernetes Playground for a cluster with 3 worker nodes on a single machine!
 
+![](demo-apic.gif)
+
 ## Step 1. Prepare the playground
 
 Clone the playground repository, go into the repository root directory, run command to init the environment:
