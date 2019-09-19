@@ -13,7 +13,7 @@ The below applications are deployed along with the playground for you to evaluat
 * [Kiali](https://www.kiali.io)
 * [Jaeger](https://www.jaegertracing.io)
 * [Prometheus](https://prometheus.io)
-* [IBM API Connect](https://www.ibm.com/cloud/api-connect), for more details, please refer to [Quick Guide to Launch APIC Playground](APIC-Quick-Guide.md)
+* [IBM API Connect](https://www.ibm.com/cloud/api-connect), for more details, please refer to [Quick Guide to Launch APIC Playground](APIC-Quick-Guide.md) or [把API Connect关进All-in-One K8S Playground里](https://morningspace.github.io/tech/all-in-one-apic-playground/)
 
 ## Tools
 
@@ -27,7 +27,7 @@ The below Kubernetes-related command line tools are integrated with the playgrou
 * [kubetail](https://github.com/johanhaleby/kubetail)
 * [kube-shell](https://github.com/cloudnativelabs/kube-shell)
 
-## Private Registry
+## Private Registries
 
 The playground runs a set of private registries that can be used to mimic below public container regiestries:
 * [Google Container Registry](https://gcr.io)
@@ -37,6 +37,14 @@ The playground runs a set of private registries that can be used to mimic below 
 By storing all images into private registries, it can boost your playground launch dramatically fast. You can even launch the playground without network connectivity! Furthermore, if you share the registries with your teammates, they all can benefit from that.
 
 For more details, please refer to ["Can I launch the playground without network?"](All-in-One-Playground-Usage-Guide.md#can-i-launch-the-playground-without-network), ["Can I share private registries with others?"](All-in-One-Playground-Usage-Guide.md#can-i-share-private-registries-with-others).
+
+## Operating Systems
+
+The playground can be launched in:
+* [Ubuntu](https://ubuntu.com/)
+* [CentOS](https://www.centos.org/)
+* [RHEL](https://www.redhat.com/en/technologies/linux-platforms/enterprise-linux)
+* [MacOS](https://www.apple.com/macos/)
 
 ## Launch
 
