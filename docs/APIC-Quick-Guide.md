@@ -14,10 +14,11 @@ As an advanced usage case of the open source project [lab-k8s-playground](https:
 
 ## Step 1. Initialize the playground
 
-Clone the playground repository, go into the repository root directory, run command to init the environment:
+Clone the playground repository, go into the repository root directory, switch to dev branch, run command to init the environment:
 ```shell
 $ git clone https://github.com/morningspace/lab-k8s-playground.git
 $ cd lab-k8s-playground
+$ git checkout dev
 $ ./install/launch.sh init
 ```
 
