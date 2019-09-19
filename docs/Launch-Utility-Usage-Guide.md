@@ -21,17 +21,17 @@ The `Launch Utility` supports many pre-defined targets. They are listed as below
 
 | Target				| Description
 | ---- 					|:----
-|apic						| Deploy [IBM API Connect](https://www.ibm.com/cloud/api-connect) to the playground
+|apic						| Deploy [IBM API Connect](https://developer.ibm.com/apiconnect) to the playground
 |base						| As a special target, will launch target docker, docker-compose, kubectl
 |default				| As a special target, will launch target base, registry, kubernetes
 |docker					| Install docker
 |docker-compose	| Install docker-compose
 |endpoints			| List all application endpoints available in the playground with healthiness status
-|helm						| Install helm
+|helm						| Install [helm](https://helm.sh)
 |init						| Initialize the playground environment
-|istio					| Deploy istio
-|istio-bookinfo	| Deploy istio demo app: bookinfo
-|kubectl				| Install kubectl
+|istio					| Deploy [istio](https://istio.io)
+|istio-bookinfo	| Deploy istio demo app: [bookinfo](https://istio.io/docs/examples/bookinfo)
+|kubectl				| Install [kubectl](https://kubernetes.io/docs/reference/kubectl)
 |kubernetes			| Manipulate kubernetes cluster
 |registry				| Manipulate private container registries
 |registry-proxy	| Manipulate private container registries that work as proxies to connect to their remote peers
