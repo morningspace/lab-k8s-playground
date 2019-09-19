@@ -133,20 +133,24 @@ function detect_os {
   echo $os
 }
 
+my_registries=(
+  "127.0.0.1:5000"
+  "${HOSTNAME:-localhost}:5000"
+  "mr.io:5000"
+)
+
 function get_insecure_registries {
+  local registries=(${my_registries[@]})
   if [[ $K8S_PROVIDER == okd ]]; then
-    echo "127.0.0.1:5000 172.30.0.0/16"
-  else
-    echo "127.0.0.1:5000"
+    registries+=("172.30.0.0/16")
   fi
+  echo "${registries[@]}"
 }
 
 function get_insecure_registries_text {
-  if [[ $K8S_PROVIDER == okd ]]; then
-    echo '"127.0.0.1:5000", "172.30.0.0/16"'
-  else
-    echo '"127.0.0.1:5000"'
-  fi
+  local registries=($(get_insecure_registries))
+  local text=$(printf ", \"%s\"" "${registries[@]}")
+  echo ${text:2}
 }
 
 function add_endpoint {
