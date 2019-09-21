@@ -97,7 +97,7 @@ function ensure_os_linux {
 }
 
 function ensure_k8s_version {
-  [[ $K8S_PROVIDER == okd ]] && K8S_VERSION= &&return 0
+  [[ $K8S_PROVIDER == oc ]] && K8S_VERSION= &&return 0
 
   local valid="v1.12 v1.13 v1.14 v1.15"
   K8S_VERSION=${K8S_VERSION:-v1.14}
@@ -109,9 +109,9 @@ function ensure_k8s_version {
 }
 
 function ensure_k8s_provider {
-  local valid="dind-cluster okd"
+  local valid="dind oc"
 
-  K8S_PROVIDER=${K8S_PROVIDER:-dind-cluster}
+  K8S_PROVIDER=${K8S_PROVIDER:-dind}
   if [[ ! $valid =~ $K8S_PROVIDER ]]; then
     echo "Kubernetes provider not supported, valid values: $valid"
     return 1
@@ -141,7 +141,7 @@ my_registries=(
 
 function get_insecure_registries {
   local registries=(${my_registries[@]})
-  if [[ $K8S_PROVIDER == okd ]]; then
+  if [[ $K8S_PROVIDER == oc ]]; then
     registries+=("172.30.0.0/16")
   fi
   echo "${registries[@]}"

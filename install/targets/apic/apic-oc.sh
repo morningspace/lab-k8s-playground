@@ -94,15 +94,15 @@ function on_after_clean {
   rm -rf $apic_pv_home
 }
 
-function apic-okd::init {
+function apic-oc::init {
   init
 }
 
-function apic-okd::validate {
+function apic-oc::validate {
   validate
 }
 
-function apic-okd::clean {
+function apic-oc::clean {
   clean
 }
 

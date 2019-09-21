@@ -26,7 +26,7 @@ After finished, specify host IP, k8s provider, k8s version, number of worker nod
 ```shell
 # The IP of your host that runs APIC
 export HOST_IP=<your_host_ip>
-# The Kubernetes provider, default is dind-cluster
+# The Kubernetes provider, default is dind
 export K8S_PROVIDER=
 # The Kubernetes version, default is v1.14
 export K8S_VERSION=
@@ -34,7 +34,7 @@ export K8S_VERSION=
 export NUM_NODES=3
 ```
 
-> You can choose different Kubernetes distributions to install APIC by specifiying `K8S_PROVIDER`, valid values include: `dind-cluster` for standard Kubernetes, `okd` for OpenShift. If you choose OpenShift, `K8S_VERSION` and `NUM_NODES` will be ignored.
+> You can choose different Kubernetes distributions to install APIC by specifiying `K8S_PROVIDER`, valid values include: `dind` for standard Kubernetes, `oc` for OpenShift. If you choose OpenShift, `K8S_VERSION` and `NUM_NODES` will be ignored.
 
 Reload `.bashrc` to apply your changes, enable bash completion and other features in current login session:
 ```shell

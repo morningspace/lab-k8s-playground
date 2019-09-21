@@ -36,7 +36,7 @@ Before reload, there are some environment variables defined in `.bashrc` that yo
 ```shell
 # The IP of your host, default is 127.0.0.1
 export HOST_IP=
-# The Kubernetes provider, default is dind-cluster
+# The Kubernetes provider, default is dind
 export K8S_PROVIDER=
 # The Kubernetes version, default is v1.14
 export K8S_VERSION=
@@ -71,9 +71,9 @@ When lauch the playground in Vagrant box, although the [Vagrantfile](/Vagrantfil
 
 ## Launch using OpenShift
 
-The playground supports both standard Kubernetes and OpenShift. This is configurable by using environment variable `K8S_PROVIDER`. The default value of `K8S_PROVIDER` is `dind-cluster`, which will launch a multi-node standard Kubernetes cluster on your host machine.
+The playground supports both standard Kubernetes and OpenShift. This is configurable by using environment variable `K8S_PROVIDER`. The default value of `K8S_PROVIDER` is `dind`, which will launch a multi-node standard Kubernetes cluster on your host machine.
 
-To launch the playground using OpenShift, you just need to change the value of `K8S_PROVIDER` to `okd`. Then run below command to launch the cluster:
+To launch the playground using OpenShift, you just need to change the value of `K8S_PROVIDER` to `oc`. Then run below command to launch the cluster:
 ```shell
 $ launch kubernetes
 ```
@@ -83,7 +83,7 @@ This will bring up a single node cluster running directly on your host machine.
 You can even run multiple clusters using different Kubernetes distributions on the same host machine! As an example, run below commands:
 ```shell
 $ K8S_PROVIDER= launch kubernetes
-$ K8S_PROVIDER=okd launch kubernetes
+$ K8S_PROVIDER=oc launch kubernetes
 ```
 
 This will bring up a multi-node standard Kubernetes cluster first, then a single node OpenShift cluster. Using [kubectx](https://github.com/ahmetb/kubectx), you can switch context between the two clusters easily. Then, run other command line tools, e.g. [kubectl](https://kubernetes.io/docs/reference/kubectl), to manage the cluster.
@@ -280,8 +280,8 @@ targets = "init default helm tools"
 
 # set Kubernetes version, supported versions: v1.12, v1.13, v1.14, v1.15
 k8s_version = "v1.14"
-# set Kubernetes provider, supported providers: dind-cluster, okd
-k8s_provider = "dind-cluster"
+# set Kubernetes provider, supported providers: dind, oc
+k8s_provider = "dind"
 # set number of worker nodes
 num_nodes = 2
 # set host ip of the box

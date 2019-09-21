@@ -6,7 +6,7 @@ source $LAB_HOME/install/funcs.sh
 function registry::init {
   ensure_k8s_version || exit
 
-  if [[ $K8S_PROVIDER == okd ]]; then
+  if [[ $K8S_PROVIDER == oc ]]; then
     images=(
       openshift/origin-node:v3.11
       openshift/origin-control-plane:v3.11

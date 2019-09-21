@@ -4,29 +4,29 @@ LAB_HOME=${LAB_HOME:-`pwd`}
 INSTALL_HOME=$LAB_HOME/install
 . $INSTALL_HOME/funcs.sh
 
-ensure_k8s_provider "okd" || exit
+ensure_k8s_provider "oc" || exit
 
-OKD_INSTALL_HOME=${OKD_INSTALL_HOME:-~/okd}
-OKD_VERSION=${OKD_VERSION:-v3.11.0}
-OKD_COMMIT=${OKD_COMMIT:-0cbc58b}
+OC_INSTALL_HOME=${OC_INSTALL_HOME:-~/openshift.local.clusterup}
+OC_VERSION=${OC_VERSION:-v3.11.0}
+OC_COMMIT=${OC_COMMIT:-0cbc58b}
 
 ensure_os || exit
 
-function okd::init {
+function oc::init {
   case "$(detect_os)" in
   ubuntu|centos|rhel)
-    local package="openshift-origin-client-tools-$OKD_VERSION-$OKD_COMMIT-linux-64bit"
+    local package="openshift-origin-client-tools-$OC_VERSION-$OC_COMMIT-linux-64bit"
     local package_file=$package.tar.gz
     ;;
   darwin)
-    local package="openshift-origin-client-tools-$OKD_VERSION-$OKD_COMMIT-mac"
+    local package="openshift-origin-client-tools-$OC_VERSION-$OC_COMMIT-mac"
     local package_file=$package.zip
     ;;
   esac
 
   if [[ ! -f ~/.launch-cache/$package_file ]]; then
     target::step "Download openshift"
-    download_url=https://github.com/openshift/origin/releases/download/$OKD_VERSION/$package_file
+    download_url=https://github.com/openshift/origin/releases/download/$OC_VERSION/$package_file
     curl -sSL $download_url -o ~/.launch-cache/$package_file
   fi
 
@@ -46,13 +46,13 @@ function okd::init {
     sudo ln -sf ~/.launch-cache/$package/kubectl /usr/sbin/kubectl
   fi
 
-  okd::up
+  oc::up
 }
 
-function okd::up {
+function oc::up {
   target::step "Take kubernetes cluster up"
 
-  mkdir -p $OKD_INSTALL_HOME
+  mkdir -p $OC_INSTALL_HOME
 
   if ensure_os_linux && grep -q "^docker:" /etc/group; then
     run_cmd="sg docker -c"
@@ -60,30 +60,30 @@ function okd::up {
     run_cmd="eval"
   fi  
 
-  $run_cmd "oc cluster up --public-hostname=$HOST_IP --base-dir=$OKD_INSTALL_HOME --write-config=false"
+  $run_cmd "oc cluster up --public-hostname=$HOST_IP --base-dir=$OC_INSTALL_HOME --write-config=false"
 
-  add_endpoint "common" "OKD Console" "https://$HOST_IP:8443/console"
+  add_endpoint "common" "OpenShift Console" "https://$HOST_IP:8443/console"
 }
 
-function okd::down {
+function oc::down {
   target::step "Take kubernetes cluster down"
   oc cluster down
 }
 
-function okd::clean {
+function oc::clean {
   target::step "Clean kubernetes cluster"
 
-  clean_endpoints "common" "OKD Console"
+  clean_endpoints "common" "OpenShift Console"
 
-  okd::down
+  oc::down
 
   local os=$(detect_os)
   if [[ $os == rhel || $os == centos ]]; then
     # https://github.com/openshift/origin/pull/2629
     findmnt -lo TARGET | grep openshift.local.volumes | xargs -r sudo umount
-    sudo rm -rf $OKD_INSTALL_HOME
+    sudo rm -rf $OC_INSTALL_HOME
   else
-    rm -rf $OKD_INSTALL_HOME
+    rm -rf $OC_INSTALL_HOME
   fi
 }
 

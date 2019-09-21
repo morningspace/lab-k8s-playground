@@ -4,7 +4,7 @@ LAB_HOME=${LAB_HOME:-`pwd`}
 INSTALL_HOME=$LAB_HOME/install
 source $INSTALL_HOME/funcs.sh
 
-ensure_k8s_provider "dind-cluster" || exit
+ensure_k8s_provider "dind" || exit
 
 function add_endpoints {
   local apiserver_port=$($INSTALL_HOME/dind-cluster.sh apiserver-port 2>/dev/null)
@@ -29,7 +29,7 @@ subjects:
 EOF
 }
 
-function dind-cluster::init {
+function dind::init {
   if [[ ! -f ~/.launch-cache/kubernetes-dashboard.yaml ]]; then
     target::step "Download kubernetes dashboard yaml"
     download_url=https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy/alternative/kubernetes-dashboard.yaml
@@ -72,25 +72,25 @@ EOF
   add_endpoints
 }
 
-function dind-cluster::up {
+function dind::up {
   target::step "Take kubernetes cluster up"
   SKIP_SNAPSHOT= $LAB_HOME/dind-cluster-wrapper.sh up && \
     dashboard_rolebinding && \
     add_endpoints
 }
 
-function dind-cluster::down {
+function dind::down {
   target::step "Take kubernetes cluster down"
   SKIP_SNAPSHOT= $LAB_HOME/dind-cluster-wrapper.sh down
 }
 
-function dind-cluster::clean {
+function dind::clean {
   target::step "Clean kubernetes cluster"
   SKIP_SNAPSHOT= $LAB_HOME/dind-cluster-wrapper.sh clean && \
     clean_endpoints "common" "Dashboard"
 }
 
-function dind-cluster::snapshot {
+function dind::snapshot {
   target::step "Create snapshot for kubernetes cluster"
   SKIP_SNAPSHOT= $LAB_HOME/dind-cluster-wrapper.sh snapshot
 }

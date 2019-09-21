@@ -73,19 +73,19 @@ function on_before_clean {
   clean_endpoints "apic" "Cloud Manager UI"
 }
 
-function apic-dind-cluster::init {
+function apic-dind::init {
   init
 }
 
-function apic-dind-cluster::validate {
+function apic-dind::validate {
   validate
 }
 
-function apic-dind-cluster::clean {
+function apic-dind::clean {
   clean
 }
 
-function apic-dind-cluster::portforward {
+function apic-dind::portforward {
   kill_portfwds "443:443"
   create_portfwd $apic_ns service/ingress-nginx-ingress-controller 443:443
 }
