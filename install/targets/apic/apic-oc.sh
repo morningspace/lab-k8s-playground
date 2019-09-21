@@ -3,7 +3,7 @@
 LAB_HOME=${LAB_HOME:-`pwd`}
 INSTALL_HOME=$LAB_HOME/install
 
-apic_domain=${HOST_IP:-127.0.0.1}.xip.io
+apic_domain=${HOST_IP:-127.0.0.1}.nip.io
 apic_pv_type=host
 apic_pv_home=$INSTALL_HOME/.launch-cache/apic/pv/
 apic_ingress_type=route
