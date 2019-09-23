@@ -10,7 +10,7 @@ function on_before_init {
   :
 }
 
-function init {
+function istio::init {
   on_before_init
 
   case $(uname -s) in
@@ -56,7 +56,7 @@ function on_before_clean {
   :
 }
 
-function clean {
+function istio::clean {
   on_before_clean
 
   pushd ~/.launch-cache/istio
@@ -67,5 +67,51 @@ function clean {
 }
 
 function on_after_clean {
+  :
+}
+
+function on_before_init_bookinfo {
+  :
+}
+
+function istio-bookinfo::init {
+  on_before_init_bookinfo
+
+  target::step "Start to install istio-bookinfo"
+
+  pushd ~/.launch-cache/istio
+
+  kubectl label namespace default istio-injection=enabled --overwrite
+  kubectl apply -f samples/bookinfo/platform/kube/bookinfo.yaml -n default
+  kubectl apply -f samples/bookinfo/networking/bookinfo-gateway.yaml -n default
+
+  wait_for_app "default" "bookinfo"\
+    "app=details,version=v1" "app=productpage,version=v1" "app=ratings,version=v1" \
+    "app=reviews,version=v1" "app=reviews,version=v2" "app=reviews,version=v3"
+
+  popd
+
+  on_after_init_bookinfo
+}
+
+function on_after_init_bookinfo {
+  :
+}
+
+function on_before_clean_bookinfo {
+  :
+}
+
+function istio-bookinfo::clean {
+  on_before_clean_bookinfo
+
+  pushd ~/.launch-cache/istio
+  samples/bookinfo/platform/kube/cleanup.sh
+  popd
+
+  on_after_clean_bookinfo
+}
+
+function on_after_clean_bookinfo {
   :
 }

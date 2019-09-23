@@ -1,6 +1,7 @@
 #!/bin/bash
 
 logs_dir=$LAB_HOME/install/logs
+targets_dir=$LAB_HOME/install/targets
 endpoints_dir=$LAB_HOME/install/targets/endpoints
 
 HOST_IP=${HOST_IP:-127.0.0.1}
@@ -211,19 +212,56 @@ function print_endpoints {
 
 function get_first_command {
   local pattern="^function $1::\w\+ {$"
+
+  local embedded_shells=($(grep "\. " $0 | awk '{print $2}'))
+  for embedded_shell in ${embedded_shells[@]}; do
+    embedded_file=$(eval "echo $embedded_shell")
+    if [[ -f $embedded_file ]]; then
+      local funcs=($(grep "$pattern" $embedded_file | awk '{print $2}'))
+      [[ ! -z ${funcs[0]} ]] && echo "${funcs[0]#*::}" && return
+    fi
+  done
+
   local funcs=($(grep "$pattern" $0 | awk '{print $2}'))
   echo "${funcs[0]#*::}"
 }
 
 function target::command {
-  local target=${0##*/}
-  target=${target%.sh}
-  local command=${1:-$(get_first_command $target)}
-  if [[ $(type -t $target::$command) == function ]]; then
-    $target::$command
+  local target cmd 
+  if [[ $1 =~ :: ]]; then
+    target=${1/%::*}
+    cmd=${1/#*::}
+    cmd=${cmd:-$(get_first_command $target)}
   else
-    echo "function $target::$command not found in $0"
+    target=${0##*/}
+    target=${target%.sh}
+    if [[ $1 != -* && ! -z $1 ]]; then
+      cmd=$1
+    fi
+    cmd=${cmd:-$(get_first_command $target)}
   fi
+
+  if [[ $(type -t $target::$cmd) == function ]]; then
+    $target::$cmd ${@:2}
+  else
+    echo "function $target::$cmd not found in $0"
+  fi
+}
+
+function target::delegate {
+  local target_shell="$targets_dir/$1"
+  local target cmd
+  if [[ $2 != -* && ! -z $2 ]]; then
+    cmd=$2
+    shift
+  fi
+  if [[ ! $cmd =~ :: ]]; then
+    target=${0##*/}
+    target=${target%.sh}
+    cmd=$target::$cmd
+  fi
+
+  LAB_HOME=$LAB_HOME $target_shell $cmd ${@:2}
 }
 
 # yellow => '\033[1;33m'
@@ -235,3 +273,5 @@ function target::step {
 function target::log {
   echo "$@"
 }
+
+ensure_k8s_provider || exit

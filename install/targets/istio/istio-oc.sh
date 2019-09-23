@@ -93,16 +93,29 @@ function on_before_clean {
   oc adm policy remove-scc-from-user anyuid -z istio-galley-service-account -n istio-system
   oc adm policy remove-scc-from-user anyuid -z istio-security-post-install-account -n istio-system
 
-  oc get clusterrolebinding kiali-binding 2>/dev/null && \
+  oc get clusterrolebinding kiali-binding 1>/dev/null 2>&1 && \
   oc delete clusterrolebinding kiali-binding
 }
 
-function istio-oc::init {
-  init
+function on_before_init_bookinfo {
+  # Add scc to group for bookinfo
+  oc adm policy add-scc-to-group privileged system:serviceaccounts -n default
+  oc adm policy add-scc-to-group anyuid system:serviceaccounts -n default
 }
 
-function istio-oc::clean {
-  clean
+function on_after_init_bookinfo {
+  oc expose svc/istio-ingressgateway --port=http2 -n istio-system
+  add_endpoint "istio" "Istio Bookinfo" "http://istio-ingressgateway-istio-system.@@HOST_IP.nip.io/productpage"
+}
+
+function on_before_clean_bookinfo {
+  clean_endpoints "istio" "Istio Bookinfo"
+
+  oc get route istio-ingressgateway -n istio-system 1>/dev/null 2>&1 && \
+  oc delete route istio-ingressgateway -n istio-system
+
+  oc adm policy remove-scc-from-group privileged system:serviceaccounts -n default
+  oc adm policy remove-scc-from-group anyuid system:serviceaccounts -n default
 }
 
 target::command $@
