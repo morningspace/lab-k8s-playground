@@ -94,16 +94,4 @@ function on_after_clean {
   rm -rf $apic_pv_home
 }
 
-function apic-oc::init {
-  init
-}
-
-function apic-oc::validate {
-  validate
-}
-
-function apic-oc::clean {
-  clean
-}
-
 target::command $@

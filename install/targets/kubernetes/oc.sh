@@ -4,15 +4,13 @@ LAB_HOME=${LAB_HOME:-`pwd`}
 INSTALL_HOME=$LAB_HOME/install
 . $INSTALL_HOME/funcs.sh
 
-ensure_k8s_provider "oc" || exit
-
 OC_INSTALL_HOME=${OC_INSTALL_HOME:-~/openshift.local.clusterup}
 OC_VERSION=${OC_VERSION:-v3.11.0}
 OC_COMMIT=${OC_COMMIT:-0cbc58b}
 
 ensure_os || exit
 
-function oc::init {
+function kubernetes::init {
   case "$(detect_os)" in
   ubuntu|centos|rhel)
     local package="openshift-origin-client-tools-$OC_VERSION-$OC_COMMIT-linux-64bit"
@@ -46,10 +44,10 @@ function oc::init {
     sudo ln -sf ~/.launch-cache/$package/kubectl /usr/sbin/kubectl
   fi
 
-  oc::up
+  kubernetes::up
 }
 
-function oc::up {
+function kubernetes::up {
   target::step "Take kubernetes cluster up"
 
   mkdir -p $OC_INSTALL_HOME
@@ -65,17 +63,17 @@ function oc::up {
   add_endpoint "common" "OpenShift Console" "https://$HOST_IP:8443/console"
 }
 
-function oc::down {
+function kubernetes::down {
   target::step "Take kubernetes cluster down"
   oc cluster down
 }
 
-function oc::clean {
+function kubernetes::clean {
   target::step "Clean kubernetes cluster"
 
   clean_endpoints "common" "OpenShift Console"
 
-  oc::down
+  kubernetes::down
 
   local os=$(detect_os)
   if [[ $os == rhel || $os == centos ]]; then

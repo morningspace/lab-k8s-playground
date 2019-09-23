@@ -311,7 +311,7 @@ function on_before_init {
   :
 }
 
-function init {
+function apic::init {
   on_before_init
 
   ensure_apicup
@@ -340,7 +340,7 @@ function on_after_init {
   :
 }
 
-function validate {
+function apic::validate {
   [ ! -d $APIC_PROJECT_HOME ] && target::log "$APIC_PROJECT_HOME not found" && exit
 
   ensure_apicup
@@ -366,7 +366,7 @@ function on_before_clean {
   :
 }
 
-function clean {
+function apic::clean {
   on_before_clean
 
   clean_apic_endpoints
