@@ -6,6 +6,11 @@ LAB_HOME=${LAB_HOME:-`pwd`}
 
 OC_INSTALL_HOME=${OC_INSTALL_HOME:-~/openshift.local.clusterup}
 
+if [[ $(detect_os) == darwin ]]; then
+  target::log "Istio deployment on OpenShift is supported on MacOS"
+  exit
+fi
+
 function on_before_init {
   # Add admission webhooks
   pushd $OC_INSTALL_HOME/kube-apiserver/
