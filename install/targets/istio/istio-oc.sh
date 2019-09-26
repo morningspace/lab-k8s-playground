@@ -35,13 +35,22 @@ admissionConfig:
 EOF
     oc ex config patch $master_config.yaml.prepatch -p "$(cat $master_config.patch)" > $master_config.yaml
 
-    target::step "Restart Openshift"
+    target::step "Restart Openshift API Server"
 
     docker restart $(docker ps -l -q --filter "label=io.kubernetes.container.name=api")
     docker restart $(docker ps -l -q --filter "label=io.kubernetes.container.name=apiserver")
 
-    until curl -f -s -k -o /dev/null https://$HOST_IP:8443/healthz; do sleep 1; done
-    until timeout --preserve-status -s SIGKILL 3 oc login -u system:admin >/dev/null 2>&1; do sleep 3; done
+    target::step "Waiting for health check passed"
+    until curl -f -s -k -o /dev/null https://$HOST_IP:8443/healthz; do echo -n .; sleep 1; done
+    target::log "[done]"
+
+    target::step "Waiting for oc login passed"
+    until echo fakepasswd | oc login -u system:admin >/dev/null 2>&1; do echo -n .; sleep 1; done
+    target::log "[done]"
+
+    target::step "Waiting for scc check passed"
+    until oc adm policy add-scc-to-user anyuid -z default -n istio-system >/dev/null 2>&1; do echo -n .; sleep 1; done
+    target::log "[done]"
   fi
 
   target::step "Add scc to user for istio"
