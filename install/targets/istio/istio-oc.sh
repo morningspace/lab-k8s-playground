@@ -14,12 +14,12 @@ fi
 function on_before_init {
   target::step "Enable AdmissionWebhook"
 
-  if cat master-config.yaml | grep -q "MutatingAdmissionWebhook:"; then
+  master_config=$OC_INSTALL_HOME/kube-apiserver/master-config
+  if cat $master_config.yaml | grep -q "MutatingAdmissionWebhook:"; then
     target::log "AdmissionWebhook detected"
   else
-    pushd $OC_INSTALL_HOME/kube-apiserver/
-    cp -p master-config.yaml master-config.yaml.prepatch
-    cat >> master-config.patch << EOF
+    cp -p $master_config.yaml{,.prepatch}
+    cat >> $master_config.patch << EOF
 admissionConfig:
   pluginConfig:
     MutatingAdmissionWebhook:
@@ -33,8 +33,7 @@ admissionConfig:
         kubeConfigFile: /dev/null
         kind: WebhookAdmission
 EOF
-    oc ex config patch master-config.yaml.prepatch -p "$(cat master-config.patch)" > master-config.yaml
-    popd
+    oc ex config patch $master_config.yaml.prepatch -p "$(cat $master_config.patch)" > $master_config.yaml
 
     target::step "Restart Openshift"
 
