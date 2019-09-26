@@ -6,7 +6,7 @@ source $INSTALL_HOME/funcs.sh
 
 endpoints_dir=$INSTALL_HOME/targets/endpoints
 
-add_endpoint "common" "Web terminal" "https://$HOST_IP:4200"
+add_endpoint "common" "Web Terminal" "https://$HOST_IP:4200"
 
 if [[ -d $endpoints_dir ]]; then
   groups=($(ls $endpoints_dir))
