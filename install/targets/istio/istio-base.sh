@@ -60,7 +60,13 @@ function istio::clean {
   on_before_clean
 
   pushd ~/.launch-cache/istio
+
+  for yaml in install/kubernetes/helm/istio-init/files/crd*yaml; do
+    kubectl delete -f $yaml
+  done
+
   kubectl delete -f install/kubernetes/istio-demo.yaml
+
   popd
 
   on_after_clean
