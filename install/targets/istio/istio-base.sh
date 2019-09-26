@@ -62,7 +62,7 @@ function istio::clean {
   pushd ~/.launch-cache/istio
 
   for yaml in install/kubernetes/helm/istio-init/files/crd*yaml; do
-    kubectl delete -f $yaml
+    kubectl delete -f $yaml 2>/dev/null
   done
 
   kubectl delete -f install/kubernetes/istio-demo.yaml 2>/dev/null
@@ -111,9 +111,7 @@ function on_before_clean_bookinfo {
 function istio-bookinfo::clean {
   on_before_clean_bookinfo
 
-  pushd ~/.launch-cache/istio
-  samples/bookinfo/platform/kube/cleanup.sh
-  popd
+  NAMESPACE=default ~/.launch-cache/istio/samples/bookinfo/platform/kube/cleanup.sh
 
   on_after_clean_bookinfo
 }
