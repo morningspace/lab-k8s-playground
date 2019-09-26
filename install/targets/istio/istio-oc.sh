@@ -12,10 +12,14 @@ if [[ $(detect_os) == darwin ]]; then
 fi
 
 function on_before_init {
-  # Add admission webhooks
-  pushd $OC_INSTALL_HOME/kube-apiserver/
-  cp -p master-config.yaml master-config.yaml.prepatch
-  cat >> master-config.patch << EOF
+  target::step "Enable AdmissionWebhook"
+
+  if cat master-config.yaml | grep -q "MutatingAdmissionWebhook:"; then
+    target::log "AdmissionWebhook detected"
+  else
+    pushd $OC_INSTALL_HOME/kube-apiserver/
+    cp -p master-config.yaml master-config.yaml.prepatch
+    cat >> master-config.patch << EOF
 admissionConfig:
   pluginConfig:
     MutatingAdmissionWebhook:
@@ -29,18 +33,21 @@ admissionConfig:
         kubeConfigFile: /dev/null
         kind: WebhookAdmission
 EOF
-  oc ex config patch master-config.yaml.prepatch -p "$(cat master-config.patch)" > master-config.yaml
-  popd
+    oc ex config patch master-config.yaml.prepatch -p "$(cat master-config.patch)" > master-config.yaml
+    popd
 
-  # Restart Openshift
-  docker restart origin
-  docker restart $(docker ps -l -q --filter "label=io.kubernetes.container.name=api")
-  docker restart $(docker ps -l -q --filter "label=io.kubernetes.container.name=apiserver")
-  until curl -f -k https://$HOST_IP:8443/healthz; do sleep 1; done
+    target::step "Restart Openshift"
 
-  sleep 60
+    docker restart origin
+    docker restart $(docker ps -l -q --filter "label=io.kubernetes.container.name=api")
+    docker restart $(docker ps -l -q --filter "label=io.kubernetes.container.name=apiserver")
+    until curl -f -k https://$HOST_IP:8443/healthz; do sleep 1; done
 
-  # Add scc to user for istio
+    sleep 60
+  fi
+
+  target::step "Add scc to user for istio"
+
   oc login -u system:admin
   oc adm policy add-scc-to-user anyuid -z istio-ingress-service-account -n istio-system
   oc adm policy add-scc-to-user anyuid -z default -n istio-system
@@ -56,11 +63,14 @@ EOF
   oc adm policy add-scc-to-user anyuid -z istio-galley-service-account -n istio-system
   oc adm policy add-scc-to-user anyuid -z istio-security-post-install-account -n istio-system
 
-  # Create cluster role binding for kiali
+  target::step "Create cluster role bindings for istio"
+
   oc create clusterrolebinding kiali-binding --clusterrole=cluster-admin --user=system:serviceaccount:istio-system:kiali-service-account
 }
 
 function on_after_init {
+  target::step "Expose service routes for istio"
+
   oc expose svc/grafana --port=http -n istio-system
   oc expose svc/kiali --port=http-kiali -n istio-system
   oc expose svc/prometheus --port=http-prometheus -n istio-system
@@ -75,6 +85,8 @@ function on_after_init {
 function on_before_clean {
   clean_endpoints "istio"
 
+  target::step "Delete service routes for istio"
+
   oc get route grafana -n istio-system 1>/dev/null 2>&1 && \
   oc delete route grafana -n istio-system
   oc get route kiali -n istio-system 1>/dev/null 2>&1 && \
@@ -83,6 +95,8 @@ function on_before_clean {
   oc delete route prometheus -n istio-system
   oc get route jaeger-query -n istio-system 1>/dev/null 2>&1 && \
   oc delete route jaeger-query -n istio-system
+
+  target::step "Delete scc from user for istio"
 
   oc adm policy remove-scc-from-user anyuid -z istio-ingress-service-account -n istio-system
   oc adm policy remove-scc-from-user anyuid -z default -n istio-system
@@ -98,17 +112,22 @@ function on_before_clean {
   oc adm policy remove-scc-from-user anyuid -z istio-galley-service-account -n istio-system
   oc adm policy remove-scc-from-user anyuid -z istio-security-post-install-account -n istio-system
 
+  target::step "Delete cluster role bindings for istio"
+
   oc get clusterrolebinding kiali-binding 1>/dev/null 2>&1 && \
   oc delete clusterrolebinding kiali-binding
 }
 
 function on_before_init_bookinfo {
-  # Add scc to group for bookinfo
+  target::step "Add scc to group for bookinfo"
+
   oc adm policy add-scc-to-group privileged system:serviceaccounts -n default
   oc adm policy add-scc-to-group anyuid system:serviceaccounts -n default
 }
 
 function on_after_init_bookinfo {
+  target::step "Expose service routes for bookinfo"
+
   oc expose svc/istio-ingressgateway --port=http2 -n istio-system
   add_endpoint "istio" "Istio Bookinfo" "http://istio-ingressgateway-istio-system.@@HOST_IP.nip.io/productpage"
 }
@@ -116,8 +135,12 @@ function on_after_init_bookinfo {
 function on_before_clean_bookinfo {
   clean_endpoints "istio" "Istio Bookinfo"
 
+  target::step "Delete service routes for bookinfo"
+
   oc get route istio-ingressgateway -n istio-system 1>/dev/null 2>&1 && \
   oc delete route istio-ingressgateway -n istio-system
+
+  target::step "Delete scc from group for bookinfo"
 
   oc adm policy remove-scc-from-group privileged system:serviceaccounts -n default
   oc adm policy remove-scc-from-group anyuid system:serviceaccounts -n default
