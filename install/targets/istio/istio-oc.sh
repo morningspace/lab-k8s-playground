@@ -64,15 +64,20 @@ EOF
 
   target::step "Create cluster role bindings for istio"
 
+  oc get clusterrolebindings kiali-binding 1>/dev/null 2>&1 || \
   oc create clusterrolebinding kiali-binding --clusterrole=cluster-admin --user=system:serviceaccount:istio-system:kiali-service-account
 }
 
 function on_after_init {
   target::step "Expose service routes for istio"
 
+  oc get route grafana -n istio-system 1>/dev/null 2>&1 || \
   oc expose svc/grafana --port=http -n istio-system
+  oc get route kiali -n istio-system 1>/dev/null 2>&1 || \
   oc expose svc/kiali --port=http-kiali -n istio-system
+  oc get route prometheus -n istio-system 1>/dev/null 2>&1 || \
   oc expose svc/prometheus --port=http-prometheus -n istio-system
+  oc get route jaeger-query -n istio-system 1>/dev/null 2>&1 || \
   oc expose svc/jaeger-query --port=query-http -n istio-system
 
   add_endpoint "istio" "Grafana" "http://grafana-istio-system.@@HOST_IP.nip.io"
@@ -127,6 +132,7 @@ function on_before_init_bookinfo {
 function on_after_init_bookinfo {
   target::step "Expose service routes for bookinfo"
 
+  oc get route istio-ingressgateway -n istio-system 1>/dev/null 2>&1 || \
   oc expose svc/istio-ingressgateway --port=http2 -n istio-system
   add_endpoint "istio" "Istio Bookinfo" "http://istio-ingressgateway-istio-system.@@HOST_IP.nip.io/productpage"
 }
