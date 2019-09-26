@@ -37,11 +37,10 @@ EOF
 
     target::step "Restart Openshift"
 
-    docker restart origin
     docker restart $(docker ps -l -q --filter "label=io.kubernetes.container.name=api")
     docker restart $(docker ps -l -q --filter "label=io.kubernetes.container.name=apiserver")
 
-    until curl -f -s -k https://$HOST_IP:8443/healthz; do sleep 1; done
+    until curl -f -s -k -o /dev/null https://$HOST_IP:8443/healthz; do sleep 1; done
     until timeout --preserve-status -s SIGKILL 3 oc login -u system:admin >/dev/null 2>&1; do sleep 3; done
   fi
 
