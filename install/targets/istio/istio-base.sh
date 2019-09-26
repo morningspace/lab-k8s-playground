@@ -65,7 +65,7 @@ function istio::clean {
     kubectl delete -f $yaml
   done
 
-  kubectl delete -f install/kubernetes/istio-demo.yaml
+  kubectl delete -f install/kubernetes/istio-demo.yaml 2>/dev/null
 
   popd
 
