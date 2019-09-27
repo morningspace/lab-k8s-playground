@@ -210,6 +210,11 @@ function print_endpoints {
   done
 }
 
+function get_container_id_by_pod {
+  local container_id=$(kubectl get pod $1 -n $2 -o jsonpath={.status.containerStatuses[0].containerID})
+  echo ${container_id#"docker://"} | sed 's/^\(.\{12\}\).*/\1/'
+}
+
 function get_first_command {
   local pattern="^function $1::\w\+ {$"
 

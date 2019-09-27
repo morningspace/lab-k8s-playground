@@ -6,13 +6,10 @@ LAB_HOME=${LAB_HOME:-`pwd`}
 
 OC_INSTALL_HOME=${OC_INSTALL_HOME:-~/openshift.local.clusterup}
 
-if [[ $(detect_os) == darwin ]]; then
-  target::log "Istio deployment on OpenShift is supported on MacOS"
-  exit
-fi
-
 function on_before_init {
   target::step "Enable AdmissionWebhook"
+
+  oc login -u system:admin
 
   master_config=$OC_INSTALL_HOME/kube-apiserver/master-config
   if cat $master_config.yaml | grep -q "MutatingAdmissionWebhook:"; then
@@ -37,7 +34,11 @@ EOF
 
     target::step "Restart Openshift API Server"
 
-    docker restart $(docker ps -l -q --filter "label=io.kubernetes.container.name=api")
+    if [[ $(detect_os) == darwin ]]; then
+      docker restart $(get_container_id_by_pod master-api-localhost kube-system)
+    else
+      docker restart $(docker ps -l -q --filter "label=io.kubernetes.container.name=api")
+    fi
     docker restart $(docker ps -l -q --filter "label=io.kubernetes.container.name=apiserver")
 
     target::step "Waiting for health check passed"
@@ -55,7 +56,6 @@ EOF
 
   target::step "Add scc to user for istio"
 
-  oc login -u system:admin
   oc adm policy add-scc-to-user anyuid -z istio-ingress-service-account -n istio-system
   oc adm policy add-scc-to-user anyuid -z default -n istio-system
   oc adm policy add-scc-to-user anyuid -z prometheus -n istio-system
