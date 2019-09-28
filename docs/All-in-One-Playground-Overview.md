@@ -8,7 +8,7 @@ This playground includes a set of shell scripts that can help you launch a singl
 
 The below Kubernetes distributions are supported by this playground:
 * [Kubernetes](https://kubernetes.io/): v1.12, v1.13, v1.14, v1.15
-* [OpenShift](https://www.openshift.com/): v3.11
+* [OpenShift(Community Distribution)](https://www.okd.io/): v3.11
 
 ## Applications
 
