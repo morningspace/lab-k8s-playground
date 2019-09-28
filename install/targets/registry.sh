@@ -6,61 +6,81 @@ source $LAB_HOME/install/funcs.sh
 function registry::init {
   ensure_k8s_version || exit
 
-  # images to be cached per kubernetes version
-  case $K8S_VERSION in
-  "v1.12")
+  if [[ $K8S_PROVIDER == oc ]]; then
     images=(
-    # k8s
-    k8s.gcr.io/hyperkube:v1.12.8
-    k8s.gcr.io/kubernetes-dashboard-amd64:v1.10.1
-    k8s.gcr.io/pause:3.1
-    k8s.gcr.io/coredns:1.2.2
-    k8s.gcr.io/etcd:3.2.24
-    # kubeadm-dind-cluster
-    mirantis/kubeadm-dind-cluster:62f5a9277678777b63ae55d144bd2f99feb7c824-v1.12
-    # helm
-    gcr.io/kubernetes-helm/tiller:v2.12.3
-    );;
-  "v1.13")
-    images=(
-    # k8s
-    k8s.gcr.io/hyperkube:v1.13.5
-    k8s.gcr.io/kubernetes-dashboard-amd64:v1.10.1
-    k8s.gcr.io/pause:3.1
-    k8s.gcr.io/coredns:1.2.6
-    k8s.gcr.io/etcd:3.2.24
-    # kubeadm-dind-cluster
-    mirantis/kubeadm-dind-cluster:62f5a9277678777b63ae55d144bd2f99feb7c824-v1.13
-    # helm
-    gcr.io/kubernetes-helm/tiller:v2.13.1
-    );;
-  "v1.14")
-    images=(
-    # k8s
-    k8s.gcr.io/hyperkube:v1.14.1
-    k8s.gcr.io/kubernetes-dashboard-amd64:v1.10.1
-    k8s.gcr.io/pause:3.1
-    k8s.gcr.io/coredns:1.3.1
-    k8s.gcr.io/etcd:3.3.10
-    # kubeadm-dind-cluster
-    mirantis/kubeadm-dind-cluster:62f5a9277678777b63ae55d144bd2f99feb7c824-v1.14
-    # helm
-    gcr.io/kubernetes-helm/tiller:v2.14.2
-    );;
-  "v1.15")
-    images=(
-    # k8s
-    k8s.gcr.io/hyperkube:v1.15.0
-    k8s.gcr.io/kubernetes-dashboard-amd64:v1.10.1
-    k8s.gcr.io/pause:3.1
-    k8s.gcr.io/coredns:1.3.1
-    k8s.gcr.io/etcd:3.3.10
-    # kubeadm-dind-cluster
-    mirantis/kubeadm-dind-cluster:62f5a9277678777b63ae55d144bd2f99feb7c824-v1.15
-    # helm
-    gcr.io/kubernetes-helm/tiller:v2.14.2
-    );;
-  esac
+      openshift/origin-node:v3.11
+      openshift/origin-control-plane:v3.11
+      openshift/origin-haproxy-router:v3.11
+      openshift/origin-deployer:v3.11
+      openshift/origin-cli:v3.11
+      openshift/origin-hyperkube:v3.11
+      openshift/origin-pod:v3.11
+      openshift/origin-hypershift:v3.11
+      openshift/origin-docker-registry:v3.11
+      openshift/origin-web-console:v3.11
+      openshift/origin-service-serving-cert-signer:v3.11
+    )
+  else
+    # images to be cached per kubernetes version
+    case $K8S_VERSION in
+    "v1.12")
+      images=(
+      # k8s
+      k8s.gcr.io/hyperkube:v1.12.8
+      k8s.gcr.io/kubernetes-dashboard-amd64:v1.10.1
+      k8s.gcr.io/pause:3.1
+      k8s.gcr.io/coredns:1.2.2
+      k8s.gcr.io/etcd:3.2.24
+      # kubeadm-dind-cluster
+      mirantis/kubeadm-dind-cluster:62f5a9277678777b63ae55d144bd2f99feb7c824-v1.12
+      # helm
+      gcr.io/kubernetes-helm/tiller:v2.12.3
+      );;
+    "v1.13")
+      images=(
+      # k8s
+      k8s.gcr.io/hyperkube:v1.13.5
+      k8s.gcr.io/kubernetes-dashboard-amd64:v1.10.1
+      k8s.gcr.io/pause:3.1
+      k8s.gcr.io/coredns:1.2.6
+      k8s.gcr.io/etcd:3.2.24
+      # kubeadm-dind-cluster
+      mirantis/kubeadm-dind-cluster:62f5a9277678777b63ae55d144bd2f99feb7c824-v1.13
+      # helm
+      gcr.io/kubernetes-helm/tiller:v2.13.1
+      );;
+    "v1.14")
+      images=(
+      # k8s
+      k8s.gcr.io/hyperkube:v1.14.1
+      k8s.gcr.io/kubernetes-dashboard-amd64:v1.10.1
+      k8s.gcr.io/pause:3.1
+      k8s.gcr.io/coredns:1.3.1
+      k8s.gcr.io/etcd:3.3.10
+      # kubeadm-dind-cluster
+      mirantis/kubeadm-dind-cluster:62f5a9277678777b63ae55d144bd2f99feb7c824-v1.14
+      # helm
+      gcr.io/kubernetes-helm/tiller:v2.14.2
+      );;
+    "v1.15")
+      images=(
+      # k8s
+      k8s.gcr.io/hyperkube:v1.15.0
+      k8s.gcr.io/kubernetes-dashboard-amd64:v1.10.1
+      k8s.gcr.io/pause:3.1
+      k8s.gcr.io/coredns:1.3.1
+      k8s.gcr.io/etcd:3.3.10
+      # kubeadm-dind-cluster
+      mirantis/kubeadm-dind-cluster:62f5a9277678777b63ae55d144bd2f99feb7c824-v1.15
+      # helm
+      gcr.io/kubernetes-helm/tiller:v2.14.2
+      );;
+    *)
+      images=(
+      # nothing
+      );;
+    esac
+  fi
 
   # registries having mirrors on docker hub
   registries_mirrored=(
@@ -74,13 +94,14 @@ function registry::init {
     quay.io
   )
 
-  my_registry=127.0.0.1:5000
+  insecure_registries=($(get_insecure_registries))
+  my_registry=${insecure_registries[0]}
   if ensure_os_linux && [ ! -f /etc/docker/daemon.json ]; then
     target::step "Set up insecure registries"
 
     cat << EOF | sudo tee /etc/docker/daemon.json
 {
-  "insecure-registries" : ["$my_registry"]
+  "insecure-registries" : [$(get_insecure_registries_text)]
 }
 EOF
     sudo systemctl daemon-reload

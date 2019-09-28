@@ -1,7 +1,10 @@
 #!/bin/bash
 
 logs_dir=$LAB_HOME/install/logs
+targets_dir=$LAB_HOME/install/targets
 endpoints_dir=$LAB_HOME/install/targets/endpoints
+
+HOST_IP=${HOST_IP:-127.0.0.1}
 
 function is_app_ready {
   local out
@@ -95,12 +98,31 @@ function ensure_os_linux {
 }
 
 function ensure_k8s_version {
+  [[ $K8S_PROVIDER == oc ]] && K8S_VERSION= &&return 0
+
   local valid="v1.12 v1.13 v1.14 v1.15"
   K8S_VERSION=${K8S_VERSION:-v1.14}
   if [[ ! $valid =~ $K8S_VERSION ]]; then
     echo "Kubernetes version not supported, valid values: $valid"
     return 1
   fi
+  return 0
+}
+
+function ensure_k8s_provider {
+  local valid="dind oc"
+
+  K8S_PROVIDER=${K8S_PROVIDER:-dind}
+  if [[ ! $valid =~ $K8S_PROVIDER ]]; then
+    echo "Kubernetes provider not supported, valid values: $valid"
+    return 1
+  fi
+
+  if [[ -n $1 && $1 != $K8S_PROVIDER ]]; then
+    echo "Kubernetes provider must be $1, but is $K8S_PROVIDER"
+    return 1
+  fi
+
   return 0
 }
 
@@ -112,6 +134,26 @@ function detect_os {
   echo $os
 }
 
+my_registries=(
+  "127.0.0.1:5000"
+  "${HOSTNAME:-localhost}:5000"
+  "mr.io:5000"
+)
+
+function get_insecure_registries {
+  local registries=(${my_registries[@]})
+  if [[ $K8S_PROVIDER == oc ]]; then
+    registries+=("172.30.0.0/16")
+  fi
+  echo "${registries[@]}"
+}
+
+function get_insecure_registries_text {
+  local registries=($(get_insecure_registries))
+  local text=$(printf ", \"%s\"" "${registries[@]}")
+  echo ${text:2}
+}
+
 function add_endpoint {
   mkdir -p $endpoints_dir
 
@@ -120,12 +162,12 @@ function add_endpoint {
     touch $group_file
   fi
 
-  if ! cat $group_file | grep -q "^$2"; then
+  if ! cat $group_file | grep -q -i "^$2"; then
     echo "$2,$3,$4" >> $group_file
   else
     [[ $(detect_os) == darwin ]] && \
       sed -i "" "s%^$2.*$%$2,$3,$4%g" $group_file || \
-      sed -i "s%^$2.*$%$2,$3,$4%g" $group_file
+      sed -i "s%^$2.*$%$2,$3,$4%gI" $group_file
   fi
 }
 
@@ -168,21 +210,63 @@ function print_endpoints {
   done
 }
 
+function get_container_id_by_pod {
+  local container_id=$(kubectl get pod $1 -n $2 -o jsonpath={.status.containerStatuses[0].containerID})
+  echo ${container_id#"docker://"} | sed 's/^\(.\{12\}\).*/\1/'
+}
+
 function get_first_command {
   local pattern="^function $1::\w\+ {$"
+
+  local embedded_shells=($(grep "\. " $0 | awk '{print $2}'))
+  for embedded_shell in ${embedded_shells[@]}; do
+    embedded_file=$(eval "echo $embedded_shell")
+    if [[ -f $embedded_file ]]; then
+      local funcs=($(grep "$pattern" $embedded_file | awk '{print $2}'))
+      [[ ! -z ${funcs[0]} ]] && echo "${funcs[0]#*::}" && return
+    fi
+  done
+
   local funcs=($(grep "$pattern" $0 | awk '{print $2}'))
   echo "${funcs[0]#*::}"
 }
 
 function target::command {
-  local target=${0##*/}
-  target=${target%.sh}
-  local command=${1:-$(get_first_command $target)}
-  if [[ $(type -t $target::$command) == function ]]; then
-    $target::$command
+  local target cmd 
+  if [[ $1 =~ :: ]]; then
+    target=${1/%::*}
+    cmd=${1/#*::}
+    cmd=${cmd:-$(get_first_command $target)}
   else
-    echo "function $target::$command not found in $0"
+    target=${0##*/}
+    target=${target%.sh}
+    if [[ $1 != -* && ! -z $1 ]]; then
+      cmd=$1
+    fi
+    cmd=${cmd:-$(get_first_command $target)}
   fi
+
+  if [[ $(type -t $target::$cmd) == function ]]; then
+    $target::$cmd ${@:2}
+  else
+    echo "function $target::$cmd not found in $0"
+  fi
+}
+
+function target::delegate {
+  local target_shell="$targets_dir/$1"
+  local target cmd
+  if [[ $2 != -* && ! -z $2 ]]; then
+    cmd=$2
+    shift
+  fi
+  if [[ ! $cmd =~ :: ]]; then
+    target=${0##*/}
+    target=${target%.sh}
+    cmd=$target::$cmd
+  fi
+
+  LAB_HOME=$LAB_HOME $target_shell $cmd ${@:2}
 }
 
 # yellow => '\033[1;33m'
@@ -194,3 +278,5 @@ function target::step {
 function target::log {
   echo "$@"
 }
+
+ensure_k8s_provider || exit

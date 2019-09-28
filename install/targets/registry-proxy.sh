@@ -6,13 +6,14 @@ source $LAB_HOME/install/funcs.sh
 docker_compose="sudo docker-compose -f docker-compose-registry-proxy.yml"
 
 function registry-proxy::init {
-  my_registry=127.0.0.1:5000
+  insecure_registries=($(get_insecure_registries))
+  my_registry=${insecure_registries[0]}
   if ensure_os_linux && [ ! -f /etc/docker/daemon.json ]; then
     target::step "Set up insecure registries"
 
     cat << EOF | sudo tee /etc/docker/daemon.json
 {
-  "insecure-registries" : ["$my_registry"]
+  "insecure-registries" : [$(get_insecure_registries_text)]
 }
 EOF
     sudo systemctl daemon-reload

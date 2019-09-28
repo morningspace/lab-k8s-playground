@@ -54,19 +54,34 @@ if ! ensure_command "kubens"; then
 fi
 
 ########################
+# kubectx
+########################
+target::step "Start to install kubectx"
+if [[ ! -f ~/.launch-cache/kubectx ]]; then
+  curl -sSLo ~/.launch-cache/kubectx \
+    https://raw.githubusercontent.com/ahmetb/kubectx/master/kubectx
+  sudo chmod +x ~/.launch-cache/kubectx
+fi
+if ! ensure_command "kubectx"; then
+  sudo ln -sf ~/.launch-cache/kubectx /usr/bin/kubectx
+  sudo ln -sf ~/.launch-cache/kubectx /usr/sbin/kubectx
+  target::log "kubectx installed"
+fi
+
+########################
 # kube-shell
 ########################
-if [ $(uname -s) == Linux ]; then
-  target::step "Start to install kube-shell"
-  if [[ ! -f ~/.launch-cache/get-pip.py ]]; then
-    curl -sSLo ~/.launch-cache/get-pip.py https://bootstrap.pypa.io/get-pip.py
-  fi
-  if ! ensure_command "kube-shell"; then
-    python3 ~/.launch-cache/get-pip.py --user
-    $HOME/.local/bin/pip3 install kube-shell --user
-    target::log "kube-shell installed"
-  fi
-fi
+# if [ $(uname -s) == Linux ]; then
+#   target::step "Start to install kube-shell"
+#   if [[ ! -f ~/.launch-cache/get-pip.py ]]; then
+#     curl -sSLo ~/.launch-cache/get-pip.py https://bootstrap.pypa.io/get-pip.py
+#   fi
+#   if ! ensure_command "kube-shell"; then
+#     python3 ~/.launch-cache/get-pip.py --user
+#     $HOME/.local/bin/pip3 install kube-shell --user
+#     target::log "kube-shell installed"
+#   fi
+# fi
 
 ########################
 # kubebox

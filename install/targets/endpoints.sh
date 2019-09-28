@@ -4,15 +4,9 @@ LAB_HOME=${LAB_HOME:-`pwd`}
 INSTALL_HOME=$LAB_HOME/install
 source $INSTALL_HOME/funcs.sh
 
-HOST_IP=${HOST_IP:-127.0.0.1}
 endpoints_dir=$INSTALL_HOME/targets/endpoints
 
-apiserver_port=$($INSTALL_HOME/dind-cluster.sh apiserver-port 2>/dev/null)
-endpoints=(
-  "Web terminal,https://$HOST_IP:4200"
-  "Dashboard,http://$HOST_IP:$apiserver_port/api/v1/namespaces/kube-system/services/http:kubernetes-dashboard:/proxy"
-)
-print_endpoints "common" "${endpoints[@]}"
+add_endpoint "common" "Web Terminal" "https://$HOST_IP:4200"
 
 if [[ -d $endpoints_dir ]]; then
   groups=($(ls $endpoints_dir))
@@ -21,6 +15,9 @@ if [[ -d $endpoints_dir ]]; then
     while IFS='' read -r line || [[ -n "$line" ]] ; do
       endpoints+=("$line")
     done < $endpoints_dir/$group
-    print_endpoints $group "${endpoints[@]}"
+
+    if [[ ${#endpoints[@]} != 0 ]]; then
+      print_endpoints $group "${endpoints[@]}"
+    fi
   done
 fi

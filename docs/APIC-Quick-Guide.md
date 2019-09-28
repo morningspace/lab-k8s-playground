@@ -8,7 +8,7 @@
 
 The standard APIC installation is a bit complicated. Depends on its system resource requirements, e.g. CPU, memory, disk volume, it usually requires multiple virtual or bare metal machines and takes hours or even days to finish the deployment. For more details, please refer to its [Documentation](https://www.ibm.com/support/knowledgecenter/SSMNED_2018/mapfiles/getting_started.html).
 
-As an advanced usage case of the open source project [lab-k8s-playground](https://github.com/morningspace/lab-k8s-playground), this guide will work you through the steps to launch APIC using the [All-in-One Kubernetes Playground](https://github.com/morningspace/lab-k8s-playground/) on top of a multi-node Kubernetes cluster on a single machine in minutes with only 5 steps in a repeatable manner!
+As an advanced usage case of the open source project [lab-k8s-playground](https://github.com/morningspace/lab-k8s-playground), this guide will work you through the steps to launch APIC on top of [Kubernetes](https://kubernetes.io/) or [OpenShift](https://www.openshift.com/) using the [All-in-One Kubernetes Playground](https://github.com/morningspace/lab-k8s-playground/) on a single machine in minutes with only 4 or 5 steps in a repeatable manner!
 
 ![](demo-apic.gif)
 
@@ -21,15 +21,19 @@ $ cd lab-k8s-playground
 $ ./install/launch.sh init
 ```
 
-After finished, specify host IP, k8s version, number of worker nodes in `~/.bashrc`:
+After finished, specify host IP, k8s provider, k8s version, number of worker nodes in `~/.bashrc`:
 ```shell
-# The IP of the host that runs APIC
+# The IP of your host that runs APIC
 export HOST_IP=<your_host_ip>
+# The Kubernetes provider, default is dind
+export K8S_PROVIDER=
 # The Kubernetes version, default is v1.14
-export K8S_VERSION=v1.15
+export K8S_VERSION=
 # The number of worker nodes, must be 3
 export NUM_NODES=3
 ```
+
+> You can choose different Kubernetes distributions to install APIC by specifiying `K8S_PROVIDER`, valid values include: `dind` for standard Kubernetes, `oc` for OpenShift. If you choose OpenShift, `K8S_VERSION` and `NUM_NODES` will be ignored.
 
 Reload `.bashrc` to apply your changes, enable bash completion and other features in current login session:
 ```shell
@@ -61,18 +65,20 @@ You can specify APIC hostnames and other settings in below file as needed:
 $ vi $LAB_HOME/install/targets/apic/settings.sh
 ```
 
+> If you choose OpenShift, the hostnames are fixed. Please run `launch endpoints` to view how the hostnames look like after APIC is launched.
+
 You can set `apic_skip_load_images` to `1` in `settings.sh` after the first launch to skip the step of loading APIC images into local private registry because you don't have to repeat that if the registry has already been provisioned. To skip this can make the launch faster.
 
-If you are interested in APIC settings customization, please refer to [Appendix: Customize APIC settings](#appendix-customize-apic-settings)
+If you are interested in APIC settings customization, please refer to [Appendix: Customize APIC settings](#appendix-customize-apic-settings).
 
 ## Step 4. Launch APIC
 
-Run command to launch Kubernetes and install Helm:
+Run command to launch Kubernetes:
 ```shell
-$ launch default helm
+$ launch default
 ```
 
-> After finished, you can run `kubectl version` and `helm version` to verify if everything works fine.
+> After finished, you can run `kubectl version` to verify if everything works fine.
 
 > Run `export IS_IN_CHINA=1` before `launch` if you are located in China who cannot pull images from Google site that are required by the cluster.
 
@@ -87,10 +93,12 @@ It takes time to finish the launch which depends on your system configuration, e
 
 If you want to destroy the current cluster for whatever reason and re-launch a new one, just run below command:
 ```shell
-$ launch apic::clean kubernetes::clean registry::up kubernetes helm apic
+$ launch apic::clean kubernetes::clean registry::up kubernetes apic
 ```
 
 ## Step 5. Expose APIC endpoints
+
+> If you choose OpenShift, then you don't need this step.
 
 You can expose APIC endpoints outside the cluster:
 ```shell
