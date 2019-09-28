@@ -58,7 +58,12 @@ function kubernetes::up {
     run_cmd="eval"
   fi  
 
-  $run_cmd "oc cluster up --public-hostname=$HOST_IP --base-dir=$OC_INSTALL_HOME --write-config=false"
+  local http_proxy=$($run_cmd "docker info -f {{.HTTPProxy}}")
+  local https_proxy=$($run_cmd "docker info -f {{.HTTPSProxy}}")
+  [[ -n $http_proxy ]] && opts+=" --http-proxy=$http_proxy"
+  [[ -n $https_proxy ]] && opts+=" --https-proxy=$https_proxy"
+
+  $run_cmd "oc cluster up --public-hostname=$HOST_IP --base-dir=$OC_INSTALL_HOME $opts"
 
   add_endpoint "common" "OpenShift Console" "https://$HOST_IP:8443/console"
 }
