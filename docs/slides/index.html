@@ -46,12 +46,17 @@
               <section data-markdown>
                 ## What’s it?
                 * A playground for you to play with Kubernetes easily and efficiently.
-                * It can launch a multi-node cluster with configurable Kubernetes version on your local machine in minutes even without network connectivity!
+                * It can launch single- or multi-node cluster with configurable Kubernetes distribution, version, etc. on your local machine in minutes in a repeatable manner even w/o network connectivity!
               </section>
             </section>
             <section>
               <section data-markdown>
                 ## What it covers?
+              </section>
+              <section data-markdown>
+                ## Kubernetes Distributions
+                * [Standard Kubernetes](https://kubernetes.io): v1.12, v1.13, v1.14, v1.15
+                * [OpenShift(Community Distribution)](https://www.okd.io/): v3.11
               </section>
               <section data-markdown>
                 ## Applications
@@ -73,7 +78,6 @@
                 * [kubens](https://github.com/ahmetb/kubectx)
                 * [kubebox](https://github.com/astefanutti/kubebox)
                 * [kubetail](https://github.com/johanhaleby/kubetail)
-                * [kube-shell](https://github.com/cloudnativelabs/kube-shell)
               </section>
               <section data-markdown>
                 ## Private Registries
@@ -219,6 +223,7 @@
               </section>
               <section data-markdown>
                 ## Variant ways you can choose
+                * Kubernetes distribution: `K8S_PROVIDER`
                 * Kubernetes version: `K8S_VERSION`
                 * Number of cluster nodes: `NUM_NODES`
                 * Launch different targets: `launch target1 target2`
