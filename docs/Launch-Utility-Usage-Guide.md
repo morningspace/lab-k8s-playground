@@ -27,6 +27,7 @@ The `Launch Utility` supports many pre-defined targets. They are listed as below
 |docker					| Install docker
 |docker-compose	| Install docker-compose
 |endpoints			| List all application endpoints available in the playground with healthiness status
+|env						| Print environment variables corresponding to the playground
 |helm						| Install [helm](https://helm.sh)
 |init						| Initialize the playground environment
 |istio					| Deploy [istio](https://istio.io)

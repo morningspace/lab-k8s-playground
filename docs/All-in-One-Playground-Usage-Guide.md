@@ -1,6 +1,6 @@
 # The All-in-One Kubernetes Playground Usage Guide
 
-This guide will work you through the steps to launch the [All-in-One Kubernetes Playground](https://github.com/morningspace/lab-k8s-playground/) with a single- or mult-node cluster on a single machine!
+This guide will work you through the steps to launch the [All-in-One Kubernetes Playground](https://github.com/morningspace/lab-k8s-playground/) with a single- or mult-node cluster on a single machine in minutes in a repeatable manner!
 
 ## How to launch the playground?
 
@@ -62,12 +62,12 @@ If you run the playground in a VM, then you probably don't need Vagrant box, sin
 ### Which OS shall I use?
 
 The playground can be launched on:
-* `Ubuntu`
-* `CentOS`
-* `RHEL`
-* `MacOS`
+* [Ubuntu](https://ubuntu.com/)
+* [CentOS](https://www.centos.org/)
+* [RHEL](https://www.redhat.com/en/technologies/linux-platforms/enterprise-linux)
+* [MacOS](https://www.apple.com/macos/)
 
-When lauch the playground in Vagrant box, although the [Vagrantfile](/Vagrantfile) uses Ubuntu, you can change it to use other OS.
+When launch the playground in Vagrant box, although the [Vagrantfile](/Vagrantfile) uses Ubuntu, you can change it to use other OS.
 
 ## Launch using OpenShift
 
@@ -86,7 +86,7 @@ $ K8S_PROVIDER= launch kubernetes
 $ K8S_PROVIDER=oc launch kubernetes
 ```
 
-This will bring up a multi-node standard Kubernetes cluster first, then a single node OpenShift cluster. Using [kubectx](https://github.com/ahmetb/kubectx), you can switch context between the two clusters easily. Then, run other command line tools, e.g. [kubectl](https://kubernetes.io/docs/reference/kubectl), to manage the cluster.
+This will bring up a multi-node standard Kubernetes cluster first, then a single node OpenShift cluster. Using [kubectx](https://github.com/ahmetb/kubectx), you can switch context between the two clusters easily. Then, run other command line tools, e.g. [kubectl](https://kubernetes.io/docs/reference/kubectl), to manage the clusters.
 
 ## How to access the playground?
 

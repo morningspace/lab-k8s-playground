@@ -14,11 +14,10 @@ As an advanced usage case of the open source project [lab-k8s-playground](https:
 
 ## Step 1. Initialize the playground
 
-Clone the playground repository, go into the repository root directory, switch to dev branch, run command to init the environment:
+Clone the playground repository, go into the repository root directory, run command to init the environment:
 ```shell
 $ git clone https://github.com/morningspace/lab-k8s-playground.git
 $ cd lab-k8s-playground
-$ git checkout dev
 $ ./install/launch.sh init
 ```
 
@@ -70,7 +69,7 @@ $ vi $LAB_HOME/install/targets/apic/settings.sh
 
 You can set `apic_skip_load_images` to `1` in `settings.sh` after the first launch to skip the step of loading APIC images into local private registry because you don't have to repeat that if the registry has already been provisioned. To skip this can make the launch faster.
 
-If you are interested in APIC settings customization, please refer to [Appendix: Customize APIC settings](#appendix-customize-apic-settings)
+If you are interested in APIC settings customization, please refer to [Appendix: Customize APIC settings](#appendix-customize-apic-settings).
 
 ## Step 4. Launch APIC
 

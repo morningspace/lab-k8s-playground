@@ -4,14 +4,6 @@
 
 This playground includes a set of shell scripts that can help you launch a single- or multi-node Kubernetes cluster on a single machine in minutes in a repeatable manner.
 
-## OS
-
-The below OSs are supported by this playground:
-* Ubuntu
-* CentOS
-* RHEL
-* MacOS
-
 ## Kubernetes Distributions
 
 The below Kubernetes distributions are supported by this playground:
@@ -39,7 +31,6 @@ The below Kubernetes-related command line tools are integrated with this playgro
 * [kubectx and kubens](https://github.com/ahmetb/kubectx)
 * [kubebox](https://github.com/astefanutti/kubebox)
 * [kubetail](https://github.com/johanhaleby/kubetail)
-* [kube-shell](https://github.com/cloudnativelabs/kube-shell)
 
 ## Private Registries
 
@@ -54,7 +45,7 @@ For more details, please refer to ["Can I launch the playground without network?
 
 ## Operating Systems
 
-The playground can be launched in:
+The below OSs are supported by this playground:
 * [Ubuntu](https://ubuntu.com/)
 * [CentOS](https://www.centos.org/)
 * [RHEL](https://www.redhat.com/en/technologies/linux-platforms/enterprise-linux)
@@ -70,7 +61,7 @@ For more details, please refer to ["How to launch the playground?"](All-in-One-P
 
 To use the playground in command line, you can login from normal terminal, or use [web terminal](https://github.com/shellinabox/shellinabox) that allows you to log in to the playground in web browser.
 
-For more details, please refer to ["How to access the playground?"](All-in-One-Playground-Usage-Guide.md#how-to-access-the-playground)
+For more details, please refer to ["How to access the playground?"](All-in-One-Playground-Usage-Guide.md#how-to-access-the-playground).
 
 ## Use
 
