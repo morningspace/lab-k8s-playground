@@ -3,13 +3,13 @@
 LAB_HOME=${LAB_HOME:-`pwd`}
 INSTALL_HOME=$LAB_HOME/install
 
-K8S_PROVIDER=${K8S_PROVIDER:-dind}
-
 targets=(base default)
 shells=($(ls -l $INSTALL_HOME/targets/*.sh | awk '{print $9}' | awk -F "/" '{print $NF}'))
 targets+=(${shells[@]%.sh})
 
 launch_completions() {
+  K8S_PROVIDER=${K8S_PROVIDER:-dind}
+
   local words=${targets[@]}
   local input="${COMP_WORDS[COMP_CWORD]}"
   local prev="${COMP_WORDS[COMP_CWORD-1]}"
