@@ -86,7 +86,9 @@ $ K8S_PROVIDER= launch kubernetes
 $ K8S_PROVIDER=oc launch kubernetes
 ```
 
-This will bring up a multi-node standard Kubernetes cluster first, then a single node OpenShift cluster. Using [kubectx](https://github.com/ahmetb/kubectx), you can switch context between the two clusters easily. Then, run other command line tools, e.g. [kubectl](https://kubernetes.io/docs/reference/kubectl), to manage the clusters.
+This will bring up a multi-node standard Kubernetes cluster first, then a single node OpenShift cluster. Using [kubectx](https://github.com/ahmetb/kubectx), you can switch context between the two clusters easily. Then, run other command line tools, e.g. [kubectl](https://kubernetes.io/docs/reference/kubectl), to manage the clusters. Here is the demo.
+
+![](demo-oc.gif)
 
 ## How to access the playground?
 
