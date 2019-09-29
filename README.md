@@ -39,3 +39,7 @@ Below are demos created based on the `All-in-One Playground`.
 > Launch [API Connect](https://developer.ibm.com/apiconnect) on top of Kubernetes cluster in the All-in-One Playground.
 
 ![](/docs/demo-apic.gif)
+
+> Launch standard Kubernetes cluster and OpenShift cluster on the same machine, then use [kubectx](https://github.com/ahmetb/kubectx) to switch context between them.
+
+![](/docs/demo-oc.gif)
