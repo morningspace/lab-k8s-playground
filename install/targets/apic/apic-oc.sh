@@ -18,30 +18,19 @@ function on_before_init {
 
   # mgmt
   mkdir -p $apic_pv_home/var/db
-  chown 105 $apic_pv_home/var/db
 
   # analyt
   mkdir -p $apic_pv_home/var/lib/elasticsearch-data/
-  chown 1000 $apic_pv_home/var/lib/elasticsearch-data/
-
   mkdir -p $apic_pv_home/var/lib/elasticsearch-master/
-  chown 1000 $apic_pv_home/var/lib/elasticsearch-master/
 
   # ptl
   mkdir -p $apic_pv_home/var/lib/mysqldata
-  chown 201 $apic_pv_home/var/lib/mysqldata
-
   mkdir -p $apic_pv_home/var/log/mysqllog
-  chown 201 $apic_pv_home/var/log/mysqllog
-
   mkdir -p $apic_pv_home/web
-  chown 200 $apic_pv_home/web
-
   mkdir -p $apic_pv_home/var/aegir/backups
-  chown 200 $apic_pv_home/var/aegir/backups
-
   mkdir -p $apic_pv_home/var/devportal
-  chown 200 $apic_pv_home/var/devportal
+
+  chmod ugo+rwx -R $apic_pv_home
 
   target::step "Ensure namespace $apic_ns"
 
