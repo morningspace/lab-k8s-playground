@@ -154,6 +154,13 @@ function get_insecure_registries_text {
   echo ${text:2}
 }
 
+function capitalize {
+  local capitalized=""
+  capitalized+="$(tr '[:lower:]' '[:upper:]' <<<"${1:0:1}")"
+  capitalized+="$(tr '[:upper:]' '[:lower:]' <<<"${1:1}")"
+  echo $capitalized
+}
+
 function add_endpoint {
   mkdir -p $endpoints_dir
 
@@ -186,7 +193,7 @@ function print_endpoints {
   local group=$1
   local endpoints=("${@:2}")
 
-  target::step "$group endpoints"
+  printf "$(capitalize $group):\n"
 
   local max_len=0
   for endpoint in "${endpoints[@]}" ; do
@@ -206,8 +213,25 @@ function print_endpoints {
       *) status="?";;
     esac
 
-    printf "%s %`echo $max_len`s: %s %s\n" $status "${parts[@]}"
+    printf "  %s %-`echo $max_len`s: %s %s\n" $status "${parts[@]}"
   done
+
+  printf "\n"
+}
+
+function printenv_common {
+  printf "Common:\n"
+  printf "  %-18s: %s\n" LAB_HOME $LAB_HOME
+  printf "  %-18s: %s\n" HOST_IP $HOST_IP
+  printf "  %-18s: %s\n\n" K8S_PROVIDER $K8S_PROVIDER
+}
+
+function printenv_provider {
+  printf "Specific to $K8S_PROVIDER:\n"
+  for env_var in "$@" ; do
+    printf "  %-18s: %s\n" $env_var $(eval "echo \$$env_var")
+  done
+  printf "\n"
 }
 
 function get_container_id_by_pod {

@@ -93,4 +93,9 @@ function kubernetes::clean {
   fi
 }
 
+function kubernetes::env {
+  printenv_common
+  printenv_provider OC_INSTALL_HOME
+}
+
 target::command $@

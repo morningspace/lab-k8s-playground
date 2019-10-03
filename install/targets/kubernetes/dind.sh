@@ -4,6 +4,9 @@ LAB_HOME=${LAB_HOME:-`pwd`}
 INSTALL_HOME=$LAB_HOME/install
 . $INSTALL_HOME/funcs.sh
 
+K8S_VERSION=${K8S_VERSION:-v1.14}
+NUM_NODES=${NUM_NODES:-2}
+
 function add_endpoints {
   local apiserver_port=$($INSTALL_HOME/dind-cluster.sh apiserver-port 2>/dev/null)
   local dashboard_endpoint="http://$HOST_IP:$apiserver_port/api/v1/namespaces/kube-system/services/http:kubernetes-dashboard:/proxy"
@@ -91,6 +94,11 @@ function kubernetes::clean {
 function kubernetes::snapshot {
   target::step "Create snapshot for kubernetes cluster"
   SKIP_SNAPSHOT= $LAB_HOME/dind-cluster-wrapper.sh snapshot
+}
+
+function kubernetes::env {
+  printenv_common
+  printenv_provider K8S_VERSION NUM_NODES
 }
 
 target::command $@
