@@ -37,6 +37,4 @@ if [[ ! -f ~/.launch-cache/$executable ]]; then
   sudo chmod +x ~/.launch-cache/$executable
 fi
 
-target::step "Create link to kubectl"
-sudo ln -sf ~/.launch-cache/$executable /usr/bin/kubectl
-sudo ln -sf ~/.launch-cache/$executable /usr/sbin/kubectl
+create_links ~/.launch-cache/$executable kubectl

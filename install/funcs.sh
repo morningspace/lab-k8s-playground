@@ -257,6 +257,20 @@ function get_first_command {
   echo "${funcs[0]#*::}"
 }
 
+function create_links {
+  target::step "Create link to $2"
+
+  case "$(detect_os)" in
+  ubuntu|centos|rhel)
+    sudo ln -sf $1 /usr/bin/$2
+    sudo ln -sf $1 /usr/sbin/$2
+    ;;
+  darwin)
+    ln -sf $1 /usr/local/bin/$2
+    ;;
+  esac
+}
+
 function target::command {
   local target cmd 
   if [[ $1 =~ :: ]]; then

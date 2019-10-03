@@ -34,14 +34,10 @@ function kubernetes::init {
     tar -zxf ~/.launch-cache/$package_file -C ~/.launch-cache/
   fi
 
-  target::step "Create link to oc"
-  sudo ln -sf ~/.launch-cache/$package/oc /usr/bin/oc
-  sudo ln -sf ~/.launch-cache/$package/oc /usr/sbin/oc
+  create_links ~/.launch-cache/$package/oc oc
 
-  target::step "Create link to kubectl"
   if [[ -f ~/.launch-cache/$package/kubectl ]]; then
-    sudo ln -sf ~/.launch-cache/$package/kubectl /usr/bin/kubectl
-    sudo ln -sf ~/.launch-cache/$package/kubectl /usr/sbin/kubectl
+    create_links ~/.launch-cache/$package/kubectl kubectl
   fi
 
   kubernetes::up

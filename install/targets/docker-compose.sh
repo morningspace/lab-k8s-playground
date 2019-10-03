@@ -15,6 +15,4 @@ if [[ ! -f ~/.launch-cache/$executable ]]; then
   sudo chmod +x ~/.launch-cache/$executable
 fi
 
-target::step "Create link to docker-compose"
-sudo ln -sf ~/.launch-cache/$executable /usr/bin/docker-compose
-sudo ln -sf ~/.launch-cache/$executable /usr/sbin/docker-compose
+create_links ~/.launch-cache/$executable "docker-compose"

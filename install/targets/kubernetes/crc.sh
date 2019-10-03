@@ -47,13 +47,7 @@ function kubernetes::init {
     mv $extracted $target
   fi
 
-  target::step "Create link to crc"
-  if [[ $os == macos ]]; then
-    ln -sf $target/crc /usr/local/bin/crc
-  else
-    sudo ln -sf $target/crc /usr/bin/crc
-    sudo ln -sf $target/crc /usr/sbin/crc
-  fi
+  create_links $target/crc crc
 
   crc setup
 
@@ -64,13 +58,7 @@ function kubernetes::init {
   kubernetes::up
 
   # eval $(crc oc-env)
-  target::step "Create link to oc"
-  if [[ $os == macos ]]; then
-    ln -sf $HOME/.crc/bin/oc /usr/local/bin/oc
-  else
-    sudo ln -sf $HOME/.crc/bin/oc /usr/bin/oc
-    sudo ln -sf $HOME/.crc/bin/oc /usr/sbin/oc
-  fi
+  create_links $HOME/.crc/bin/oc oc
 }
 
 function kubernetes::up {

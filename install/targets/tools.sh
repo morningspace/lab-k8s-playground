@@ -48,8 +48,7 @@ if [[ ! -f ~/.launch-cache/kubens ]]; then
   sudo chmod +x ~/.launch-cache/kubens
 fi
 if ! ensure_command "kubens"; then
-  sudo ln -sf ~/.launch-cache/kubens /usr/bin/kubens
-  sudo ln -sf ~/.launch-cache/kubens /usr/sbin/kubens
+  create_links ~/.launch-cache/kubens kubens
   target::log "kubens installed"
 fi
 
@@ -63,8 +62,7 @@ if [[ ! -f ~/.launch-cache/kubectx ]]; then
   sudo chmod +x ~/.launch-cache/kubectx
 fi
 if ! ensure_command "kubectx"; then
-  sudo ln -sf ~/.launch-cache/kubectx /usr/bin/kubectx
-  sudo ln -sf ~/.launch-cache/kubectx /usr/sbin/kubectx
+  create_links ~/.launch-cache/kubectx kubectx
   target::log "kubectx installed"
 fi
 
@@ -97,8 +95,7 @@ if [[ ! -f ~/.launch-cache/kubebox ]]; then
   sudo chmod +x ~/.launch-cache/kubebox
 fi
 if ! ensure_command "kubebox"; then
-  sudo ln -sf ~/.launch-cache/kubebox /usr/bin/kubebox
-  sudo ln -sf ~/.launch-cache/kubebox /usr/sbin/kubebox
+  create_links ~/.launch-cache/kubebox kubebox
   target::log "kubebox installed"
 fi
 
@@ -112,7 +109,6 @@ if [[ ! -f ~/.launch-cache/kubetail ]]; then
   sudo chmod +x ~/.launch-cache/kubetail
 fi
 if ! ensure_command "kubetail"; then
-  sudo ln -sf ~/.launch-cache/kubetail /usr/bin/kubetail
-  sudo ln -sf ~/.launch-cache/kubetail /usr/sbin/kubetail
+  create_links ~/.launch-cache/kubetail kubetail
   target::log "kubetail installed"
 fi

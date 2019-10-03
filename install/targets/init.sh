@@ -96,9 +96,7 @@ fi
 EOF
 fi
 
-target::step "Create link to launch.sh"
-sudo ln -sf $INSTALL_HOME/launch.sh /usr/bin/launch
-sudo ln -sf $INSTALL_HOME/launch.sh /usr/sbin/launch
+create_links $INSTALL_HOME/launch.sh launch
 
 target::step "Configure launch cache"
 mkdir -p $INSTALL_HOME/.launch-cache
