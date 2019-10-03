@@ -1,7 +1,7 @@
 #!/bin/bash
 
 LAB_HOME=${LAB_HOME:-`pwd`}
-source $LAB_HOME/install/funcs.sh
+. $LAB_HOME/install/funcs.sh
 
 docker_compose="sudo docker-compose -f docker-compose-registry-proxy.yml"
 

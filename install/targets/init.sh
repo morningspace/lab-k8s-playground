@@ -9,7 +9,7 @@
 
 LAB_HOME=${LAB_HOME:-`pwd`}
 INSTALL_HOME=$LAB_HOME/install
-source $INSTALL_HOME/funcs.sh
+. $INSTALL_HOME/funcs.sh
 
 ensure_os || exit
 

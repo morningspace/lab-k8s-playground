@@ -1,7 +1,7 @@
 #!/bin/bash
 
 LAB_HOME=${LAB_HOME:-`pwd`}
-source $LAB_HOME/install/funcs.sh
+. $LAB_HOME/install/funcs.sh
 
 target::step "Start to install docker-compose"
 ensure_command "docker-compose" && exit
