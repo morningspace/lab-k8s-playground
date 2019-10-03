@@ -23,13 +23,13 @@ function kubernetes::init {
   esac
 
   if [[ ! -f ~/.launch-cache/$package_file ]]; then
-    target::step "Download openshift"
+    target::step "Download OpenShift client tools"
     download_url=https://github.com/openshift/origin/releases/download/$OC_VERSION/$package_file
     curl -sSL $download_url -o ~/.launch-cache/$package_file
   fi
 
   if [ ! -d ~/.launch-cache/$package ]; then
-    target::step "Extract openshift package"
+    target::step "Extract OpenShift package"
     mkdir ~/.launch-cache/$package
     tar -zxf ~/.launch-cache/$package_file -C ~/.launch-cache/
   fi
