@@ -86,9 +86,11 @@ function kubernetes::down {
 }
 
 function kubernetes::clean {
-  kubernetes::down
-
   target::step "Clean kubernetes cluster"
+
+  clean_endpoints "common" "OpenShift Console"
+
+  kubernetes::down
 
   crc status >/dev/null 2>&1 && \
   crc delete --force # --clear-cache
