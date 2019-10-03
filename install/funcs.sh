@@ -1,5 +1,7 @@
 #!/bin/bash
 
+trap exit INT
+
 logs_dir=$LAB_HOME/install/logs
 targets_dir=$LAB_HOME/install/targets
 endpoints_dir=$LAB_HOME/install/targets/endpoints
