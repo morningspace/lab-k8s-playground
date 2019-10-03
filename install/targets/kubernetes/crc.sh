@@ -80,20 +80,20 @@ function kubernetes::up {
 function kubernetes::down {
   target::step "Take kubernetes cluster down"
 
-  crc status >/dev/null 2>&1 && \
-  crc status | grep "^CRC VM:" | grep -q Running && \
-  crc stop --force
+  # crc status >/dev/null 2>&1 && \
+  # crc status | grep "^CRC VM:" | grep -q Running && \
+  crc stop # --force
 }
 
 function kubernetes::clean {
-  target::step "Clean kubernetes cluster"
-
   clean_endpoints "common" "OpenShift Console"
 
   kubernetes::down
 
-  crc status >/dev/null 2>&1 && \
-  crc delete --force # --clear-cache
+  target::step "Clean kubernetes cluster"
+
+  # crc status >/dev/null 2>&1 && \
+  crc delete # --force --clear-cache
 
   [[ $(stat -f '%u' /etc/hosts) == 0 ]] || sudo chown root /etc/hosts
 }
