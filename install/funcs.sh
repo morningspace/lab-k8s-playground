@@ -112,7 +112,7 @@ function ensure_k8s_version {
 }
 
 function ensure_k8s_provider {
-  local valid="dind oc"
+  local valid="dind oc crc"
 
   K8S_PROVIDER=${K8S_PROVIDER:-dind}
   if [[ ! $valid =~ $K8S_PROVIDER ]]; then
