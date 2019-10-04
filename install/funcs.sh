@@ -223,15 +223,20 @@ function print_endpoints {
 
 function printenv_common {
   printf "Common:\n"
-  printf "  %-18s: %s\n" LAB_HOME $LAB_HOME
-  printf "  %-18s: %s\n" HOST_IP $HOST_IP
-  printf "  %-18s: %s\n\n" K8S_PROVIDER $K8S_PROVIDER
+  printf "  %-12s: %s\n" LAB_HOME $LAB_HOME
+  printf "  %-12s: %s\n" HOST_IP $HOST_IP
+  printf "  %-12s: %s\n\n" K8S_PROVIDER $K8S_PROVIDER
 }
 
 function printenv_provider {
+  local max_len=0
+  for key in "$@" ; do
+    (( ${#key} > $max_len )) && max_len=${#key}
+  done
+
   printf "Specific to $K8S_PROVIDER:\n"
-  for env_var in "$@" ; do
-    printf "  %-18s: %s\n" $env_var $(eval "echo \$$env_var")
+  for key in "$@" ; do
+    printf "  %-`echo $max_len`s: %s\n" $key $(eval "echo \$$key")
   done
   printf "\n"
 }
