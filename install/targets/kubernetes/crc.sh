@@ -15,23 +15,40 @@ CRC_USE_VIRTUALBOX=${CRC_USE_VIRTUALBOX:-}
 
 virtualbox_bundle="crc_virtualbox_$CRC_OPENSHIFT_VERSION.crcbundle"
 
-case "$(detect_os)" in
-centos|rhel)
-  os="linux"
-  package="crc-$os-amd64"
+os=$(detect_os)
+case $os in
+ubuntu|centos|rhel)
+  package="crc-linux-amd64"
+  pkg_pattern="crc-linux.\+-amd64"
   stat_a="stat -c '%a'"
   stat_u="stat -c '%U'"
-  yum install NetworkManager
   ;;
 darwin)
-  os="macos"
-  package="crc-$os-amd64"
+  package="crc-macos-amd64"
+  pkg_pattern="crc-macos.\+-amd64"
   stat_a="stat -f '%A'"
   stat_u="stat -f '%u'"
   ;;
 esac
 
 function kubernetes::init {
+  target::step "Install Dependencies"
+
+  case $os in
+  centos|rhel)
+    # su -c 'yum install NetworkManager'
+    sudo yum install NetworkManager xz
+    unzip_cmd="unxz -f"
+    ;;
+  ubuntu)
+    sudo apt install qemu-kvm libvirt-daemon libvirt-daemon-system network-manager xz-utils
+    unzip_cmd="unxz -f"
+    ;;
+  darwin)
+    unzip_cmd="gunzip -f"
+    ;;
+  esac
+  
   local target=$CACHE_HOME/$package
   if [[ ! -f $target.tar ]]; then
     if [[ ! -f $target.tar.xz ]]; then
@@ -39,7 +56,7 @@ function kubernetes::init {
       local download_url=https://mirror.openshift.com/pub/openshift-v4/clients/crc/$CRC_VERSION/$package.tar.xz
       curl -sSL $download_url -o $target.tar.xz
     fi
-    gunzip -f $target.tar.xz
+    $unzip_cmd $target.tar.xz
     rm -rf $target
   fi
 
@@ -52,7 +69,7 @@ function kubernetes::init {
   if [[ ! -d $target ]] ; then
     target::step "Extract OpenShift CRC package"
     tar -zxf $target.tar -C $CACHE_HOME/
-    local extracted=$(ls -d $CACHE_HOME/*/ | grep "crc-$os.\+-amd64")
+    local extracted=$(ls -d $CACHE_HOME/*/ | grep $pkg_pattern)
     mv $extracted $target
   fi
 
