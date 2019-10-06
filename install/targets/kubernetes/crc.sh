@@ -39,13 +39,16 @@ function kubernetes::init {
     # su -c 'yum install NetworkManager'
     sudo yum install NetworkManager xz
     unzip_cmd="unxz -f"
+    untar_cmd="tar -xf"
     ;;
   ubuntu)
     sudo apt install qemu-kvm libvirt-daemon libvirt-daemon-system network-manager xz-utils
     unzip_cmd="unxz -f"
+    untar_cmd="tar -xf"
     ;;
   darwin)
     unzip_cmd="gunzip -f"
+    untar_cmd="tar -zxf"
     ;;
   esac
   
@@ -68,7 +71,7 @@ function kubernetes::init {
 
   if [[ ! -d $target ]] ; then
     target::step "Extract OpenShift CRC package"
-    tar -zxf $target.tar -C $CACHE_HOME/
+    $untar_cmd $target.tar -C $CACHE_HOME/
     local extracted=$(ls -d $CACHE_HOME/*/ | grep $pkg_pattern)
     mv $extracted $target
   fi
