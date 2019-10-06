@@ -7,30 +7,39 @@ INSTALL_HOME=$LAB_HOME/install
 CACHE_HOME=$INSTALL_HOME/.launch-cache
 
 CRC_INSTALL_HOME=$HOME/.crc
+CRC_VERSION=${CRC_VERSION:-1.0.0-rc.0}
+CRC_OPENSHIFT_VERSION=${CRC_OPENSHIFT_VERSION:-4.2.0-0.nightly-2019-09-26-192831}
+CRC_MEMORY=${CRC_MEMORY:-8192}
+CRC_CPUS=${CRC_CPUS:-4}
 CRC_USE_VIRTUALBOX=${CRC_USE_VIRTUALBOX:-}
 
-virtualbox_bundle="crc_virtualbox_4.1.14.crcbundle"
+virtualbox_bundle="crc_virtualbox_$CRC_OPENSHIFT_VERSION.crcbundle"
+
+case "$(detect_os)" in
+centos|rhel)
+  os="linux"
+  package="crc-$os-amd64"
+  stat_a="stat -c '%a'"
+  stat_u="stat -c '%U'"
+  yum install NetworkManager
+  ;;
+darwin)
+  os="macos"
+  package="crc-$os-amd64"
+  stat_a="stat -f '%A'"
+  stat_u="stat -f '%u'"
+  ;;
+esac
 
 function kubernetes::init {
-  case "$(detect_os)" in
-  ubuntu|centos|rhel)
-    local os="linux"
-    local package="crc-$os-amd64"
-    # stat -c "%a" filename
-    # stat -c "%U" filename
-    ;;
-  darwin)
-    local os="macos"
-    local package="crc-$os-amd64"
-    ;;
-  esac
-
   local target=$CACHE_HOME/$package
   if [[ ! -f $target.tar ]]; then
-    target::step "Download OpenShift CRC"
-    local download_url=https://mirror.openshift.com/pub/openshift-v4/clients/crc/latest/$package.tar.xz
-    curl -sSL $download_url -o $target.tar.xz
-    gunzip -f $target.tar.xz # macos?
+    if [[ ! -f $target.tar.xz ]]; then
+      target::step "Download OpenShift CRC"
+      local download_url=https://mirror.openshift.com/pub/openshift-v4/clients/crc/$CRC_VERSION/$package.tar.xz
+      curl -sSL $download_url -o $target.tar.xz
+    fi
+    gunzip -f $target.tar.xz
     rm -rf $target
   fi
 
@@ -49,11 +58,16 @@ function kubernetes::init {
 
   create_links $target/crc crc
 
+  target::step "Update OpenShift CRC configuration"
+
+  crc config set memory $CRC_MEMORY
+  crc config set cpus $CRC_CPUS
+
   crc setup
 
   # https://github.com/code-ready/crc/issues/618
-  [[ $(stat -f '%A' /etc/hosts) == 644 ]] || sudo chmod 0644 /etc/hosts
-  [[ $(stat -f '%A' /etc/resolver/testing) == 600 ]] || sudo chmod 0600 /etc/resolver/testing
+  [[ $($stat_a /etc/hosts) == 644 ]] || sudo chmod 0644 /etc/hosts
+  [[ $($stat_a /etc/resolver/testing) == 600 ]] || sudo chmod 0600 /etc/resolver/testing
 
   kubernetes::up
 
@@ -93,14 +107,14 @@ function kubernetes::clean {
   target::step "Clean kubernetes cluster"
 
   # crc status >/dev/null 2>&1 && \
-  crc delete # --force --clear-cache
+  crc delete --force # --clear-cache
 
-  [[ $(stat -f '%u' /etc/hosts) == 0 ]] || sudo chown root /etc/hosts
+  [[ $($stat_u /etc/hosts) == 0 ]] || sudo chown root /etc/hosts
 }
 
 function kubernetes::env {
   printenv_common
-  printenv_provider CRC_USE_VIRTUALBOX
+  printenv_provider CRC_VERSION CRC_OPENSHIFT_VERSION CRC_MEMORY CRC_CPUS CRC_USE_VIRTUALBOX
 }
 
 target::command $@
