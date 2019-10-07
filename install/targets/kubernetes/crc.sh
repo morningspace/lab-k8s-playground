@@ -37,12 +37,12 @@ function kubernetes::init {
   case $os in
   centos|rhel)
     # su -c 'yum install NetworkManager'
-    sudo yum install NetworkManager xz
+    sudo yum install -y NetworkManager xz
     unzip_cmd="unxz -f"
     untar_cmd="tar -xf"
     ;;
   ubuntu)
-    sudo apt install qemu-kvm libvirt-daemon libvirt-daemon-system network-manager xz-utils
+    sudo apt-get install -y qemu-kvm libvirt-daemon libvirt-daemon-system network-manager xz-utils
     unzip_cmd="unxz -f"
     untar_cmd="tar -xf"
     ;;
