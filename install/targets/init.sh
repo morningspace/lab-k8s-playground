@@ -13,7 +13,8 @@ INSTALL_HOME=$LAB_HOME/install
 
 ensure_os || exit
 
-case "$(detect_os)" in
+os=$(detect_os)
+case $os in
 ubuntu)
   target::step "Install basic tools"
   sudo apt-get install -y shellinabox bash-completion
@@ -58,6 +59,18 @@ darwin)
   sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain $INSTALL_HOME/certs/lab-ca.pem.crt
   ;;
 esac
+
+if [[ "ubuntu centos rhel" =~ $os ]]; then
+  grep -q "^wheel:" /etc/group && usermod -aG wheel $USER
+  grep -q "^sudo:" /etc/group && usermod -aG sudo $USER
+  usermod -s /bin/bash $USER
+fi
+
+target::step "Set $USER as sudoer without password prompt"
+  cat << EOF | sudo tee /etc/sudoers.d/$USER
+$USER ALL=(ALL) NOPASSWD: ALL
+EOF
+sudo chmod 440 /etc/sudoers.d/$USER
 
 target::step "Update .bashrc"
 if [ ! -f ~/.bashrc ] || ! $(cat ~/.bashrc | grep -q "^# For playground$") ; then

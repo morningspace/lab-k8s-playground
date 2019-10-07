@@ -34,7 +34,7 @@ if [[ ! -f ~/.launch-cache/$executable ]]; then
   [[ -n $https_proxy ]] && target::log "https_proxy detected: $https_proxy"
   download_url=https://storage.googleapis.com/kubernetes-release/release/$KUBECTL_VERSION/bin/$os/amd64/kubectl
   curl -sSL $download_url -o ~/.launch-cache/$executable
-  sudo chmod +x ~/.launch-cache/$executable
+  chmod +x ~/.launch-cache/$executable
 fi
 
 create_links ~/.launch-cache/$executable kubectl

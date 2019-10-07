@@ -45,7 +45,7 @@ target::step "Start to install kubens"
 if [[ ! -f ~/.launch-cache/kubens ]]; then
   curl -sSLo ~/.launch-cache/kubens \
     https://raw.githubusercontent.com/ahmetb/kubectx/master/kubens
-  sudo chmod +x ~/.launch-cache/kubens
+  chmod +x ~/.launch-cache/kubens
 fi
 if ! ensure_command "kubens"; then
   create_links ~/.launch-cache/kubens kubens
@@ -59,7 +59,7 @@ target::step "Start to install kubectx"
 if [[ ! -f ~/.launch-cache/kubectx ]]; then
   curl -sSLo ~/.launch-cache/kubectx \
     https://raw.githubusercontent.com/ahmetb/kubectx/master/kubectx
-  sudo chmod +x ~/.launch-cache/kubectx
+  chmod +x ~/.launch-cache/kubectx
 fi
 if ! ensure_command "kubectx"; then
   create_links ~/.launch-cache/kubectx kubectx
@@ -92,7 +92,7 @@ esac
 if [[ ! -f ~/.launch-cache/kubebox ]]; then
   curl -sSLo ~/.launch-cache/kubebox \
     https://github.com/astefanutti/kubebox/releases/download/v0.5.0/$kubebox_cmd
-  sudo chmod +x ~/.launch-cache/kubebox
+  chmod +x ~/.launch-cache/kubebox
 fi
 if ! ensure_command "kubebox"; then
   create_links ~/.launch-cache/kubebox kubebox
@@ -106,7 +106,7 @@ target::step "Start to install kubetail"
 if [[ ! -f ~/.launch-cache/kubetail ]]; then
   curl -sSLo ~/.launch-cache/kubetail \
     https://raw.githubusercontent.com/johanhaleby/kubetail/master/kubetail
-  sudo chmod +x ~/.launch-cache/kubetail
+  chmod +x ~/.launch-cache/kubetail
 fi
 if ! ensure_command "kubetail"; then
   create_links ~/.launch-cache/kubetail kubetail

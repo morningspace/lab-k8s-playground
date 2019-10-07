@@ -3,7 +3,9 @@
 LAB_HOME=${LAB_HOME:-`pwd`}
 . $LAB_HOME/install/funcs.sh
 
-docker_compose="sudo docker-compose -f docker-compose-registry-proxy.yml"
+[[ -n $RUN_DOCKER_AS_SUDO ]] && sudo_prefix="sudo"
+
+docker_compose="$sudo_prefix docker-compose -f docker-compose-registry-proxy.yml"
 
 function registry-proxy::init {
   insecure_registries=($(get_insecure_registries))
@@ -22,9 +24,9 @@ EOF
   fi
 
   target::step "Set up registries network and volume"
-  sudo docker network inspect net-registries &>/dev/null || \
-  sudo docker network create net-registries
-  sudo docker volume create vol-registries
+  $sudo_prefix docker network inspect net-registries &>/dev/null || \
+  $sudo_prefix docker network create net-registries
+  $sudo_prefix docker volume create vol-registries
 
   pushd $LAB_HOME
 

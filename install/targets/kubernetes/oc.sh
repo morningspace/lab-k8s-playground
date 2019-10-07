@@ -38,7 +38,6 @@ function kubernetes::init {
 
   if [[ -f ~/.launch-cache/$package/kubectl ]]; then
     create_links ~/.launch-cache/$package/kubectl kubectl
-    # sudo setcap CAP_NET_BIND_SERVICE=+ep ~/.launch-cache/$package/kubectl
   fi
 
   kubernetes::up

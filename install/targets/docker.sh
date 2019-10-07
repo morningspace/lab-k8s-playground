@@ -13,7 +13,8 @@ if [[ $? == 0 ]]; then
   target::step "Per OS post installation"
 
   # avoid adding sudo before docker cmd
-  sudo usermod -aG docker $USER
+  grep -q "^docker:" /etc/group && sudo usermod -aG docker $USER
+  grep -q "^dockerroot:" /etc/group && sudo usermod -aG dockerroot $USER
 
   lsb_dist=""
   if [ -r /etc/os-release ]; then
