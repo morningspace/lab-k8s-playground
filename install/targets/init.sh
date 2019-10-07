@@ -61,9 +61,9 @@ darwin)
 esac
 
 if [[ "ubuntu centos rhel" =~ $os ]]; then
-  grep -q "^wheel:" /etc/group && usermod -aG wheel $USER
-  grep -q "^sudo:" /etc/group && usermod -aG sudo $USER
-  usermod -s /bin/bash $USER
+  grep -q "^wheel:" /etc/group && sudo usermod -aG wheel $USER
+  grep -q "^sudo:" /etc/group && sudo usermod -aG sudo $USER
+  sudo usermod -s /bin/bash $USER
 fi
 
 target::step "Set $USER as sudoer without password prompt"
