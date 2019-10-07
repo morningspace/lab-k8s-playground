@@ -4,12 +4,18 @@ LAB_HOME=${LAB_HOME:-`pwd`}
 . $LAB_HOME/install/funcs.sh
 
 target::step "Start to install docker"
-ensure_command "docker" && exit
-ensure_os_linux || exit
 
-curl -sSL https://get.docker.com/ | sh
+docker_installed=0
 
-if [[ $? == 0 ]]; then
+if ensure_command "docker"; then
+  docker_installed=1
+else
+  if ensure_os_linux && curl -sSL https://get.docker.com/ | sh; then
+    docker_installed=1
+  fi
+fi
+
+if [[ $docker_installed == 1 ]]; then
   target::step "Per OS post installation"
 
   # avoid adding sudo before docker cmd
