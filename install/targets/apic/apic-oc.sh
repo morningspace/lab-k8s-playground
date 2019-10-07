@@ -80,7 +80,7 @@ function on_before_clean {
 
 function on_after_clean {
   target::step "Clean apic persistent volumes"
-  rm -rf $apic_pv_home
+  sudo rm -rf $apic_pv_home
 }
 
 target::command $@

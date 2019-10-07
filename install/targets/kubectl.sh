@@ -38,3 +38,4 @@ if [[ ! -f ~/.launch-cache/$executable ]]; then
 fi
 
 create_links ~/.launch-cache/$executable kubectl
+sudo setcap CAP_NET_BIND_SERVICE=+ep ~/.launch-cache/$executable

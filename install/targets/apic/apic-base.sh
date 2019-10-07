@@ -195,7 +195,7 @@ function install_analyt {
   # adjust vm.max_map_count
   if ! $(sysctl vm.max_map_count|grep -q $max_map_count) ; then
     target::log "set vm.max_map_count to $max_map_count"
-    sysctl -w vm.max_map_count=$max_map_count
+    sudo sysctl -w vm.max_map_count=$max_map_count
   fi
 
   # create pv

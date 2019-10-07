@@ -98,7 +98,7 @@ function kubernetes::snapshot {
 
 function kubernetes::env {
   printenv_common
-  printenv_provider K8S_VERSION NUM_NODES
+  printenv_provider K8S_VERSION NUM_NODES DIND_DAEMON_JSON_FILE
 }
 
 target::command $@
