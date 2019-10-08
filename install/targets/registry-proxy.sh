@@ -6,14 +6,9 @@ LAB_HOME=${LAB_HOME:-`pwd`}
 function registry-proxy::init {
   insecure_registries=($(get_insecure_registries))
   my_registry=${insecure_registries[0]}
-  if ensure_os_linux && [ ! -f /etc/docker/daemon.json ]; then
+  if ensure_os_linux; then
     target::step "Set up insecure registries"
-
-    cat << EOF | sudo tee /etc/docker/daemon.json
-{
-  "insecure-registries" : [$(get_insecure_registries_text)]
-}
-EOF
+    update_docker_daemon_json "\"insecure-registries\" : [$(get_insecure_registries_text)]"
     sudo systemctl daemon-reload
     sudo systemctl restart docker
     sudo systemctl show --property=Environment docker

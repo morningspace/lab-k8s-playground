@@ -17,7 +17,7 @@ os=$(detect_os)
 case $os in
 ubuntu)
   target::step "Install basic tools"
-  sudo apt-get install -y shellinabox bash-completion
+  sudo apt-get install -y shellinabox bash-completion jq
 
   # path to bash completion
   bash_completion="/usr/share/bash-completion/bash_completion"
@@ -29,7 +29,7 @@ ubuntu)
 centos|rhel)
   target::step "Install basic tools"
   sudo yum install -y epel-release
-  sudo yum install -y shellinabox bash-completion net-tools
+  sudo yum install -y shellinabox bash-completion net-tools jq
   # https://github.com/shellinabox/shellinabox/issues/327
   sudo sed -i \
     's/^#\s*PasswordAuthentication yes$/PasswordAuthentication yes/g;
@@ -50,7 +50,7 @@ centos|rhel)
   ;;
 darwin)
   target::step "Install basic tools"
-  brew install shellinabox bash-completion
+  brew install shellinabox bash-completion jq
 
   # path to bash completion
   bash_completion="$(brew --prefix)/etc/bash_completion"

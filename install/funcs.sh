@@ -164,6 +164,23 @@ function get_insecure_registries_text {
   echo ${text:2}
 }
 
+function update_docker_daemon_json {
+  local daemon_json_file="/etc/docker/daemon.json"
+  local jq=()
+  if [[ -f $daemon_json_file ]] ; then
+    jq+=("$(cat $daemon_json_file)")
+  else
+    jq+=("{}")
+  fi
+
+  for entry in "$@"; do
+    jq+=("{ $entry }")
+  done
+
+  local json=$(IFS="+"; echo "${jq[*]}")
+  jq -n "$json" | sudo tee $daemon_json_file
+}
+
 function capitalize {
   local capitalized=""
   capitalized+="$(tr '[:lower:]' '[:upper:]' <<<"${1:0:1}")"

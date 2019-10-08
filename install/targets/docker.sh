@@ -19,8 +19,13 @@ if [[ $docker_installed == 1 ]]; then
   target::step "Per OS post installation"
 
   # avoid adding sudo before docker cmd
-  grep -q "^docker:" /etc/group && sudo usermod -aG docker $USER
-  grep -q "^dockerroot:" /etc/group && sudo usermod -aG dockerroot $USER
+  grep -q "^docker:" /etc/group && \
+    sudo usermod -aG docker $USER
+
+  grep -q "^dockerroot:" /etc/group && \
+    sudo usermod -aG dockerroot $USER && \
+    update_docker_daemon_json '"group": "dockerroot"' && \
+    need_restart=1
 
   lsb_dist=""
   if [ -r /etc/os-release ]; then
@@ -44,9 +49,13 @@ net.bridge.bridge-nf-call-ip6tables = 1
 EOF
       sudo sysctl -p
     fi
+    need_restart=1
+    ;;
+  esac
+
+  if [[ $need_restart == 1 ]]; then
     sudo systemctl enable docker.service
     sudo systemctl daemon-reload
     sudo systemctl restart docker
-    ;;
-  esac
+  fi
 fi
