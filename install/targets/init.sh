@@ -66,11 +66,11 @@ if [[ "ubuntu centos rhel" =~ $os ]]; then
   sudo usermod -s /bin/bash $USER
 fi
 
-target::step "Set $USER as sudoer without password prompt"
-  cat << EOF | sudo tee /etc/sudoers.d/$USER
-$USER ALL=(ALL) NOPASSWD: ALL
-EOF
-sudo chmod 440 /etc/sudoers.d/$USER
+# target::step "Set $USER as sudoer without password prompt"
+#   cat << EOF | sudo tee /etc/sudoers.d/$USER
+# $USER ALL=(ALL) NOPASSWD: ALL
+# EOF
+# sudo chmod 440 /etc/sudoers.d/$USER
 
 target::step "Update .bashrc"
 if [ ! -f ~/.bashrc ] || ! $(cat ~/.bashrc | grep -q "^# For playground$") ; then

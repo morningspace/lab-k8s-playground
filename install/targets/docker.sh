@@ -6,13 +6,21 @@ LAB_HOME=${LAB_HOME:-`pwd`}
 target::step "Start to install docker"
 
 docker_installed=0
+os=$(detect_os)
 
 if ensure_command "docker"; then
   docker_installed=1
 else
-  if ensure_os_linux && curl -sSL https://get.docker.com/ | sh; then
+  case $os in
+  rhel)
+    sudo yum install -y docker
     docker_installed=1
-  fi
+    ;;
+  ubuntu|centos)
+    curl -sSL https://get.docker.com/ | sh
+    docker_installed=1
+    ;;
+  esac
 fi
 
 if [[ $docker_installed == 1 ]]; then

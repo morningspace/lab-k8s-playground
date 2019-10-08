@@ -139,6 +139,8 @@ function detect_os {
 function run_docker_as_sudo {
   if ensure_os_linux && grep -q "^docker:" /etc/group; then
     echo "sg docker -c"
+  elif grep -q "^dockerroot:" /etc/group; then
+    echo "sg dockerroot -c"
   else
     echo "eval"
   fi  
