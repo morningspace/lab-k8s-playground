@@ -69,7 +69,6 @@ Vagrant.configure(2) do |config|
       "HOST_IP" => "#{host_ip}",
       "IS_IN_CHINA" => "#{is_in_china}",
       "https_proxy" => "#{https_proxy}"
-      "RUN_DOCKER_AS_SUDO" => "1"
     }
   end
 end

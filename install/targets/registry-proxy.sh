@@ -3,10 +3,6 @@
 LAB_HOME=${LAB_HOME:-`pwd`}
 . $LAB_HOME/install/funcs.sh
 
-[[ -n $RUN_DOCKER_AS_SUDO ]] && sudo_prefix="sudo"
-
-docker_compose="$sudo_prefix docker-compose -f docker-compose-registry-proxy.yml"
-
 function registry-proxy::init {
   insecure_registries=($(get_insecure_registries))
   my_registry=${insecure_registries[0]}
@@ -24,9 +20,9 @@ EOF
   fi
 
   target::step "Set up registries network and volume"
-  $sudo_prefix docker network inspect net-registries &>/dev/null || \
-  $sudo_prefix docker network create net-registries
-  $sudo_prefix docker volume create vol-registries
+  $(run_docker_as_sudo) "docker network inspect net-registries &>/dev/null" || \
+  $(run_docker_as_sudo) "docker network create net-registries"
+  $(run_docker_as_sudo) "docker volume create vol-registries"
 
   pushd $LAB_HOME
 
@@ -35,7 +31,7 @@ EOF
   echo "REGISTRY_PROXY_REMOTEURL=http://$REGISTRY_REMOTE:5000" >.env
 
   target::step "Take all registry proxies up"
-  $docker_compose up -d
+  $(run_docker_as_sudo) "docker-compose -f docker-compose-registry-proxy.yml up -d"
 
   popd
 }
@@ -43,14 +39,14 @@ EOF
 function registry-proxy::up {
   pushd $LAB_HOME
   target::step "Take all registry proxies up"
-  $docker_compose up -d
+  $(run_docker_as_sudo) "docker-compose -f docker-compose-registry-proxy.yml up -d"
   popd
 }
 
 function registry-proxy::down {
   pushd $LAB_HOME
   target::step "Take all registry proxies down"
-  $docker_compose down
+  $(run_docker_as_sudo) "docker-compose -f docker-compose-registry-proxy.yml down"
   popd
 }
 

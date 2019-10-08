@@ -3,8 +3,6 @@
 LAB_HOME=${LAB_HOME:-`pwd`}
 . $LAB_HOME/install/funcs.sh
 
-[[ -n $RUN_DOCKER_AS_SUDO ]] && sudo_prefix="sudo"
-
 function registry::init {
   ensure_k8s_version || exit
 
@@ -112,14 +110,14 @@ EOF
   fi
 
   target::step "Set up registries network and volume"
-  $sudo_prefix docker network inspect net-registries &>/dev/null || \
-  $sudo_prefix docker network create net-registries
-  $sudo_prefix docker volume create vol-registries
+  $(run_docker_as_sudo) "docker network inspect net-registries &>/dev/null" || \
+  $(run_docker_as_sudo) "docker network create net-registries"
+  $(run_docker_as_sudo) "docker volume create vol-registries"
 
   pushd $LAB_HOME
 
   target::step "Take registry mr.io up"
-  $sudo_prefix docker-compose up -d mr.io
+  $(run_docker_as_sudo) "docker-compose up -d mr.io"
 
   sleep 5
 
@@ -145,14 +143,14 @@ EOF
     fi
 
     target::step "$image ➞ $target_image"
-    $sudo_prefix docker pull $image
-    $sudo_prefix docker tag $image $target_image
-    $sudo_prefix docker push $target_image
-    $sudo_prefix docker rmi $target_image
+    $(run_docker_as_sudo) "docker pull $image"
+    $(run_docker_as_sudo) "docker tag $image $target_image"
+    $(run_docker_as_sudo) "docker push $target_image"
+    $(run_docker_as_sudo) "docker rmi $target_image"
   done  
 
   target::step "Take other registries up"
-  $sudo_prefix docker-compose up -d --scale socat=0
+  $(run_docker_as_sudo) "docker-compose up -d --scale socat=0"
 
   popd
 }
@@ -160,14 +158,14 @@ EOF
 function registry::up {
   pushd $LAB_HOME
   target::step "Take all registries up"
-  $sudo_prefix docker-compose up -d --scale socat=0
+  $(run_docker_as_sudo) "docker-compose up -d --scale socat=0"
   popd
 }
 
 function registry::down {
   pushd $LAB_HOME
   target::step "Take all registries down"
-  $sudo_prefix docker-compose down
+  $(run_docker_as_sudo) "docker-compose down"
   popd
 }
 
@@ -177,13 +175,13 @@ function registry::docker.io {
 
   if cat /etc/hosts | grep -q "# $docker_io_host"; then
     target::step "Disable local docker.io"
-    $sudo_prefix docker-compose stop socat
+    $(run_docker_as_sudo) "docker-compose stop socat"
 
     target::step "Remove $docker_io_host mapping from /etc/hosts"
     sudo sed -i.bak "/$docker_io_host/d" /etc/hosts
   else
     target::step "Enable local docker.io"
-    $sudo_prefix COMPOSE_IGNORE_ORPHANS=True docker-compose up -d socat
+    $(run_docker_as_sudo) "COMPOSE_IGNORE_ORPHANS=True docker-compose up -d socat"
 
     target::step "Add $docker_io_host mapping into /etc/hosts"
     cat << EOF | sudo tee -a /etc/hosts

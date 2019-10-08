@@ -48,18 +48,12 @@ function kubernetes::up {
 
   mkdir -p $OC_INSTALL_HOME
 
-  if ensure_os_linux && grep -q "^docker:" /etc/group; then
-    run_cmd="sg docker -c"
-  else
-    run_cmd="eval"
-  fi  
-
-  local http_proxy=$($run_cmd "docker info -f {{.HTTPProxy}}")
-  local https_proxy=$($run_cmd "docker info -f {{.HTTPSProxy}}")
+  local http_proxy=$($(run_docker_as_sudo) "docker info -f {{.HTTPProxy}}")
+  local https_proxy=$($(run_docker_as_sudo) "docker info -f {{.HTTPSProxy}}")
   [[ -n $http_proxy ]] && opts+=" --http-proxy=$http_proxy"
   [[ -n $https_proxy ]] && opts+=" --https-proxy=$https_proxy"
 
-  $run_cmd "oc cluster up --public-hostname=$HOST_IP --base-dir=$OC_INSTALL_HOME $opts"
+  $(run_docker_as_sudo) "oc cluster up --public-hostname=$HOST_IP --base-dir=$OC_INSTALL_HOME $opts"
 
   add_endpoint "common" "OpenShift Console" "https://$HOST_IP:8443/console"
 }

@@ -34,12 +34,16 @@ EOF
 
     target::step "Restart Openshift API Server"
 
+    local container_id
     if [[ $(detect_os) == darwin ]]; then
-      docker restart $(get_container_id_by_pod master-api-localhost kube-system)
+      container_id=$(get_container_id_by_pod master-api-localhost kube-system)
+      $(run_docker_as_sudo) "docker restart $container_id"
     else
-      docker restart $(docker ps -l -q --filter "label=io.kubernetes.container.name=api")
+      container_id=$($(run_docker_as_sudo) "docker ps -l -q --filter 'label=io.kubernetes.container.name=api'")
+      $(run_docker_as_sudo) "docker restart $container_id"
     fi
-    docker restart $(docker ps -l -q --filter "label=io.kubernetes.container.name=apiserver")
+    container_id=$($(run_docker_as_sudo) "docker ps -l -q --filter 'label=io.kubernetes.container.name=apiserver'")
+    $(run_docker_as_sudo) "docker restart $container_id"
 
     target::step "Waiting for health check passed"
     until curl -f -s -k -o /dev/null https://$HOST_IP:8443/healthz; do echo -n .; sleep 1; done

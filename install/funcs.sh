@@ -136,6 +136,14 @@ function detect_os {
   echo $os
 }
 
+function run_docker_as_sudo {
+  if ensure_os_linux && grep -q "^docker:" /etc/group; then
+    echo "sg docker -c"
+  else
+    echo "eval"
+  fi  
+}
+
 my_registries=(
   "127.0.0.1:5000"
   "${HOSTNAME:-localhost}:5000"
