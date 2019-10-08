@@ -6,6 +6,7 @@ INSTALL_HOME=$LAB_HOME/install
 
 K8S_VERSION=${K8S_VERSION:-v1.14}
 NUM_NODES=${NUM_NODES:-2}
+DIND_DAEMON_JSON_FILE=$INSTALL_HOME/targets/kubernetes/daemon.json
 
 function add_endpoints {
   local apiserver_port=$($(run_docker_as_sudo) "$LAB_HOME/dind-cluster-wrapper.sh apiserver-port 2>/dev/null")
@@ -63,6 +64,7 @@ EOF
     DIND_CA_CERT_URL=$DIND_CA_CERT_URL \
     DASHBOARD_URL=$DASHBOARD_URL \
     SKIP_SNAPSHOT=$SKIP_SNAPSHOT \
+    DIND_DAEMON_JSON_FILE=$DIND_DAEMON_JSON_FILE \
     $LAB_HOME/dind-cluster-wrapper.sh up" && \
   dashboard_rolebinding && \
   add_endpoints
@@ -71,7 +73,9 @@ EOF
 function kubernetes::up {
   target::step "Take kubernetes cluster up"
   $(run_docker_as_sudo) \
-    "SKIP_SNAPSHOT= $LAB_HOME/dind-cluster-wrapper.sh up" && \
+    "SKIP_SNAPSHOT= \
+     DIND_DAEMON_JSON_FILE=$DIND_DAEMON_JSON_FILE \
+     $LAB_HOME/dind-cluster-wrapper.sh up" && \
     dashboard_rolebinding && \
     add_endpoints
 }
@@ -97,7 +101,7 @@ function kubernetes::snapshot {
 
 function kubernetes::env {
   printenv_common
-  printenv_provider K8S_VERSION NUM_NODES DIND_DAEMON_JSON_FILE
+  printenv_provider K8S_VERSION NUM_NODES
 }
 
 target::command $@
