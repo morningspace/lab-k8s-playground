@@ -49,13 +49,13 @@ function kubernetes::init {
   esac
   
   local target=$CACHE_HOME/$package
-  if [[ ! -f $target.tar ]]; then
-    if [[ ! -f $target.tar.xz ]]; then
+  if [[ ! -f $target-$CRC_VERSION.tar ]]; then
+    if [[ ! -f $target-$CRC_VERSION.tar.xz ]]; then
       target::step "Download OpenShift CRC"
       local download_url=https://mirror.openshift.com/pub/openshift-v4/clients/crc/$CRC_VERSION/$package.tar.xz
-      curl -sSL $download_url -o $target.tar.xz
+      curl -sSL $download_url -o $target-$CRC_VERSION.tar.xz
     fi
-    $unzip_cmd $target.tar.xz
+    $unzip_cmd $target-$CRC_VERSION.tar.xz
     rm -rf $target
   fi
 
@@ -67,7 +67,7 @@ function kubernetes::init {
 
   if [[ ! -d $target ]] ; then
     target::step "Extract OpenShift CRC package"
-    $untar_cmd $target.tar -C $CACHE_HOME/
+    $untar_cmd $target-$CRC_VERSION.tar -C $CACHE_HOME/
     local extracted=$(ls -d $CACHE_HOME/*/ | grep $pkg_pattern)
     mv $extracted $target
   fi
