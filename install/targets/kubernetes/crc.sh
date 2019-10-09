@@ -20,14 +20,10 @@ case $os in
 ubuntu|centos|rhel)
   package="crc-linux-amd64"
   pkg_pattern="crc-linux.\+-amd64"
-  stat_a="stat -c '%a'"
-  stat_u="stat -c '%U'"
   ;;
 darwin)
   package="crc-macos-amd64"
   pkg_pattern="crc-macos.\+-amd64"
-  stat_a="stat -f '%A'"
-  stat_u="stat -f '%u'"
   ;;
 esac
 
@@ -86,8 +82,10 @@ function kubernetes::init {
   crc setup
 
   # https://github.com/code-ready/crc/issues/618
-  [[ $($stat_a /etc/hosts) == 644 ]] || sudo chmod 0644 /etc/hosts
-  [[ $($stat_a /etc/resolver/testing) == 600 ]] || sudo chmod 0600 /etc/resolver/testing
+  if [[ $os == darwin ]]; then
+    [[ $(stat -f '%A' /etc/hosts) == 644 ]] || sudo chmod 0644 /etc/hosts
+    [[ $(stat -f '%A' /etc/resolver/testing) == 600 ]] || sudo chmod 0600 /etc/resolver/testing
+  fi
 
   kubernetes::up
 
@@ -129,7 +127,9 @@ function kubernetes::clean {
   # crc status >/dev/null 2>&1 && \
   crc delete --force # --clear-cache
 
-  [[ $($stat_u /etc/hosts) == 0 ]] || sudo chown root /etc/hosts
+  if [[ $os == darwin ]];  then
+    [[ $(stat -f '%u' /etc/hosts) == 0 ]] || sudo chown root /etc/hosts
+  fi
 }
 
 function kubernetes::env {
