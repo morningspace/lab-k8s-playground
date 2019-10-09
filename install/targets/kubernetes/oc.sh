@@ -15,10 +15,6 @@ function kubernetes::init {
   ubuntu|centos|rhel)
     local package="openshift-origin-client-tools-$OC_VERSION-$OC_COMMIT-linux-64bit"
     local package_file=$package.tar.gz
-    update_docker_daemon_json "\"insecure-registries\" : [$(get_insecure_registries_text)]"
-    sudo systemctl daemon-reload
-    sudo systemctl restart docker
-    sudo systemctl show --property=Environment docker
     ;;
   darwin)
     local package="openshift-origin-client-tools-$OC_VERSION-$OC_COMMIT-mac"
