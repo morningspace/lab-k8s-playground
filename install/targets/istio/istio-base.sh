@@ -31,22 +31,18 @@ function download_pkg {
 }
 
 function install_crds {
-  target::step "Install CRDs"
-
   if [[ $ISTIO_INSTALL_MODE == helm ]]; then
+    target::step "Install CRDs"
+
     helm template install/kubernetes/helm/istio-init \
       --name istio-init --namespace istio-system | kubectl apply -f -
-  else
-    for yaml in install/kubernetes/helm/istio-init/files/crd*yaml; do
-      kubectl apply -f $yaml
-    done
-  fi
 
-  while [[ $(kubectl get crds | grep 'istio.io' | wc -l) != 23 ]]; do
-    echo -n "." >&2
-    sleep 1
-  done
-  echo "[done]" >&2
+    while (( $(kubectl get crds | grep 'istio.io' | wc -l) != 23 )); do
+      echo -n "." >&2
+      sleep 1
+    done
+    echo "[done]" >&2
+  fi
 }
 
 function install_istio {
@@ -100,13 +96,17 @@ function on_before_clean {
   :
 }
 
-function delete_crd {
-  for yaml in install/kubernetes/helm/istio-init/files/crd*yaml; do
-    kubectl delete -f $yaml 2>/dev/null
-  done
+function delete_crds {
+  if [[ $ISTIO_INSTALL_MODE == helm ]]; then
+    target::step "Delete CRDs"
+    for yaml in install/kubernetes/helm/istio-init/files/crd*yaml; do
+      kubectl delete -f $yaml 2>/dev/null
+    done
+  fi
 }
 
 function delete_istio {
+  target::step "Start to uninstall istio"
   if [[ $ISTIO_INSTALL_MODE == helm ]]; then
     helm template install/kubernetes/helm/istio \
       --name istio --namespace istio-system \
@@ -180,6 +180,7 @@ function on_before_clean_bookinfo {
 function istio-bookinfo::clean {
   clean_endpoints "istio" "Istio Bookinfo"
   on_before_clean_bookinfo
+  target::step "Start to uninstall istio-bookinfo"
   NAMESPACE=default ~/.launch-cache/istio/samples/bookinfo/platform/kube/cleanup.sh
   on_after_clean_bookinfo
 }

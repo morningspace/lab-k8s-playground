@@ -41,14 +41,14 @@ function enable_admission_webhook {
 
 function add_scc_to_user {
   target::step "Add scc to user for istio"
-  for $acount in ${accounts[@]}; do
+  for account in ${accounts[@]}; do
     oc adm policy add-scc-to-user anyuid -z $account -n istio-system
   done
 }
 
 function create_role_bindings {
   target::step "Create cluster role bindings for istio"
-  for $binding in ${bindings[@]}; do
+  for binding in ${bindings[@]}; do
     oc get clusterrolebindings ${binding%,*} 1>/dev/null 2>&1 || \
     oc create clusterrolebinding ${binding%,*} --clusterrole=cluster-admin \
       --user=system:serviceaccount:istio-system:${binding#*,}
@@ -65,7 +65,7 @@ function on_before_init {
 function expose_routes {
   target::step "Expose service routes for $1"
   local routes=(${@:2})
-  for $route in ${routes[@]}; do
+  for route in ${routes[@]}; do
     oc get route ${route%,*} -n istio-system 1>/dev/null 2>&1 || \
     oc expose svc/${route%,*} --port=${route#*,} -n istio-system
   done
@@ -82,7 +82,7 @@ function on_after_init {
 function delete_routes {
   target::step "Delete service routes for $1"
   local routes=(${@:2})
-  for $route in ${routes[@]}; do
+  for route in ${routes[@]}; do
     oc get route ${route%,*} -n istio-system 1>/dev/null 2>&1 && \
     oc delete route ${route%,*} -n istio-system
   done
@@ -99,14 +99,14 @@ function on_before_clean {
 
 function delete_scc_from_user {
   target::step "Delete scc from user for istio"
-  for $acount in ${accounts[@]}; do
+  for account in ${accounts[@]}; do
     oc adm policy remove-scc-from-user anyuid -z $account -n istio-system
   done
 }
 
 function delete_role_bindings {
   target::step "Delete cluster role bindings for istio"
-  for $binding in ${bindings[@]}; do
+  for binding in ${bindings[@]}; do
     oc get clusterrolebinding ${binding%,*} 1>/dev/null 2>&1 && \
     oc delete clusterrolebinding ${binding%,*}
   done
@@ -124,7 +124,7 @@ function on_before_init_bookinfo {
 }
 
 function expose_routes_bookinfo {
-  expose_routes "bookinfo" ${routes_bookinf[@]}
+  expose_routes "bookinfo" ${routes_bookinfo[@]}
 }
 
 function on_after_init_bookinfo {

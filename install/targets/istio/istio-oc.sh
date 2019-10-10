@@ -61,6 +61,7 @@ EOF
 }
 
 function add_endpoints {
+  target::step "Add endpoints for istio"
   add_endpoint "istio" "Grafana" "http://grafana-istio-system.@@HOST_IP.nip.io"
   add_endpoint "istio" "Kiali" "http://kiali-istio-system.@@HOST_IP.nip.io"
   add_endpoint "istio" "Prometheus" "http://prometheus-istio-system.@@HOST_IP.nip.io"
@@ -68,6 +69,7 @@ function add_endpoints {
 }
 
 function add_endpoints_bookinfo {
+  target::step "Add endpoints for istio-bookinfo"
   add_endpoint "istio" "Istio Bookinfo" "http://istio-ingressgateway-istio-system.@@HOST_IP.nip.io/productpage"
 }
 
