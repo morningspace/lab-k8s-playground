@@ -1,18 +1,13 @@
 #!/bin/bash
 
 LAB_HOME=${LAB_HOME:-`pwd`}
-
 . $LAB_HOME/install/targets/istio/istio-base.sh
 
-function on_after_init {
+function add_endpoints {
   add_endpoint "istio" "Grafana" "http://@@HOST_IP:3000"
   add_endpoint "istio" "Kiali" "http://@@HOST_IP:20001"
   add_endpoint "istio" "Jaeger" "http://@@HOST_IP:15032"
   add_endpoint "istio" "Prometheus" "http://@@HOST_IP:9090"
-}
-
-function on_before_clean {
-  clean_endpoints "istio"
 }
 
 function istio::portforward {
@@ -24,12 +19,8 @@ function istio::portforward {
   create_portfwd istio-system pod/prometheus 9090:9090
 }
 
-function on_after_init_bookinfo {
+function add_endpoints_bookinfo {
   add_endpoint "istio" "Istio Bookinfo" "http://@@HOST_IP:31380/productpage"
-}
-
-function on_before_clean_bookinfo {
-  clean_endpoints "istio" "Istio Bookinfo"
 }
 
 function istio-bookinfo::portforward {
