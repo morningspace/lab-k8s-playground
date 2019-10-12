@@ -33,7 +33,7 @@ admissionConfig:
 EOF
     oc ex config patch $master_config.yaml.prepatch -p "$(cat $master_config.patch)" > $master_config.yaml
 
-    target::step "Restart Openshift API Server"
+    target::log "Restart Openshift API Server"
 
     local container_id
     if [[ $(detect_os) == darwin ]]; then
@@ -46,15 +46,15 @@ EOF
     container_id=$($(run_docker_as_sudo) "docker ps -l -q --filter 'label=io.kubernetes.container.name=apiserver'")
     $(run_docker_as_sudo) "docker restart $container_id"
 
-    target::step "Waiting for health check passed"
+    target::log "Waiting for health check passed"
     until curl -f -s -k -o /dev/null https://$HOST_IP:8443/healthz; do echo -n .; sleep 1; done
     target::log "[done]"
 
-    target::step "Waiting for oc login passed"
+    target::log "Waiting for oc login passed"
     until echo fakepasswd | oc login -u system:admin >/dev/null 2>&1; do echo -n .; sleep 1; done
     target::log "[done]"
 
-    target::step "Waiting for scc check passed"
+    target::log "Waiting for scc check passed"
     until oc adm policy add-scc-to-user anyuid -z default -n istio-system >/dev/null 2>&1; do echo -n .; sleep 1; done
     target::log "[done]"
   fi
