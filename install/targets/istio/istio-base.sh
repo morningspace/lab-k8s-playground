@@ -32,12 +32,15 @@ function download_pkg {
 
 function install_crds {
   if [[ $ISTIO_INSTALL_MODE == helm ]]; then
+    (kubectl get namespace | grep -q istio-system) || \
+    kubectl create namespace istio-system
+
     target::step "Install CRDs"
 
     helm template install/kubernetes/helm/istio-init \
       --name istio-init --namespace istio-system | kubectl apply -f -
 
-    while (( $(kubectl get crds | grep 'istio.io' | wc -l) != 23 )); do
+    while (( $(kubectl get crds 2>/dev/null | grep 'istio.io' | wc -l) != 23 )); do
       echo -n "." >&2
       sleep 1
     done
@@ -49,8 +52,6 @@ function install_istio {
   target::step "Start to install istio"
 
   if [[ $ISTIO_INSTALL_MODE == helm ]]; then
-    kubectl create namespace istio-system
-
     if [[ $ISTIO_CNI_ENABLED == true ]]; then
       local exclude_ns="istio-system,kube-system"
       helm template install/kubernetes/helm/istio-cni \
@@ -61,6 +62,7 @@ function install_istio {
     helm template install/kubernetes/helm/istio \
       --name istio --namespace istio-system \
       --set istio_cni.enabled=$ISTIO_CNI_ENABLED \
+      --set gateways.istio-ingressgateway.type=NodePort \
       --values install/kubernetes/helm/istio/values-istio-demo.yaml | kubectl apply -f -
   else
     kubectl apply -f install/kubernetes/istio-demo.yaml
@@ -117,6 +119,9 @@ function delete_istio {
       helm template install/kubernetes/helm/istio-cni \
         --name=istio-cni --namespace=kube-system | kubectl delete -f -
     fi
+
+    (kubectl get namespace | grep -q istio-system) && \
+    kubectl delete namespace istio-system
   else
     kubectl delete -f install/kubernetes/istio-demo.yaml 2>/dev/null
   fi
