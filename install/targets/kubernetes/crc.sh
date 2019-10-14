@@ -76,9 +76,6 @@ function kubernetes::init {
 
   target::step "Update OpenShift CRC configuration"
 
-  crc config set memory $CRC_MEMORY
-  crc config set cpus $CRC_CPUS
-
   crc setup
 
   # https://github.com/code-ready/crc/issues/618
@@ -96,7 +93,7 @@ function kubernetes::init {
 function kubernetes::up {
   target::step "Take kubernetes cluster up"
 
-  local opt
+  local opt="-c $CRC_CPUS -m $CRC_MEMORY"
   if [[ -n $CRC_USE_VIRTUALBOX ]]; then
     opt+=" --vm-driver virtualbox --bundle $CACHE_HOME/$virtualbox_bundle"
   fi
