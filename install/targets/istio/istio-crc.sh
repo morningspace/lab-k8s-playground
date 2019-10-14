@@ -8,8 +8,8 @@ ISTIO_INSTALL_MODE=helm
 ISTIO_CNI_ENABLED=true
 
 function login_as_admin {
-  oc login -u kubeadmin -p BMLkR-NjA28-v7exC-8bwAk https://api.crc.testing:6443
-  # oc login -u kubeadmin -p F44En-Xau6V-jQuyb-yuMXB https://api.crc.testing:6443
+  local adm_p=$(crc console --credentials | grep kubeadmin | sed "s/.*password is '\(.*\)'./\1/")
+  oc login -u kubeadmin -p $adm_p https://api.crc.testing:6443
 }
 
 function add_endpoints {

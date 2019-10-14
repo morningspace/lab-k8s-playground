@@ -106,7 +106,9 @@ function kubernetes::up {
 
   crc start $opt
 
-  add_endpoint "common" "OpenShift Console" $(crc console --url)
+  local adm_u="kubeadmin"
+  local adm_p=$(crc console --credentials | grep $adm_u | sed "s/.*password is '\(.*\)'./\1/")
+  add_endpoint "common" "OpenShift Console" $(crc console --url) "(admin usr/pwd: $adm_u/$adm_p)"
 }
 
 function kubernetes::down {
