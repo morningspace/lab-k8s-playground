@@ -6,6 +6,8 @@ LAB_HOME=${LAB_HOME:-`pwd`}
 ISTIO_VERSION="1.3.2"
 ISTIO_INSTALL_MODE=
 ISTIO_CNI_ENABLED=
+ISTIO_CNI_BIN_DIR="/opt/cni/bin"
+ISTIO_CNI_CONF_DIR="/etc/cni/net.d"
 
 function on_before_init {
   :
@@ -56,7 +58,10 @@ function install_istio {
       local exclude_ns="istio-system,kube-system"
       helm template install/kubernetes/helm/istio-cni \
         --name=istio-cni --namespace=kube-system \
-        --set logLevel=info --set excludeNamespaces={$exclude_ns} | kubectl apply -f -
+        --set cniBinDir=$ISTIO_CNI_BIN_DIR \
+        --set cniConfDir=$ISTIO_CNI_CONF_DIR \
+        --set logLevel=info \
+        --set excludeNamespaces={$exclude_ns} | kubectl apply -f -
     fi
 
     helm template install/kubernetes/helm/istio \

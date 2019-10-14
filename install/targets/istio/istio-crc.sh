@@ -6,6 +6,8 @@ LAB_HOME=${LAB_HOME:-`pwd`}
 
 ISTIO_INSTALL_MODE=helm
 ISTIO_CNI_ENABLED=true
+ISTIO_CNI_BIN_DIR="/var/lib/cni/bin"
+ISTIO_CNI_CONF_DIR="/etc/kubernetes/cni/net.d"
 
 function login_as_admin {
   local adm_p=$(crc console --credentials | grep kubeadmin | sed "s/.*password is '\(.*\)'./\1/")
