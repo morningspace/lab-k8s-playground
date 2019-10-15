@@ -18,8 +18,8 @@ function add_endpoints {
   target::step "Add endpoints for istio"
   add_endpoint "istio" "Grafana" "http://grafana-istio-system.apps-crc.testing"
   add_endpoint "istio" "Kiali" "http://kiali-istio-system.apps-crc.testing"
-  add_endpoint "istio" "Prometheus" "http://prometheus-istio-system.apps-crc.testing"
   add_endpoint "istio" "Jaeger" "http://jaeger-query-istio-system.apps-crc.testing"
+  add_endpoint "istio" "Prometheus" "http://prometheus-istio-system.apps-crc.testing"
 }
 
 function add_endpoints_bookinfo {

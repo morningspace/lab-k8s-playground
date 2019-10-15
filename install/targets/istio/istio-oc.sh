@@ -64,8 +64,8 @@ function add_endpoints {
   target::step "Add endpoints for istio"
   add_endpoint "istio" "Grafana" "http://grafana-istio-system.@@HOST_IP.nip.io"
   add_endpoint "istio" "Kiali" "http://kiali-istio-system.@@HOST_IP.nip.io"
-  add_endpoint "istio" "Prometheus" "http://prometheus-istio-system.@@HOST_IP.nip.io"
   add_endpoint "istio" "Jaeger" "http://jaeger-query-istio-system.@@HOST_IP.nip.io"
+  add_endpoint "istio" "Prometheus" "http://prometheus-istio-system.@@HOST_IP.nip.io"
 }
 
 function add_endpoints_bookinfo {
