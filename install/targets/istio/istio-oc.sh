@@ -5,7 +5,7 @@ LAB_HOME=${LAB_HOME:-`pwd`}
 . $LAB_HOME/install/targets/istio/istio-openshift.sh
 
 function login_as_admin {
-  oc login -u system:admin
+  oc login -u system:admin https://$HOST_IP:8443
 }
 
 function enable_admission_webhook {
