@@ -73,12 +73,16 @@ When launch the playground in Vagrant box, although the [Vagrantfile](/Vagrantfi
 
 The playground supports both standard Kubernetes and OpenShift. This is configurable by using environment variable `K8S_PROVIDER`. The default value of `K8S_PROVIDER` is `dind`, which will launch a multi-node standard Kubernetes cluster on your host machine.
 
-To launch the playground using OpenShift, you just need to change the value of `K8S_PROVIDER` to `oc`. Then run below command to launch the cluster:
+To launch the playground using OpenShift, you just need to change the value of `K8S_PROVIDER` to:
+* `oc`: For OpenShift v3.11 based on `oc cluster up`;
+* `crc`: For OpenShift v4.x based on [CodeReady Containers](https://github.com/code-ready/crc).
+
+Then run below command to launch the cluster:
 ```shell
 $ launch kubernetes
 ```
 
-This will bring up a single node cluster running directly on your host machine.
+This will bring up a single node cluster running on your host machine.
 
 You can even run multiple clusters using different Kubernetes distributions on the same host machine! As an example, run below commands:
 ```shell
@@ -171,15 +175,17 @@ Targets to be launched: [endpoints]
 ####################################                                                                                                         
 # Launch target endpoints...                                                                                                                 
 ####################################                                                                                                         
-» common endpoints...
-✔ Web Terminal: https://192.168.56.100:4200                                                                                                  
-✔    Dashboard: http://192.168.56.100:32768/api/v1/namespaces/kube-system/services/http:kubernetes-dashboard:/proxy                          
-» istio endpoints...
-✔        Grafana: http://192.168.56.100:3000                                                                                                 
-✔          Kiali: http://192.168.56.100:20001                                                                                                
-✔         Jaeger: http://192.168.56.100:15032                                                                                                
-✔     Prometheus: http://192.168.56.100:9090                                                                                                 
-✔ Istio Bookinfo: http://192.168.56.100:31380/productpage                                                                                    
+Common:
+  ✔ Web Terminal: https://192.168.56.100:4200                                                                                                  
+  ✔ Dashboard   : http://192.168.56.100:32768/api/v1/namespaces/kube-system/services/http:kubernetes-dashboard:/proxy                          
+
+Istio:
+  ✔ Grafana       : http://192.168.56.100:3000                                                                                                 
+  ✔ Kiali         : http://192.168.56.100:20001                                                                                                
+  ✔ Jaeger        : http://192.168.56.100:15032                                                                                                
+  ✔ Prometheus    : http://192.168.56.100:9090                                                                                                 
+  ✔ Istio Bookinfo: http://192.168.56.100:31380/productpage                                                                                    
+
 Total elapsed time: 1 seconds                                                                                                                
 ```
 
@@ -205,6 +211,8 @@ $ launch kubernetes::up
 ```
 
 It's fast to restore a cluster from an existing snapshot, and all applications that are previously deployed before you create the snapshot will come back again.
+
+> This feature is currently only available when set `K8S_PROVIDER` to `dind`.
 
 ## What if images are changed?
 
@@ -263,6 +271,8 @@ $ launch kubernetes
 Here is a demo that I turned off Wi-Fi on my laptop, then went into the box, and run `launch kubernetes helm` to re-install Kubernetes and Helm.
 
 ![](demo-offline.gif)
+
+> This feature is currently only available when set `K8S_PROVIDER` to `dind`.
 
 ## Can I customize the playground?
 

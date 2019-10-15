@@ -47,6 +47,7 @@ Some targets may have multiple commands available for you to call, e.g. target `
 | ---- 					|:----
 |clean					| Stop the cluster and clean up the storage
 |down						| Stop the cluster but do not clean up the storage
+|env						| Print environment variables corresponding to the playground
 |init						| Initialize and bring up the cluster
 |snapshot				| Create snapshot for current running cluster
 |up							| Bring up the cluster
