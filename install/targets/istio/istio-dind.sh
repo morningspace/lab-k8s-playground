@@ -11,7 +11,7 @@ function add_endpoints {
   add_endpoint "istio" "Prometheus" "http://@@HOST_IP:9090"
 }
 
-function istio::portforward {
+function istio::forward {
   kill_portfwds "3000:3000" "20001:20001" "15032:16686" "9090:9090"
   create_portfwd istio-system service/grafana 3000:3000
   create_portfwd istio-system service/kiali 20001:20001
@@ -24,7 +24,7 @@ function add_endpoints_bookinfo {
   add_endpoint "istio" "Istio Bookinfo" "http://@@HOST_IP:31380/productpage"
 }
 
-function istio-bookinfo::portforward {
+function istio-bookinfo::forward {
   kill_portfwds "31380:80"
   create_portfwd istio-system service/istio-ingressgateway 31380:80
 }
