@@ -32,13 +32,12 @@ function kubernetes::init {
 
   case $os in
   centos|rhel)
-    # su -c 'yum install NetworkManager'
-    sudo yum install -y NetworkManager xz
+    sudo yum install -y NetworkManager xz nginx
     unzip_cmd="unxz -f"
     untar_cmd="tar -xf"
     ;;
   ubuntu)
-    sudo apt-get install -y qemu-kvm libvirt-daemon libvirt-daemon-system network-manager xz-utils
+    sudo apt-get install -y qemu-kvm libvirt-daemon libvirt-daemon-system network-manager xz-utils nginx
     unzip_cmd="unxz -f"
     untar_cmd="tar -xf"
     ;;
@@ -90,6 +89,25 @@ function kubernetes::init {
   create_links $HOME/.crc/bin/oc oc
 }
 
+function add_proxy {
+  local k8target_path="$INSTALL_HOME/targets/kubernetes"
+  local tcp_conf_path="/etc/nginx/tcpconf.d"
+  local nginx_conf="/etc/nginx/nginx.conf"
+  if ensure_os_linux; then
+    sudo cp $k8target_path/crc-nginx.conf $tcp_conf_path/crc.conf
+    if ! cat $nginx_conf | grep -q "# For TCP configuration"; then
+      cat << EOF | sudo tee -a $nginx_conf
+
+# For TCP configuration
+include $tcp_conf_path/*;
+EOF
+    fi
+    sudo systemctl reload nginx
+  else
+    target::log "This is only supported on Linux."
+  fi
+}
+
 function kubernetes::up {
   target::step "Take kubernetes cluster up"
 
@@ -106,6 +124,7 @@ function kubernetes::up {
   local adm_u="kubeadmin"
   local adm_p=$(crc console --credentials | grep $adm_u | sed "s/.*password is '\(.*\)'./\1/")
   add_endpoint "common" "OpenShift Console" $(crc console --url) "(admin usr/pwd: $adm_u/$adm_p)"
+  add_proxy
 }
 
 function kubernetes::down {
