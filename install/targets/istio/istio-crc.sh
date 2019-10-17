@@ -25,22 +25,30 @@ function add_endpoints {
 }
 
 function add_proxy {
-  local service=$1
+  local app=$1
+  local service=$2
   if ! cat $istio_conf | grep -q "# For $service"; then
+    target::step "Forwarding $service"
+
     cat $LAB_HOME/install/targets/istio/istio-nginx.conf | \
       sed -e "s/@@SERVICE/$service/g; s/@@HOST_IP/$HOST_IP/g" | \
-      sudo tee -a $istio_conf
+      sudo tee -a $istio_conf >/dev/null
+
+    local url=$(cat $istio_conf | grep server_name | \
+      grep $service | sed "s/.*server_name \(.*\);/\1/")
+    add_endpoint "istio(proxy)" $app $url
   fi
 }
 
-function istio::forward {
+function istio::expose {
   if ensure_os_linux; then
     sudo touch $istio_conf
-    add_proxy "grafana"
-    add_proxy "kiali"
-    add_proxy "jaeger-query"
-    add_proxy "prometheus"
+    add_proxy "Grafana" "grafana"
+    add_proxy "Kiali" "kiali"
+    add_proxy "Jaeger" "jaeger-query"
+    add_proxy "Prometheus" "prometheus"
     sudo systemctl reload nginx
+    target::log "Done. Please check $istio_conf"
   else
     target::log "This is only supported on Linux."
   fi
@@ -51,16 +59,19 @@ function add_endpoints_bookinfo {
   add_endpoint "istio" "Istio Bookinfo" "http://istio-ingressgateway-istio-system.apps-crc.testing/productpage"
 }
 
-function istio-bookinfo::forward {
+function istio-bookinfo::expose {
   if ensure_os_linux; then
+    sudo touch $istio_conf
+
     local hash_bucket_size="server_names_hash_bucket_size 128;"
     if ! cat $istio_conf | grep -q "$hash_bucket_size"; then
-      echo $hash_bucket_size | sudo tee -a $istio_conf
-      echo | sudo tee -a $istio_conf
+      echo $hash_bucket_size | sudo tee -a $istio_conf >/dev/null
+      echo | sudo tee -a $istio_conf >/dev/null
     fi
 
-    add_proxy "istio-ingressgateway"
+    add_proxy "Istio Bookinfo" "istio-ingressgateway"
     sudo systemctl reload nginx
+    target::log "Done. Please check $istio_conf"
   else
     target::log "This is only supported on Linux."
   fi

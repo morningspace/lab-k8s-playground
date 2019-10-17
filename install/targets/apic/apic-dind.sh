@@ -73,7 +73,7 @@ function on_before_clean {
   clean_endpoints "apic" "Cloud Manager UI"
 }
 
-function apic::forward {
+function apic::expose {
   kill_portfwds "443:443"
   create_portfwd $apic_ns service/ingress-nginx-ingress-controller 443:443
 }

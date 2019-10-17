@@ -102,7 +102,7 @@ $ launch apic::clean kubernetes::clean registry::up kubernetes apic
 
 You can expose APIC endpoints outside the cluster:
 ```shell
-$ launch apic::forward
+$ launch apic::expose
 ```
 
 Then add the host IP and hostname mapping into `/etc/hosts` on your local machine so that you can access APIC UI from web browser. e.g.:

@@ -145,8 +145,8 @@ $ launch istio-bookinfo
 
 When Istio and Bookinfo are all up and running, you can run below command to expose their ports so that can be accessed outside the cluster, e.g. in web browser:
 ```shell
-$ launch istio::forward istio-bookinfo::forward 
-Targets to be launched: [istio::forward istio-bookinfo::forward]
+$ launch istio::expose istio-bookinfo::expose 
+Targets to be launched: [istio::expose istio-bookinfo::expose]
 ####################################
 # Launch target istio...
 ####################################

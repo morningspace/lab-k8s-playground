@@ -94,6 +94,7 @@ function add_proxy {
   local tcp_conf_path="/etc/nginx/tcpconf.d"
   local nginx_conf="/etc/nginx/nginx.conf"
   if ensure_os_linux; then
+    sudo mkdir -p $tcp_conf_path
     sudo cp $k8target_path/crc-nginx.conf $tcp_conf_path/crc.conf
     if ! cat $nginx_conf | grep -q "# For TCP configuration"; then
       cat << EOF | sudo tee -a $nginx_conf
