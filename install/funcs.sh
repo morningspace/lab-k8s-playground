@@ -341,14 +341,24 @@ function target::delegate {
   LAB_HOME=$LAB_HOME $target_shell $cmd ${@:2}
 }
 
-# yellow => '\033[1;33m'
-# normal => '\033[0m'
+# yellow => '1;33'
+# purple => '1;35'
+# red    => '1;31'
+# normal => '0'
 function target::step {
   echo -e "\033[1;33m» $@...\033[0m"
 }
 
 function target::log {
-  echo "$@"
+  echo -e "\033[1mINFO \033[0m $@"
+}
+
+function target::warn {
+  echo -e "\033[1;35mWARN \033[0m $@"
+}
+
+function target::error {
+  echo -e "\033[1;31mERROR\033[0m $@"
 }
 
 ensure_k8s_provider || exit
