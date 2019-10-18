@@ -117,8 +117,11 @@
             <section>
               <section data-markdown>
                 ## What’s behind?
-                ### kubeadm + DIND
-                *Run Docker inside Docker*
+| Environment					| K8S_PROVIDER	| Description
+| ----								| ---- 					|:----
+| Standard Kubernetes	| dind 					| Run Docker in Docker
+| OpenShift 3.x				| oc 						| Run on host directly
+| OpenShift 4.x				| crc 					| Run in VM, then on host
               </section>
             </section>
             <section>
