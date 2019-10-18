@@ -141,6 +141,7 @@ function delete_all {
 
 function istio::clean {
   clean_endpoints "istio"
+  clean_endpoints "istio-proxied"
   on_before_clean
   delete_all
   on_after_clean
@@ -189,6 +190,7 @@ function on_before_clean_bookinfo {
 
 function istio-bookinfo::clean {
   clean_endpoints "istio" "Istio Bookinfo"
+  clean_endpoints "istio-proxied" "Istio Bookinfo"
   on_before_clean_bookinfo
   target::step "Start to uninstall istio-bookinfo"
   NAMESPACE=default ~/.launch-cache/istio/samples/bookinfo/platform/kube/cleanup.sh
