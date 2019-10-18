@@ -1,16 +1,17 @@
 #!/bin/bash
 
 LAB_HOME=${LAB_HOME:-`pwd`}
-
 . $LAB_HOME/install/targets/istio/istio-base.sh
+. $LAB_HOME/install/targets/istio/istio-openshift.sh
 
-OC_INSTALL_HOME=${OC_INSTALL_HOME:-~/openshift.local.clusterup}
+function login_as_admin {
+  oc login -u system:admin https://$HOST_IP:8443
+}
 
-function on_before_init {
+function enable_admission_webhook {
   target::step "Enable AdmissionWebhook"
 
-  oc login -u system:admin
-
+  OC_INSTALL_HOME=${OC_INSTALL_HOME:-~/openshift.local.clusterup}
   master_config=$OC_INSTALL_HOME/kube-apiserver/master-config
   if cat $master_config.yaml | grep -q "MutatingAdmissionWebhook:"; then
     target::log "AdmissionWebhook detected"
@@ -32,131 +33,44 @@ admissionConfig:
 EOF
     oc ex config patch $master_config.yaml.prepatch -p "$(cat $master_config.patch)" > $master_config.yaml
 
-    target::step "Restart Openshift API Server"
+    target::log "Restart Openshift API Server"
 
+    local container_id
     if [[ $(detect_os) == darwin ]]; then
-      docker restart $(get_container_id_by_pod master-api-localhost kube-system)
+      container_id=$(get_container_id_by_pod master-api-localhost kube-system)
+      $(run_docker_as_sudo) "docker restart $container_id"
     else
-      docker restart $(docker ps -l -q --filter "label=io.kubernetes.container.name=api")
+      container_id=$($(run_docker_as_sudo) "docker ps -l -q --filter 'label=io.kubernetes.container.name=api'")
+      $(run_docker_as_sudo) "docker restart $container_id"
     fi
-    docker restart $(docker ps -l -q --filter "label=io.kubernetes.container.name=apiserver")
+    container_id=$($(run_docker_as_sudo) "docker ps -l -q --filter 'label=io.kubernetes.container.name=apiserver'")
+    $(run_docker_as_sudo) "docker restart $container_id"
 
-    target::step "Waiting for health check passed"
+    target::log "Waiting for health check passed"
     until curl -f -s -k -o /dev/null https://$HOST_IP:8443/healthz; do echo -n .; sleep 1; done
     target::log "[done]"
 
-    target::step "Waiting for oc login passed"
+    target::log "Waiting for oc login passed"
     until echo fakepasswd | oc login -u system:admin >/dev/null 2>&1; do echo -n .; sleep 1; done
     target::log "[done]"
 
-    target::step "Waiting for scc check passed"
+    target::log "Waiting for scc check passed"
     until oc adm policy add-scc-to-user anyuid -z default -n istio-system >/dev/null 2>&1; do echo -n .; sleep 1; done
     target::log "[done]"
   fi
-
-  target::step "Add scc to user for istio"
-
-  oc adm policy add-scc-to-user anyuid -z istio-ingress-service-account -n istio-system
-  oc adm policy add-scc-to-user anyuid -z default -n istio-system
-  oc adm policy add-scc-to-user anyuid -z prometheus -n istio-system
-  oc adm policy add-scc-to-user anyuid -z istio-egressgateway-service-account -n istio-system
-  oc adm policy add-scc-to-user anyuid -z istio-citadel-service-account -n istio-system
-  oc adm policy add-scc-to-user anyuid -z istio-ingressgateway-service-account -n istio-system
-  oc adm policy add-scc-to-user anyuid -z istio-cleanup-old-ca-service-account -n istio-system
-  oc adm policy add-scc-to-user anyuid -z istio-mixer-post-install-account -n istio-system
-  oc adm policy add-scc-to-user anyuid -z istio-mixer-service-account -n istio-system
-  oc adm policy add-scc-to-user anyuid -z istio-pilot-service-account -n istio-system
-  oc adm policy add-scc-to-user anyuid -z istio-sidecar-injector-service-account -n istio-system
-  oc adm policy add-scc-to-user anyuid -z istio-galley-service-account -n istio-system
-  oc adm policy add-scc-to-user anyuid -z istio-security-post-install-account -n istio-system
-
-  target::step "Create cluster role bindings for istio"
-
-  oc get clusterrolebindings kiali-binding 1>/dev/null 2>&1 || \
-  oc create clusterrolebinding kiali-binding --clusterrole=cluster-admin --user=system:serviceaccount:istio-system:kiali-service-account
 }
 
-function on_after_init {
-  target::step "Expose service routes for istio"
-
-  oc get route grafana -n istio-system 1>/dev/null 2>&1 || \
-  oc expose svc/grafana --port=http -n istio-system
-  oc get route kiali -n istio-system 1>/dev/null 2>&1 || \
-  oc expose svc/kiali --port=http-kiali -n istio-system
-  oc get route prometheus -n istio-system 1>/dev/null 2>&1 || \
-  oc expose svc/prometheus --port=http-prometheus -n istio-system
-  oc get route jaeger-query -n istio-system 1>/dev/null 2>&1 || \
-  oc expose svc/jaeger-query --port=query-http -n istio-system
-
+function add_endpoints {
+  target::step "Add endpoints for istio"
   add_endpoint "istio" "Grafana" "http://grafana-istio-system.@@HOST_IP.nip.io"
   add_endpoint "istio" "Kiali" "http://kiali-istio-system.@@HOST_IP.nip.io"
-  add_endpoint "istio" "Prometheus" "http://prometheus-istio-system.@@HOST_IP.nip.io"
   add_endpoint "istio" "Jaeger" "http://jaeger-query-istio-system.@@HOST_IP.nip.io"
+  add_endpoint "istio" "Prometheus" "http://prometheus-istio-system.@@HOST_IP.nip.io"
 }
 
-function on_before_clean {
-  clean_endpoints "istio"
-
-  target::step "Delete service routes for istio"
-
-  oc get route grafana -n istio-system 1>/dev/null 2>&1 && \
-  oc delete route grafana -n istio-system
-  oc get route kiali -n istio-system 1>/dev/null 2>&1 && \
-  oc delete route kiali -n istio-system
-  oc get route prometheus -n istio-system 1>/dev/null 2>&1 && \
-  oc delete route prometheus -n istio-system
-  oc get route jaeger-query -n istio-system 1>/dev/null 2>&1 && \
-  oc delete route jaeger-query -n istio-system
-
-  target::step "Delete scc from user for istio"
-
-  oc adm policy remove-scc-from-user anyuid -z istio-ingress-service-account -n istio-system
-  oc adm policy remove-scc-from-user anyuid -z default -n istio-system
-  oc adm policy remove-scc-from-user anyuid -z prometheus -n istio-system
-  oc adm policy remove-scc-from-user anyuid -z istio-egressgateway-service-account -n istio-system
-  oc adm policy remove-scc-from-user anyuid -z istio-citadel-service-account -n istio-system
-  oc adm policy remove-scc-from-user anyuid -z istio-ingressgateway-service-account -n istio-system
-  oc adm policy remove-scc-from-user anyuid -z istio-cleanup-old-ca-service-account -n istio-system
-  oc adm policy remove-scc-from-user anyuid -z istio-mixer-post-install-account -n istio-system
-  oc adm policy remove-scc-from-user anyuid -z istio-mixer-service-account -n istio-system
-  oc adm policy remove-scc-from-user anyuid -z istio-pilot-service-account -n istio-system
-  oc adm policy remove-scc-from-user anyuid -z istio-sidecar-injector-service-account -n istio-system
-  oc adm policy remove-scc-from-user anyuid -z istio-galley-service-account -n istio-system
-  oc adm policy remove-scc-from-user anyuid -z istio-security-post-install-account -n istio-system
-
-  target::step "Delete cluster role bindings for istio"
-
-  oc get clusterrolebinding kiali-binding 1>/dev/null 2>&1 && \
-  oc delete clusterrolebinding kiali-binding
-}
-
-function on_before_init_bookinfo {
-  target::step "Add scc to group for bookinfo"
-
-  oc adm policy add-scc-to-group privileged system:serviceaccounts -n default
-  oc adm policy add-scc-to-group anyuid system:serviceaccounts -n default
-}
-
-function on_after_init_bookinfo {
-  target::step "Expose service routes for bookinfo"
-
-  oc get route istio-ingressgateway -n istio-system 1>/dev/null 2>&1 || \
-  oc expose svc/istio-ingressgateway --port=http2 -n istio-system
+function add_endpoints_bookinfo {
+  target::step "Add endpoints for istio-bookinfo"
   add_endpoint "istio" "Istio Bookinfo" "http://istio-ingressgateway-istio-system.@@HOST_IP.nip.io/productpage"
-}
-
-function on_before_clean_bookinfo {
-  clean_endpoints "istio" "Istio Bookinfo"
-
-  target::step "Delete service routes for bookinfo"
-
-  oc get route istio-ingressgateway -n istio-system 1>/dev/null 2>&1 && \
-  oc delete route istio-ingressgateway -n istio-system
-
-  target::step "Delete scc from group for bookinfo"
-
-  oc adm policy remove-scc-from-group privileged system:serviceaccounts -n default
-  oc adm policy remove-scc-from-group anyuid system:serviceaccounts -n default
 }
 
 target::command $@

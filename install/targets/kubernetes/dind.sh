@@ -4,8 +4,12 @@ LAB_HOME=${LAB_HOME:-`pwd`}
 INSTALL_HOME=$LAB_HOME/install
 . $INSTALL_HOME/funcs.sh
 
+K8S_VERSION=${K8S_VERSION:-v1.14}
+NUM_NODES=${NUM_NODES:-2}
+DIND_DAEMON_JSON_FILE=$INSTALL_HOME/targets/kubernetes/daemon.json
+
 function add_endpoints {
-  local apiserver_port=$($INSTALL_HOME/dind-cluster.sh apiserver-port 2>/dev/null)
+  local apiserver_port=$($(run_docker_as_sudo) "$LAB_HOME/dind-cluster-wrapper.sh apiserver-port 2>/dev/null")
   local dashboard_endpoint="http://$HOST_IP:$apiserver_port/api/v1/namespaces/kube-system/services/http:kubernetes-dashboard:/proxy"
   add_endpoint "common" "Dashboard" $dashboard_endpoint
 }
@@ -52,12 +56,7 @@ EOF
   fi
 
   target::step "Start to init kubernetes cluster"
-  if ensure_os_linux && grep -q "^docker:" /etc/group; then
-    run_cmd="sg docker -c"
-  else
-    run_cmd="eval"
-  fi  
-  $run_cmd \
+  $(run_docker_as_sudo) \
    "K8S_VERSION=$K8S_VERSION \
     NUM_NODES=$NUM_NODES \
     HOST_IP=$HOST_IP \
@@ -65,32 +64,44 @@ EOF
     DIND_CA_CERT_URL=$DIND_CA_CERT_URL \
     DASHBOARD_URL=$DASHBOARD_URL \
     SKIP_SNAPSHOT=$SKIP_SNAPSHOT \
-  $LAB_HOME/dind-cluster-wrapper.sh up" && \
+    DIND_DAEMON_JSON_FILE=$DIND_DAEMON_JSON_FILE \
+    $LAB_HOME/dind-cluster-wrapper.sh up" && \
   dashboard_rolebinding && \
   add_endpoints
 }
 
 function kubernetes::up {
   target::step "Take kubernetes cluster up"
-  SKIP_SNAPSHOT= $LAB_HOME/dind-cluster-wrapper.sh up && \
+  $(run_docker_as_sudo) \
+    "SKIP_SNAPSHOT= \
+     DIND_DAEMON_JSON_FILE=$DIND_DAEMON_JSON_FILE \
+     $LAB_HOME/dind-cluster-wrapper.sh up" && \
     dashboard_rolebinding && \
     add_endpoints
 }
 
 function kubernetes::down {
   target::step "Take kubernetes cluster down"
-  SKIP_SNAPSHOT= $LAB_HOME/dind-cluster-wrapper.sh down
+  $(run_docker_as_sudo) \
+    "SKIP_SNAPSHOT= $LAB_HOME/dind-cluster-wrapper.sh down"
 }
 
 function kubernetes::clean {
   target::step "Clean kubernetes cluster"
-  SKIP_SNAPSHOT= $LAB_HOME/dind-cluster-wrapper.sh clean && \
+  $(run_docker_as_sudo) \
+    "SKIP_SNAPSHOT= $LAB_HOME/dind-cluster-wrapper.sh clean" && \
     clean_endpoints "common" "Dashboard"
 }
 
 function kubernetes::snapshot {
   target::step "Create snapshot for kubernetes cluster"
-  SKIP_SNAPSHOT= $LAB_HOME/dind-cluster-wrapper.sh snapshot
+  $(run_docker_as_sudo) \
+    "SKIP_SNAPSHOT= $LAB_HOME/dind-cluster-wrapper.sh snapshot"
+}
+
+function kubernetes::env {
+  printenv_common
+  printenv_provider K8S_VERSION NUM_NODES
 }
 
 target::command $@

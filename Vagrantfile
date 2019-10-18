@@ -8,7 +8,7 @@ targets = "init default helm tools"
 
 # set Kubernetes version, supported versions: v1.12, v1.13, v1.14, v1.15
 k8s_version = "v1.14"
-# set Kubernetes provider, supported providers: dind, oc
+# set Kubernetes provider, supported providers: dind, oc, crc
 k8s_provider = "dind"
 # set number of worker nodes
 num_nodes = 2

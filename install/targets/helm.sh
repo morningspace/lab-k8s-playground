@@ -1,7 +1,7 @@
 #!/bin/bash
 
 LAB_HOME=${LAB_HOME:-`pwd`}
-source $LAB_HOME/install/funcs.sh
+. $LAB_HOME/install/funcs.sh
 
 target::step "Start to install helm"
 ensure_k8s_version || exit
@@ -37,9 +37,7 @@ if [ ! -d ~/.launch-cache/$package ]; then
   tar -zxf ~/.launch-cache/$package.tar.gz -C ~/.launch-cache/$package
 fi
 
-target::step "Create link to helm"
-sudo ln -sf ~/.launch-cache/$package/$os-amd64/helm /usr/bin/helm
-sudo ln -sf ~/.launch-cache/$package/$os-amd64/helm /usr/sbin/helm
+create_links ~/.launch-cache/$package/$os-amd64/helm helm
 
 target::step "Run helm init"
 if [[ $IS_IN_CHINA == 1 ]]; then

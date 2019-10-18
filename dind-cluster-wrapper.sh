@@ -37,7 +37,7 @@ function run_script() {
   start_time=$SECONDS
   . $script_dir
   elapsed_time=$(($SECONDS - $start_time))
-  echo "Total elapsed time: $elapsed_time seconds"
+  # echo "Total elapsed time: $elapsed_time seconds"
 }
 
 #################################################

@@ -2,7 +2,7 @@
 
 LAB_HOME=${LAB_HOME:-`pwd`}
 INSTALL_HOME=$LAB_HOME/install
-source $INSTALL_HOME/funcs.sh
+. $INSTALL_HOME/funcs.sh
 
 endpoints_dir=$INSTALL_HOME/targets/endpoints
 

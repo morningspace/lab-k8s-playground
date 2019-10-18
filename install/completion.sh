@@ -36,7 +36,7 @@ launch_completions() {
       fi
 
       if [[ -f $file ]]; then
-        local embedded_shells=($(grep "\. " $file | awk '{print $2}'))
+        local embedded_shells=($(grep "^\. " $file | awk '{print $2}'))
         for embedded_shell in ${embedded_shells[@]}; do
           embedded_file=$(eval "echo $embedded_shell")
           if [[ -f $embedded_file ]]; then

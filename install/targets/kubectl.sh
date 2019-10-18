@@ -1,7 +1,7 @@
 #!/bin/bash
 
 LAB_HOME=${LAB_HOME:-`pwd`}
-source $LAB_HOME/install/funcs.sh
+. $LAB_HOME/install/funcs.sh
 
 target::step "Start to install kubectl"
 
@@ -34,9 +34,10 @@ if [[ ! -f ~/.launch-cache/$executable ]]; then
   [[ -n $https_proxy ]] && target::log "https_proxy detected: $https_proxy"
   download_url=https://storage.googleapis.com/kubernetes-release/release/$KUBECTL_VERSION/bin/$os/amd64/kubectl
   curl -sSL $download_url -o ~/.launch-cache/$executable
-  sudo chmod +x ~/.launch-cache/$executable
+  chmod +x ~/.launch-cache/$executable
 fi
 
-target::step "Create link to kubectl"
-sudo ln -sf ~/.launch-cache/$executable /usr/bin/kubectl
-sudo ln -sf ~/.launch-cache/$executable /usr/sbin/kubectl
+create_links ~/.launch-cache/$executable kubectl
+if [[ $os != darwin ]]; then
+  sudo setcap CAP_NET_BIND_SERVICE=+ep ~/.launch-cache/$executable
+fi

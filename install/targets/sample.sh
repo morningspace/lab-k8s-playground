@@ -4,7 +4,7 @@
 
 # Load funcs.sh for helper functions
 LAB_HOME=${LAB_HOME:-`pwd`}
-source $LAB_HOME/install/funcs.sh
+. $LAB_HOME/install/funcs.sh
 
 # The first command function
 # Define as the default command function

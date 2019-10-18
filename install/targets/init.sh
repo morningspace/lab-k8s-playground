@@ -9,14 +9,15 @@
 
 LAB_HOME=${LAB_HOME:-`pwd`}
 INSTALL_HOME=$LAB_HOME/install
-source $INSTALL_HOME/funcs.sh
+. $INSTALL_HOME/funcs.sh
 
 ensure_os || exit
 
-case "$(detect_os)" in
+os=$(detect_os)
+case $os in
 ubuntu)
   target::step "Install basic tools"
-  sudo apt-get install -y shellinabox bash-completion
+  sudo apt-get install -y shellinabox bash-completion jq
 
   # path to bash completion
   bash_completion="/usr/share/bash-completion/bash_completion"
@@ -28,7 +29,7 @@ ubuntu)
 centos|rhel)
   target::step "Install basic tools"
   sudo yum install -y epel-release
-  sudo yum install -y shellinabox bash-completion net-tools
+  sudo yum install -y shellinabox bash-completion net-tools jq
   # https://github.com/shellinabox/shellinabox/issues/327
   sudo sed -i \
     's/^#\s*PasswordAuthentication yes$/PasswordAuthentication yes/g;
@@ -49,7 +50,7 @@ centos|rhel)
   ;;
 darwin)
   target::step "Install basic tools"
-  brew install shellinabox bash-completion
+  brew install shellinabox bash-completion jq
 
   # path to bash completion
   bash_completion="$(brew --prefix)/etc/bash_completion"
@@ -58,6 +59,18 @@ darwin)
   sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain $INSTALL_HOME/certs/lab-ca.pem.crt
   ;;
 esac
+
+if [[ "ubuntu centos rhel" =~ $os ]]; then
+  grep -q "^wheel:" /etc/group && sudo usermod -aG wheel $USER
+  grep -q "^sudo:" /etc/group && sudo usermod -aG sudo $USER
+  sudo usermod -s /bin/bash $USER
+fi
+
+# target::step "Set $USER as sudoer without password prompt"
+#   cat << EOF | sudo tee /etc/sudoers.d/$USER
+# $USER ALL=(ALL) NOPASSWD: ALL
+# EOF
+# sudo chmod 440 /etc/sudoers.d/$USER
 
 target::step "Update .bashrc"
 if [ ! -f ~/.bashrc ] || ! $(cat ~/.bashrc | grep -q "^# For playground$") ; then
@@ -96,9 +109,7 @@ fi
 EOF
 fi
 
-target::step "Create link to launch.sh"
-sudo ln -sf $INSTALL_HOME/launch.sh /usr/bin/launch
-sudo ln -sf $INSTALL_HOME/launch.sh /usr/sbin/launch
+create_links $INSTALL_HOME/launch.sh launch
 
 target::step "Configure launch cache"
 mkdir -p $INSTALL_HOME/.launch-cache

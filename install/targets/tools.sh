@@ -1,7 +1,7 @@
 #!/bin/bash
 
 LAB_HOME=${LAB_HOME:-`pwd`}
-source $LAB_HOME/install/funcs.sh
+. $LAB_HOME/install/funcs.sh
 
 ########################
 # kubectl autocompletion
@@ -45,11 +45,10 @@ target::step "Start to install kubens"
 if [[ ! -f ~/.launch-cache/kubens ]]; then
   curl -sSLo ~/.launch-cache/kubens \
     https://raw.githubusercontent.com/ahmetb/kubectx/master/kubens
-  sudo chmod +x ~/.launch-cache/kubens
+  chmod +x ~/.launch-cache/kubens
 fi
 if ! ensure_command "kubens"; then
-  sudo ln -sf ~/.launch-cache/kubens /usr/bin/kubens
-  sudo ln -sf ~/.launch-cache/kubens /usr/sbin/kubens
+  create_links ~/.launch-cache/kubens kubens
   target::log "kubens installed"
 fi
 
@@ -60,11 +59,10 @@ target::step "Start to install kubectx"
 if [[ ! -f ~/.launch-cache/kubectx ]]; then
   curl -sSLo ~/.launch-cache/kubectx \
     https://raw.githubusercontent.com/ahmetb/kubectx/master/kubectx
-  sudo chmod +x ~/.launch-cache/kubectx
+  chmod +x ~/.launch-cache/kubectx
 fi
 if ! ensure_command "kubectx"; then
-  sudo ln -sf ~/.launch-cache/kubectx /usr/bin/kubectx
-  sudo ln -sf ~/.launch-cache/kubectx /usr/sbin/kubectx
+  create_links ~/.launch-cache/kubectx kubectx
   target::log "kubectx installed"
 fi
 
@@ -94,11 +92,10 @@ esac
 if [[ ! -f ~/.launch-cache/kubebox ]]; then
   curl -sSLo ~/.launch-cache/kubebox \
     https://github.com/astefanutti/kubebox/releases/download/v0.5.0/$kubebox_cmd
-  sudo chmod +x ~/.launch-cache/kubebox
+  chmod +x ~/.launch-cache/kubebox
 fi
 if ! ensure_command "kubebox"; then
-  sudo ln -sf ~/.launch-cache/kubebox /usr/bin/kubebox
-  sudo ln -sf ~/.launch-cache/kubebox /usr/sbin/kubebox
+  create_links ~/.launch-cache/kubebox kubebox
   target::log "kubebox installed"
 fi
 
@@ -109,10 +106,9 @@ target::step "Start to install kubetail"
 if [[ ! -f ~/.launch-cache/kubetail ]]; then
   curl -sSLo ~/.launch-cache/kubetail \
     https://raw.githubusercontent.com/johanhaleby/kubetail/master/kubetail
-  sudo chmod +x ~/.launch-cache/kubetail
+  chmod +x ~/.launch-cache/kubetail
 fi
 if ! ensure_command "kubetail"; then
-  sudo ln -sf ~/.launch-cache/kubetail /usr/bin/kubetail
-  sudo ln -sf ~/.launch-cache/kubetail /usr/sbin/kubetail
+  create_links ~/.launch-cache/kubetail kubetail
   target::log "kubetail installed"
 fi

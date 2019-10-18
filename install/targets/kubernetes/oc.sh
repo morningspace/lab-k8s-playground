@@ -23,25 +23,21 @@ function kubernetes::init {
   esac
 
   if [[ ! -f ~/.launch-cache/$package_file ]]; then
-    target::step "Download openshift"
+    target::step "Download OpenShift client tools"
     download_url=https://github.com/openshift/origin/releases/download/$OC_VERSION/$package_file
     curl -sSL $download_url -o ~/.launch-cache/$package_file
   fi
 
   if [ ! -d ~/.launch-cache/$package ]; then
-    target::step "Extract openshift package"
+    target::step "Extract OpenShift package"
     mkdir ~/.launch-cache/$package
     tar -zxf ~/.launch-cache/$package_file -C ~/.launch-cache/
   fi
 
-  target::step "Create link to oc"
-  sudo ln -sf ~/.launch-cache/$package/oc /usr/bin/oc
-  sudo ln -sf ~/.launch-cache/$package/oc /usr/sbin/oc
+  create_links ~/.launch-cache/$package/oc oc
 
-  target::step "Create link to kubectl"
   if [[ -f ~/.launch-cache/$package/kubectl ]]; then
-    sudo ln -sf ~/.launch-cache/$package/kubectl /usr/bin/kubectl
-    sudo ln -sf ~/.launch-cache/$package/kubectl /usr/sbin/kubectl
+    create_links ~/.launch-cache/$package/kubectl kubectl
   fi
 
   kubernetes::up
@@ -52,25 +48,19 @@ function kubernetes::up {
 
   mkdir -p $OC_INSTALL_HOME
 
-  if ensure_os_linux && grep -q "^docker:" /etc/group; then
-    run_cmd="sg docker -c"
-  else
-    run_cmd="eval"
-  fi  
-
-  local http_proxy=$($run_cmd "docker info -f {{.HTTPProxy}}")
-  local https_proxy=$($run_cmd "docker info -f {{.HTTPSProxy}}")
+  local http_proxy=$($(run_docker_as_sudo) "docker info -f {{.HTTPProxy}}")
+  local https_proxy=$($(run_docker_as_sudo) "docker info -f {{.HTTPSProxy}}")
   [[ -n $http_proxy ]] && opts+=" --http-proxy=$http_proxy"
   [[ -n $https_proxy ]] && opts+=" --https-proxy=$https_proxy"
 
-  $run_cmd "oc cluster up --public-hostname=$HOST_IP --base-dir=$OC_INSTALL_HOME $opts"
+  $(run_docker_as_sudo) "oc cluster up --public-hostname=$HOST_IP --base-dir=$OC_INSTALL_HOME $opts"
 
   add_endpoint "common" "OpenShift Console" "https://$HOST_IP:8443/console"
 }
 
 function kubernetes::down {
   target::step "Take kubernetes cluster down"
-  oc cluster down
+  $(run_docker_as_sudo) "oc cluster down"
 }
 
 function kubernetes::clean {
@@ -91,6 +81,11 @@ function kubernetes::clean {
   else
     rm -rf $OC_INSTALL_HOME
   fi
+}
+
+function kubernetes::env {
+  printenv_common
+  printenv_provider OC_INSTALL_HOME
 }
 
 target::command $@

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+trap exit INT
+
 logs_dir=$LAB_HOME/install/logs
 targets_dir=$LAB_HOME/install/targets
 endpoints_dir=$LAB_HOME/install/targets/endpoints
@@ -110,7 +112,7 @@ function ensure_k8s_version {
 }
 
 function ensure_k8s_provider {
-  local valid="dind oc"
+  local valid="dind oc crc"
 
   K8S_PROVIDER=${K8S_PROVIDER:-dind}
   if [[ ! $valid =~ $K8S_PROVIDER ]]; then
@@ -134,6 +136,16 @@ function detect_os {
   echo $os
 }
 
+function run_docker_as_sudo {
+  if ensure_os_linux && grep -q "^docker:" /etc/group; then
+    echo "sg docker -c"
+  elif grep -q "^dockerroot:" /etc/group; then
+    echo "sg dockerroot -c"
+  else
+    echo "eval"
+  fi  
+}
+
 my_registries=(
   "127.0.0.1:5000"
   "${HOSTNAME:-localhost}:5000"
@@ -152,6 +164,30 @@ function get_insecure_registries_text {
   local registries=($(get_insecure_registries))
   local text=$(printf ", \"%s\"" "${registries[@]}")
   echo ${text:2}
+}
+
+function update_docker_daemon_json {
+  local daemon_json_file="/etc/docker/daemon.json"
+  local jq=()
+  if [[ -f $daemon_json_file ]] ; then
+    jq+=("$(cat $daemon_json_file)")
+  else
+    jq+=("{}")
+  fi
+
+  for entry in "$@"; do
+    jq+=("{ $entry }")
+  done
+
+  local json=$(IFS="+"; echo "${jq[*]}")
+  jq -n "$json" | sudo tee $daemon_json_file
+}
+
+function capitalize {
+  local capitalized=""
+  capitalized+="$(tr '[:lower:]' '[:upper:]' <<<"${1:0:1}")"
+  capitalized+="$(tr '[:upper:]' '[:lower:]' <<<"${1:1}")"
+  echo $capitalized
 }
 
 function add_endpoint {
@@ -186,7 +222,7 @@ function print_endpoints {
   local group=$1
   local endpoints=("${@:2}")
 
-  target::step "$group endpoints"
+  printf "$(capitalize "${group/-/ }"):\n"
 
   local max_len=0
   for endpoint in "${endpoints[@]}" ; do
@@ -206,8 +242,30 @@ function print_endpoints {
       *) status="?";;
     esac
 
-    printf "%s %`echo $max_len`s: %s %s\n" $status "${parts[@]}"
+    printf "  %s %-`echo $max_len`s: %s %s\n" $status "${parts[@]}"
   done
+
+  printf "\n"
+}
+
+function printenv_common {
+  printf "Common:\n"
+  printf "  %-12s: %s\n" LAB_HOME $LAB_HOME
+  printf "  %-12s: %s\n" HOST_IP $HOST_IP
+  printf "  %-12s: %s\n\n" K8S_PROVIDER $K8S_PROVIDER
+}
+
+function printenv_provider {
+  local max_len=0
+  for key in "$@" ; do
+    (( ${#key} > $max_len )) && max_len=${#key}
+  done
+
+  printf "Specific to $K8S_PROVIDER:\n"
+  for key in "$@" ; do
+    printf "  %-`echo $max_len`s: %s\n" $key $(eval "echo \$$key")
+  done
+  printf "\n"
 }
 
 function get_container_id_by_pod {
@@ -229,6 +287,20 @@ function get_first_command {
 
   local funcs=($(grep "$pattern" $0 | awk '{print $2}'))
   echo "${funcs[0]#*::}"
+}
+
+function create_links {
+  target::step "Create link to $2"
+
+  case "$(detect_os)" in
+  ubuntu|centos|rhel)
+    sudo ln -sf $1 /usr/bin/$2
+    sudo ln -sf $1 /usr/sbin/$2
+    ;;
+  darwin)
+    ln -sf $1 /usr/local/bin/$2
+    ;;
+  esac
 }
 
 function target::command {
@@ -269,14 +341,24 @@ function target::delegate {
   LAB_HOME=$LAB_HOME $target_shell $cmd ${@:2}
 }
 
-# yellow => '\033[1;33m'
-# normal => '\033[0m'
+# yellow => '1;33'
+# purple => '1;35'
+# red    => '1;31'
+# normal => '0'
 function target::step {
   echo -e "\033[1;33m» $@...\033[0m"
 }
 
 function target::log {
   echo "$@"
+}
+
+function target::warn {
+  echo -e "\033[1;35mWARN \033[0m $@"
+}
+
+function target::error {
+  echo -e "\033[1;31mERROR\033[0m $@"
 }
 
 ensure_k8s_provider || exit
