@@ -39,16 +39,16 @@ function istio::expose {
   if ensure_os_linux; then
     sudo touch $istio_conf
     add_proxy "grafana"
-    add_endpoint "istio(proxy)" "Grafana" "http://grafana-istio-system.$HOST_IP.nip.io"
+    add_endpoint "istio-proxied" "Grafana" "http://grafana-istio-system.$HOST_IP.nip.io"
 
     add_proxy "kiali"
-    add_endpoint "istio(proxy)" "Kiali" "http://kiali-istio-system.$HOST_IP.nip.io"
+    add_endpoint "istio-proxied" "Kiali" "http://kiali-istio-system.$HOST_IP.nip.io"
 
     add_proxy "jaeger-query"
-    add_endpoint "istio(proxy)" "Jaeger" "http://jaeger-query-istio-system.$HOST_IP.nip.io"
+    add_endpoint "istio-proxied" "Jaeger" "http://jaeger-query-istio-system.$HOST_IP.nip.io"
 
     add_proxy "prometheus"
-    add_endpoint "istio(proxy)" "Prometheus" "http://prometheus-istio-system.$HOST_IP.nip.io"
+    add_endpoint "istio-proxied" "Prometheus" "http://prometheus-istio-system.$HOST_IP.nip.io"
 
     sudo systemctl reload nginx
     target::log "Done. Please check $istio_conf"
@@ -73,7 +73,7 @@ function istio-bookinfo::expose {
     fi
 
     add_proxy "Istio Bookinfo" "istio-ingressgateway"
-    add_endpoint "istio(proxy)" "Istio Bookinfo" "http://istio-ingressgateway-istio-system.$HOST_IP.nip.io/productpage"
+    add_endpoint "istio-proxied" "Istio Bookinfo" "http://istio-ingressgateway-istio-system.$HOST_IP.nip.io/productpage"
 
     sudo systemctl reload nginx
     target::log "Done. Please check $istio_conf"
