@@ -23,6 +23,7 @@ function download_pkg {
     target::step "Download istio"
     download_url=https://github.com/istio/istio/releases/download/$ISTIO_VERSION/$package.tar.gz
     curl -sSL $download_url -o ~/.launch-cache/$package.tar.gz
+    rm -rf ~/.launch-cache/istio
   fi
 
   if [ ! -d ~/.launch-cache/istio ]; then
