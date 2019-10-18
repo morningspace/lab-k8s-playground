@@ -19,6 +19,11 @@ function istio::expose {
   create_portfwd istio-system pod/prometheus 9090:9090
 }
 
+function istio::portforward {
+  target::warn "Target command portforward is deprecated, use expose instead"
+  istio::expose
+}
+
 function add_endpoints_bookinfo {
   target::step "Add endpoints for istio-bookinfo"
   add_endpoint "istio" "Istio Bookinfo" "http://@@HOST_IP:31380/productpage"
@@ -27,6 +32,11 @@ function add_endpoints_bookinfo {
 function istio-bookinfo::expose {
   kill_portfwds "31380:80"
   create_portfwd istio-system service/istio-ingressgateway 31380:80
+}
+
+function istio-bookinfo::portforward {
+  target::warn "Target command portforward is deprecated, use expose instead"
+  istio-bookinfo::expose
 }
 
 target::command $@

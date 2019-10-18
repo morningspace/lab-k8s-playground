@@ -78,4 +78,9 @@ function apic::expose {
   create_portfwd $apic_ns service/ingress-nginx-ingress-controller 443:443
 }
 
+function apic::portforward {
+  target::warn "Target command portforward is deprecated, use expose instead"
+  apic::expose
+}
+
 target::command $@
