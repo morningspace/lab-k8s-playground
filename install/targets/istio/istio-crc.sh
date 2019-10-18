@@ -72,7 +72,7 @@ function istio-bookinfo::expose {
       echo | sudo tee -a $istio_conf >/dev/null
     fi
 
-    add_proxy "Istio Bookinfo" "istio-ingressgateway"
+    add_proxy "istio-ingressgateway"
     add_endpoint "istio-proxied" "Istio Bookinfo" "http://istio-ingressgateway-istio-system.$HOST_IP.nip.io/productpage"
 
     sudo systemctl reload nginx
