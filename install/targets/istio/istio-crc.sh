@@ -25,28 +25,31 @@ function add_endpoints {
 }
 
 function add_proxy {
-  local app=$1
-  local service=$2
+  local service=$1
   if ! cat $istio_conf | grep -q "# For $service"; then
     target::step "Forwarding $service"
 
     cat $LAB_HOME/install/targets/istio/istio-nginx.conf | \
       sed -e "s/@@SERVICE/$service/g; s/@@HOST_IP/$HOST_IP/g" | \
       sudo tee -a $istio_conf >/dev/null
-
-    local url=$(cat $istio_conf | grep server_name | \
-      grep $service | sed "s/.*server_name \(.*\);/\1/")
-    add_endpoint "istio(proxy)" $app $url
   fi
 }
 
 function istio::expose {
   if ensure_os_linux; then
     sudo touch $istio_conf
-    add_proxy "Grafana" "grafana"
-    add_proxy "Kiali" "kiali"
-    add_proxy "Jaeger" "jaeger-query"
-    add_proxy "Prometheus" "prometheus"
+    add_proxy "grafana"
+    add_endpoint "istio(proxy)" "Grafana" "http://grafana-istio-system.$HOST_IP.nip.io"
+
+    add_proxy "kiali"
+    add_endpoint "istio(proxy)" "Kiali" "http://kiali-istio-system.$HOST_IP.nip.io"
+
+    add_proxy "jaeger-query"
+    add_endpoint "istio(proxy)" "Jaeger" "http://jaeger-query-istio-system.$HOST_IP.nip.io"
+
+    add_proxy "prometheus"
+    add_endpoint "istio(proxy)" "Prometheus" "http://prometheus-istio-system.$HOST_IP.nip.io"
+
     sudo systemctl reload nginx
     target::log "Done. Please check $istio_conf"
   else
@@ -70,6 +73,8 @@ function istio-bookinfo::expose {
     fi
 
     add_proxy "Istio Bookinfo" "istio-ingressgateway"
+    add_endpoint "istio(proxy)" "Istio Bookinfo" "http://istio-ingressgateway-istio-system.$HOST_IP.nip.io/productpage"
+
     sudo systemctl reload nginx
     target::log "Done. Please check $istio_conf"
   else
