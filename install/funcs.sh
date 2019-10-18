@@ -222,7 +222,7 @@ function print_endpoints {
   local group=$1
   local endpoints=("${@:2}")
 
-  printf "$(capitalize ${group/-/ }):\n"
+  printf "$(capitalize "${group/-/ }"):\n"
 
   local max_len=0
   for endpoint in "${endpoints[@]}" ; do
