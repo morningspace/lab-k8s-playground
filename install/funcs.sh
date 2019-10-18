@@ -350,7 +350,7 @@ function target::step {
 }
 
 function target::log {
-  echo -e "\033[1mINFO \033[0m $@"
+  echo "$@"
 }
 
 function target::warn {
