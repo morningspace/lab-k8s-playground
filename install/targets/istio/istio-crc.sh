@@ -53,7 +53,7 @@ function istio::expose {
     sudo systemctl reload nginx
     target::log "Done. Please check $istio_conf"
   else
-    target::log "This is only supported on Linux."
+    target::error "This is only supported on Linux."
   fi
 }
 
@@ -78,7 +78,7 @@ function istio-bookinfo::expose {
     sudo systemctl reload nginx
     target::log "Done. Please check $istio_conf"
   else
-    target::log "This is only supported on Linux."
+    target::error "This is only supported on Linux."
   fi
 }
 
