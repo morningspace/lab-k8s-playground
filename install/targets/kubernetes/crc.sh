@@ -7,13 +7,10 @@ INSTALL_HOME=$LAB_HOME/install
 CACHE_HOME=$INSTALL_HOME/.launch-cache
 
 CRC_INSTALL_HOME=$HOME/.crc
-CRC_VERSION=${CRC_VERSION:-1.0.0-rc.0}
-CRC_OPENSHIFT_VERSION=${CRC_OPENSHIFT_VERSION:-4.2.0-0.nightly-2019-09-26-192831}
+CRC_VERSION=${CRC_VERSION:-1.0.0}
 CRC_MEMORY=${CRC_MEMORY:-10240}
 CRC_CPUS=${CRC_CPUS:-4}
 CRC_USE_VIRTUALBOX=${CRC_USE_VIRTUALBOX:-}
-
-virtualbox_bundle="crc_virtualbox_$CRC_OPENSHIFT_VERSION.crcbundle"
 
 os=$(detect_os)
 case $os in
@@ -26,6 +23,11 @@ darwin)
   pkg_pattern="crc-macos.\+-amd64"
   ;;
 esac
+
+function vbox_bundle_name {
+  local openshift_version=$(cat $CACHE_HOME/crc-release-info.json | jq -r .version.openshiftVersion)
+  echo "crc_virtualbox_$openshift_version.crcbundle"
+}
 
 function kubernetes::init {
   target::step "Install Dependencies"
@@ -47,20 +49,24 @@ function kubernetes::init {
     ;;
   esac
   
+  local download_base_url=https://mirror.openshift.com/pub/openshift-v4/clients/crc/$CRC_VERSION
   local target=$CACHE_HOME/$package
   if [[ ! -f $target-$CRC_VERSION.tar ]]; then
     if [[ ! -f $target-$CRC_VERSION.tar.xz ]]; then
       target::step "Download OpenShift CRC"
-      local download_url=https://mirror.openshift.com/pub/openshift-v4/clients/crc/$CRC_VERSION/$package.tar.xz
+      local download_url=$download_base_url/$package.tar.xz
       curl -sSL $download_url -o $target-$CRC_VERSION.tar.xz
+      download_url=$download_base_url/release-info.json
+      curl -sSL $download_url -o $CACHE_HOME/crc-release-info.json
     fi
     $unzip_cmd $target-$CRC_VERSION.tar.xz
     rm -rf $target
   fi
 
+  virtualbox_bundle=$(vbox_bundle_name)
   if [[ -n $CRC_USE_VIRTUALBOX && ! -f $CACHE_HOME/$virtualbox_bundle ]]; then
     target::step "Download OpenShift CRC VirtualBox Bundle"
-    download_url=https://mirror.openshift.com/pub/openshift-v4/clients/crc/latest/$virtualbox_bundle
+    download_url=$download_base_url/$virtualbox_bundle
     curl -sSL $download_url -o $CACHE_HOME/$virtualbox_bundle
   fi
 
@@ -114,6 +120,7 @@ function kubernetes::up {
 
   local opt="-c $CRC_CPUS -m $CRC_MEMORY"
   if [[ -n $CRC_USE_VIRTUALBOX ]]; then
+    virtualbox_bundle=$(vbox_bundle_name)
     opt+=" --vm-driver virtualbox --bundle $CACHE_HOME/$virtualbox_bundle"
   fi
   if [[ -f $CRC_INSTALL_HOME/pull-secret.txt ]]; then
@@ -153,7 +160,7 @@ function kubernetes::clean {
 
 function kubernetes::env {
   printenv_common
-  printenv_provider CRC_VERSION CRC_OPENSHIFT_VERSION CRC_MEMORY CRC_CPUS CRC_USE_VIRTUALBOX
+  printenv_provider CRC_VERSION CRC_MEMORY CRC_CPUS CRC_USE_VIRTUALBOX
 }
 
 target::command $@
