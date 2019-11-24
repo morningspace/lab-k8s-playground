@@ -7,7 +7,7 @@ INSTALL_HOME=$LAB_HOME/install
 CACHE_HOME=$INSTALL_HOME/.launch-cache
 
 CRC_INSTALL_HOME=$HOME/.crc
-CRC_VERSION=${CRC_VERSION:-1.0.0}
+CRC_VERSION=${CRC_VERSION:-1.1.0}
 CRC_MEMORY=${CRC_MEMORY:-10240}
 CRC_CPUS=${CRC_CPUS:-4}
 CRC_USE_VIRTUALBOX=${CRC_USE_VIRTUALBOX:-}
@@ -111,7 +111,7 @@ EOF
     fi
     sudo systemctl reload nginx
   else
-    target::log "This is only supported on Linux."
+    target::log "The proxy is only supported on Linux."
   fi
 }
 
