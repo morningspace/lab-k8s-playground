@@ -1,12 +1,8 @@
-## MorningSpace Lab 
+# The All-in-One Playground for Kubernetes
 
-晴耕实验室
-
-[![](https://morningspace.github.io/assets/images/banner.jpg)](https://morningspace.github.io)
-
-# Kubernetes Playground
-
-Keywords: Kubernetes, OpenShift, Container, DIND, Vagrant
+[![MIT license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/morningspace/lab-k8s-playground/blob/master/LICENSE)
+[!["Latest Release"](https://img.shields.io/github/release/morningspace/lab-k8s-playground.svg)](https://github.com/morningspace/lab-k8s-playground/releases/latest)
+[![Gitter](https://badges.gitter.im/morningspace/community.svg)](https://gitter.im/morningspace/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 ## Overview
 
