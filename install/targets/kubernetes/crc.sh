@@ -7,7 +7,7 @@ INSTALL_HOME=$LAB_HOME/install
 CACHE_HOME=$INSTALL_HOME/.launch-cache
 
 CRC_INSTALL_HOME=$HOME/.crc
-CRC_VERSION=${CRC_VERSION:-1.1.0}
+CRC_VERSION=${CRC_VERSION:-1.2.0}
 CRC_MEMORY=${CRC_MEMORY:-10240}
 CRC_CPUS=${CRC_CPUS:-4}
 CRC_USE_VIRTUALBOX=${CRC_USE_VIRTUALBOX:-}
@@ -160,7 +160,7 @@ function kubernetes::clean {
 
 function kubernetes::env {
   printenv_common
-  printenv_provider CRC_VERSION CRC_MEMORY CRC_CPUS CRC_USE_VIRTUALBOX
+  printenv_provider CRC_VERSION CRC_MEMORY CRC_CPUS
 }
 
 target::command $@
