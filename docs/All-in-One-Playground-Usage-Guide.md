@@ -75,7 +75,7 @@ The playground supports both standard Kubernetes and OpenShift. This is configur
 
 To launch the playground using OpenShift, you just need to change the value of `K8S_PROVIDER` to:
 * `oc`: For OpenShift v3.11 based on `oc cluster up`;
-* `crc`: For OpenShift v4.x based on [CodeReady Containers](https://github.com/code-ready/crc).
+* `crc`: For OpenShift v4.x based on [CodeReady Containers(CRC)](https://github.com/code-ready/crc).
 
 Then run below command to launch the cluster:
 ```shell
@@ -83,6 +83,28 @@ $ launch kubernetes
 ```
 
 This will bring up a single node cluster running on your host machine.
+
+For OpenShift v4.x based on CRC, it is recommanded to update the CRC version on a regular basis (e.g. monthly), so that you can always get the latest version of OpenShift.
+
+To specify the CRC version, use `CRC_VERSION` environment variable. To know what the CRC version is currently being used by the playground, run `launch env`, e.g.:
+```shell
+$ launch env
+Targets to be launched: [env]
+####################################
+# Launch target env...
+####################################
+Common:
+  LAB_HOME    : /Users/morningspace/lab-k8s-playground
+  HOST_IP     : 127.0.0.1
+  K8S_PROVIDER: crc
+
+Specific to crc:
+  CRC_VERSION       : 1.2.0
+  CRC_MEMORY        : 10240
+  CRC_CPUS          : 4
+
+Total elapsed time: 0 seconds
+```
 
 You can even run multiple clusters using different Kubernetes distributions on the same host machine! As an example, run below commands:
 ```shell
