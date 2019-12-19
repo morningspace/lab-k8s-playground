@@ -1,0 +1,294 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>The All-in-One Kubernetes Playground</title>
+
+    <link rel="shortcut icon" type="image/png" href="https://kubernetes.io/images/favicon.png">
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/night.css">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    
+    <style>
+      .reveal h2 { font-size: 2em; }
+      .reveal h3 { font-size: 1.5em; }
+    </style>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <section>
+              <img src="images/logo.png" style="border: 0; background-color: #111111" width="25%" />
+              <h3>10 Minutes to Learn</h2>
+              <h3>The All-in-One Kubernetes Playground</h3>
+              on <a href="https://github.com/morningspace/lab-k8s-playground">GitHub</a>
+              <p>by <a href="https://morningspace.github.io/">MorningSpace</a></p>
+            </section>
+            <section>
+              <section>
+                <img src="images/sad-face.png" style="border: 0; background-color: #111111" width="20%" />
+                <h2>The Headaches</h2>
+              </section>
+              <section>
+                <img src="images/metal-number-1.png" style="border: 0; background-color: #111111" width="15%" />
+                <h3 style="text-align: left; white-space: nowrap;">I want to deploy using multi-node cluster</h3>
+                <img src="images/but.png" style="border: 0; background-color: #111111; float: left; margin-right: 10px;" width="10%" />
+                <h3 style="text-align: left; white-space: nowrap; padding-top: 35px">we have very limited resources !</h3>
+              </section>
+              <section>
+                <img src="images/metal-number-2.png" style="border: 0; background-color: #111111" width="15%" />
+                <h3 style="text-align: left; white-space: nowrap;">I want to verify my code against real env</h3>
+                <img src="images/but.png" style="border: 0; background-color: #111111; float: left; margin-right: 10px;" width="10%" />
+                <h3 style="text-align: left; white-space: nowrap; padding-top: 35px">I can't touch prod env owned by Ops !</h3>
+              </section>
+              <section>
+                <img src="images/metal-number-3.png" style="border: 0; background-color: #111111" width="15%" />
+                <h3 style="text-align: left; white-space: nowrap;">I want to install IBM APIC for my local dev</h3>
+                <img src="images/but.png" style="border: 0; background-color: #111111; float: left; margin-right: 10px;" width="10%" />
+                <h3 style="text-align: left; white-space: nowrap; padding-top: 35px">it costed a lot of time and resources !</h3>
+              </section>
+              <section>
+                <img src="images/metal-number-4.png" style="border: 0; background-color: #111111" width="15%" />
+                <h3 style="text-align: left; white-space: nowrap;">I want to setup a demo env for my customer</h3>
+                <img src="images/but.png" style="border: 0; background-color: #111111; float: left; margin-right: 10px;" width="10%" />
+                <h3 style="text-align: left; white-space: nowrap; padding-top: 35px">it has no network connectivity there !</h3>
+              </section>
+              <section>
+                <img src="images/metal-number-5.png" style="border: 0; background-color: #111111" width="15%" />
+                <h3 style="text-align: left; white-space: nowrap;">I want to test multiple k8s distributions, releases</h3>
+                <img src="images/but.png" style="border: 0; background-color: #111111; float: left; margin-right: 10px;" width="10%" />
+                <h3 style="text-align: left; padding-top: 15px">it's hard to maintain multi-env at the same time !</h3>
+              </section>
+              <section>
+                <img src="images/metal-number-6.png" style="border: 0; background-color: #111111" width="15%" />
+                <h3 style="text-align: left; white-space: nowrap;">I want to run in-cluster test on CI/CD pipeline</h3>
+                <img src="images/but.png" style="border: 0; background-color: #111111; float: left; margin-right: 10px;" width="10%" />
+                <h3 style="text-align: left; padding-top: 15px">it's too heavy and fragile to connect to a shared env !</h3>
+              </section>
+              <section>
+                <img src="images/metal-number-7.png" style="border: 0; background-color: #111111" width="15%" />
+                <h3 style="text-align: left; white-space: nowrap;">I want to reinstall the whole cluster</h3>
+                <img src="images/but.png" style="border: 0; background-color: #111111; float: left; margin-right: 10px;" width="10%" />
+                <h3 style="text-align: left; padding-top: 10px">all my previously deployed apps have gone and I have to redeploy !</h3>
+              </section>
+            </section>
+            <section>
+              <section>
+                <img src="images/logo.png" style="border: 0; background-color: #111111" width="25%" />
+                <h2>The One-for-All Solution</h2>
+              </section>
+              <section>
+                <h2>The All-in-One K8S Playground</h2>
+                <div style="text-align: left">A playground that allows you to launch single or multiple nodes k8s cluster with many popular applications deployed and command line tools integrated on single physical or virtual machine easily, quickly, repeatably, consistently and configurably.</div>
+              </section>
+            </section>
+            <section>
+              <section>
+                <img src="images/checklist.png" style="border: 0; background-color: #111111" width="25%" />
+                <h2>What It Covers</h2>
+              </section>
+              <section data-markdown>
+                ## Distributions and Releases
+                (supported)
+                * [Standard Kubernetes](https://kubernetes.io): v1.12, v1.13, v1.14, v1.15
+                * OpenShift: [OKD](https://www.okd.io/) v3.11, OpenShift 4.x by [CRC](https://code-ready.github.io/crc/)
+              </section>
+              <section data-markdown>
+                ## Applications
+                (deployed)
+                * [Kubernetes dashboard](https://github.com/kubernetes/dashboard)
+                * [Istio](https://istio.io) with demo app [bookinfo](https://istio.io/docs/examples/bookinfo)
+                * [Grafana](https://grafana.com)
+                * [Kiali](https://www.kiali.io)
+                * [Jaeger](https://www.jaegertracing.io)
+                * [Prometheus](https://prometheus.io)
+                * [IBM API Connect](https://www.ibm.com/cloud/api-connect)
+              </section>
+              <section data-markdown>
+                ## Tools
+                (integrated)
+                * [kubectl](https://kubernetes.io/docs/reference/kubectl)
+                * [helm](https://helm.sh)
+                * [kubectl autocompletion](https://kubernetes.io/docs/tasks/tools/install-kubectl/#optional-kubectl-configurations)
+                * [kubectl aliases](https://github.com/ahmetb/kubectl-aliases)
+                * [kubectx](https://github.com/ahmetb/kubectx)
+                * [kubens](https://github.com/ahmetb/kubectx)
+                * [kubebox](https://github.com/astefanutti/kubebox)
+                * [kubetail](https://github.com/johanhaleby/kubetail)
+                * [oc](https://docs.openshift.com/container-platform/4.2/cli_reference/openshift_cli/getting-started-cli.html)
+              </section>
+              <section data-markdown>
+                ## Private Registries
+                (provided to mock)
+                * [Google Container Registry](https://gcr.io)
+                * [Quay](https://quay.io)
+                * [Docker Hub](https://hub.docker.com)
+              </section>
+              <section data-markdown>
+                ## Operating Systems
+                (supported)
+                * [Ubuntu](https://ubuntu.com/)
+                * [CentOS](https://www.centos.org/)
+                * [RHEL](https://www.redhat.com/en/technologies/linux-platforms/enterprise-linux)
+                * [MacOS](https://www.apple.com/macos/)
+              </section>
+            </section>
+            <section>
+              <section>
+                <img src="images/demo.png" style="border: 0; background-color: #111111" width="35%" />
+                <h2>How It Looks</h2>
+              </section>
+              <section data-markdown>
+                ### Many Applications Deployed
+                ![](https://morningspace.github.io/lab-k8s-playground/docs/demo-apps.gif)
+              </section>
+              <section data-markdown>
+                ### Many Tools Integrated
+                ![](https://morningspace.github.io/lab-k8s-playground/docs/demo-tools.gif)
+              </section>
+              <section data-markdown>
+                ### Play in Offline Mode
+                ![](https://morningspace.github.io/lab-k8s-playground/docs/demo-offline.gif)
+              </section>
+              <section data-markdown>
+                ### Run K8S and OpenShift on Same Machine
+                ![](https://morningspace.github.io/lab-k8s-playground/docs/demo-oc.gif)
+              </section>
+              <section data-markdown>
+                ### Launch APIC on Single Machine in Minutes
+                ![](https://morningspace.github.io/lab-k8s-playground/docs/demo-apic.gif)
+              </section>
+            </section>
+            <section>
+              <section>
+                <img src="images/more.png" style="border: 0; background-color: #111111" width="20%" />
+                <h2>What is More</h2>
+              </section>
+              <section>
+                <h2>Use the Launch Utility</h2>
+
+<p style="background-color: #111; padding: 1em; text-align: left; font-size: 20px">
+<code style="box-sizing: border-box; font-family: Monaco, Consolas, &quot;Lucida Console&quot;, monospace;">
+  <span style="box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(255, 0, 134);">$ </span>launch<br><br>Usage: launch <span style="box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(31, 170, 170);">[</span>targets<span style="box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(31, 170, 170);">]</span><br><br>&nbsp;&nbsp;Targets are separated by space and launch in order of appearance one by one.<br><br>&nbsp;&nbsp;Special pre-defined targets:<br>&nbsp;&nbsp;<span style="box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(119, 119, 119);">*</span>&nbsp;base &nbsp; &nbsp; &nbsp;will launch target docker, docker-compose, and kubectl<br>&nbsp;&nbsp;<span style="box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(119, 119, 119);">*</span>&nbsp;default &nbsp; will launch target base, registry, and kubernetes<br><br>&nbsp;&nbsp;e.g.<br>&nbsp;&nbsp;launch default tools istio<br>&nbsp;&nbsp;launch kubernetes</code>
+</p>
+              </section>
+              <section>
+                <h2>Launch Cluster from Snapshot</h2>
+
+<p style="background-color: #111; padding: 1em; text-align: left; font-size: 20px">
+<code style="box-sizing: border-box; font-family: Monaco, Consolas, &quot;Lucida Console&quot;, monospace;">
+  <span style="box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(255, 0, 134);">$ </span>launch kubernetes::snapshot<br style="outline: none;">
+  <span style="box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(255, 0, 134);">$ </span>launch kubernetes::down<br style="outline: none;">
+  <span style="box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(255, 0, 134);">$ </span>launch kubernetes::up<br style="outline: none;">
+</code>
+</p>
+              </section>
+              <section data-markdown>
+                ## Customize the Playground
+                * Kubernetes distribution: `K8S_PROVIDER`
+                * Kubernetes version: `K8S_VERSION`
+                * Number of cluster nodes: `NUM_NODES`
+                * Launch different targets: `launch target1 target2`
+                * Special optimization for users in China: `IS_IN_CHINA`
+                * Write your own targets
+                * ...
+              </section>
+              <section>
+<p style="background-color: #111; padding: 1em; text-align: left; font-size: 15px">
+<code style="outline: none; box-sizing: border-box; font-family: Monaco, Consolas, &quot;Lucida Console&quot;, monospace; background-color: #111">
+<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(119, 119, 119);"># Just for fun;-) Choose one case then find the link(s) and click!</span><br style="outline: none;">
+<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(173, 0, 161);">function<span>&nbsp;</span></span>to_learn_more<span>&nbsp;</span><span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(31, 170, 170);">{</span><br style="outline: none;">
+&nbsp;&nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(173, 0, 161);">case</span>&nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(255, 0, 134);">$I_want</span>&nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(173, 0, 161);">in</span><br style="outline: none;">
+&nbsp;&nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(0, 201, 24);">"to learn what it provides in general"</span><span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s;">)</span><br style="outline: none;">
+&nbsp;&nbsp; &nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s;">cat</span>&nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(55, 119, 230);">"<a href="https://morningspace.github.io/lab-k8s-playground/docs/All-in-One-Playground-Overview.html" rel="noopener" target="_blank">All-in-One&nbsp;K8S&nbsp;Playground&nbsp;Overview</a>"</span><br style="outline: none;">
+&nbsp;&nbsp; &nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s;">;;</span><br style="outline: none;">
+&nbsp;&nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(0, 201, 24);">"to get started quickly"</span><span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s;">)</span><br style="outline: none;">
+&nbsp;&nbsp; &nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s;">cat</span>&nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(55, 119, 230);">"<a href="https://morningspace.github.io/lab-k8s-playground/docs/All-in-One-Playground-Usage-Guide.html" rel="noopener" target="_blank">All-in-One&nbsp;K8S&nbsp;Playground&nbsp;Usage&nbsp;Guide</a>"</span><br style="outline: none;">
+&nbsp;&nbsp; &nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s;">cat</span>&nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(55, 119, 230);">"<a href="http://morningspace.github.io/tech/all-in-one-k8s-playground" rel="noopener" target="_blank">All-in-One&nbsp;K8S&nbsp;Playground 中文使用指南</a>"</span><br style="outline: none;">
+&nbsp;&nbsp; &nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s;">;;</span><br style="outline: none;">
+&nbsp;&nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(0, 201, 24);">"to understand what's behind"</span><span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s;">)</span><br style="outline: none;">
+&nbsp;&nbsp; &nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s;">cat</span>&nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(55, 119, 230);">"<a href="https://morningspace.github.io/tech/k8s-run" rel="noopener" target="_blank">Launch&nbsp;multi-node&nbsp;k8s&nbsp;cluster&nbsp;locally&nbsp;in&nbsp;one&nbsp;minute,&nbsp;and&nbsp;more...</a>"</span><br style="outline: none;">
+&nbsp;&nbsp; &nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s;">cat</span>&nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(55, 119, 230);">"<a href="https://v.youku.com/v_show/id_XNDI2Mzk1NDcyMA==.html?f=52221532" rel="noopener" target="_blank">视频教程 - Kubernetes实战:&nbsp;如何1分钟内在本地启动一个多节点集群</a>"</span><br style="outline: none;">
+&nbsp;&nbsp; &nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s;">cat</span>&nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(55, 119, 230);">"<a href="https://morningspace.github.io/tech/openshift-v3-trap-and-pitfalls" rel="noopener" target="_blank">OpenShift v3的填坑之旅</a>"</span><br style="outline: none;">
+&nbsp;&nbsp; &nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s;">cat</span>&nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(55, 119, 230);">"<a href="https://morningspace.github.io/tech/openshift-v4-trap-and-pitfalls" rel="noopener" target="_blank">OpenShift v4的填坑之旅</a>"</span><br style="outline: none;">
+&nbsp;&nbsp; &nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s;">;;</span><br style="outline: none;">
+&nbsp;&nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(0, 201, 24);">"to extend it by myself"</span><span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s;">)</span><br style="outline: none;">
+&nbsp;&nbsp; &nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s;">cat</span>&nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(55, 119, 230);">"<a href="https://morningspace.github.io/lab-k8s-playground/docs/Launch-Utility-Usage-Guide.html" rel="noopener" target="_blank">Launch&nbsp;Utility&nbsp;Usage&nbsp;Guide</a>"</span><br style="outline: none;">
+&nbsp;&nbsp; &nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s;">cat</span>&nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(55, 119, 230);">"<a href="https://github.com/morningspace/lab-k8s-playground/blob/master/install/targets/sample.sh" rel="noopener" target="_blank">A Sample Target for Demo Purpose</a>"</span><br style="outline: none;">
+&nbsp;&nbsp; &nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s;">;;</span><br style="outline: none;">
+&nbsp;&nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(0, 201, 24);">"to learn more cool features"</span><span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s;">)</span><br style="outline: none;">
+&nbsp;&nbsp; &nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s;">cat</span>&nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(55, 119, 230);">"<a href="https://morningspace.github.io/lab-k8s-playground/docs/APIC-Quick-Guide.html" rel="noopener" target="_blank">Quick&nbsp;Guide&nbsp;to&nbsp;Launch&nbsp;APIC&nbsp;Playground</a>"</span><br style="outline: none;">
+&nbsp;&nbsp; &nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s;">cat</span>&nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(55, 119, 230);">"<a href="https://morningspace.github.io/tech/all-in-one-apic-playground" rel="noopener" target="_blank">把API Connect关进All-in-One K8S Playground里</a>"</span><br style="outline: none;">
+&nbsp;&nbsp; &nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s;">cat</span>&nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(55, 119, 230);">"<a href="https://morningspace.github.io/tech/all-in-one-openshift-playground/" rel="noopener" target="_blank">All-in-One K8S Playground新增OpenShift支持</a>"</span><br style="outline: none;">
+&nbsp;&nbsp; &nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s;">cat</span>&nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(55, 119, 230);">"<a href="https://morningspace.github.io/tech/all-in-one-openshift-v4-playground/" rel="noopener" target="_blank">All-in-One K8S Playground支持OpenShift v4</a>"</span><br style="outline: none;">
+&nbsp;&nbsp; &nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s;">;;</span><br style="outline: none;">
+&nbsp;&nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(0, 201, 24);">"to contribute back"</span><span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s;">)</span><br style="outline: none;">
+&nbsp;&nbsp; &nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(119, 119, 119);"># Feel free to <a class="github-button" href="https://github.com/morningspace/lab-k8s-playground/subscription" data-icon="octicon-eye" aria-label="Watch morningspace/lab-k8s-playground on GitHub">Watch</a> <a class="github-button" href="https://github.com/morningspace/lab-k8s-playground" data-icon="octicon-star" aria-label="Star morningspace/lab-k8s-playground on GitHub">Star</a> and <a class="github-button" href="https://github.com/morningspace/lab-k8s-playground/fork" data-icon="octicon-repo-forked" aria-label="Fork morningspace/lab-k8s-playground on GitHub">Fork</a></span><br style="outline: none;">
+&nbsp;&nbsp; &nbsp;git clone<span>&nbsp;</span><a href="https://github.com/morningspace/lab-k8s-playground.git" rel="noopener" target="_blank">https://github.com/morningspace/lab-k8s-playground.git</a><br style="outline: none;">
+&nbsp;&nbsp; &nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s;">;;</span><br style="outline: none;">
+&nbsp;&nbsp;<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(173, 0, 161);">esac</span><br style="outline: none;">
+<span style="outline: none; box-sizing: border-box; transition: all 0.2s ease-in-out 0s; color: rgb(31, 170, 170);">}</span></code>
+</p>
+              </section>
+            </section>
+            <section>
+              <img src="images/logo.png" style="border: 0; background-color: #111111" width="25%" />
+              <h2>Thanks</h2>
+              <p>
+                <a class="github-button" href="https://github.com/morningspace/lab-k8s-playground/subscription" data-icon="octicon-eye" data-size="large" aria-label="Watch morningspace/lab-k8s-playground on GitHub">Watch</a>
+                <a class="github-button" href="https://github.com/morningspace/lab-k8s-playground" data-icon="octicon-star" data-size="large" aria-label="Star morningspace/lab-k8s-playground on GitHub">Star</a>
+                <a class="github-button" href="https://github.com/morningspace/lab-k8s-playground/fork" data-icon="octicon-repo-forked" data-size="large" aria-label="Fork morningspace/lab-k8s-playground on GitHub">Fork</a>
+              </p>
+            </section>
+        </div>
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.js"></script>
+
+    <script>
+        // More info https://github.com/hakimel/reveal.js#configuration
+        Reveal.initialize({
+            history: true,
+            transition: 'convex',
+
+            // More info https://github.com/hakimel/reveal.js#dependencies
+            dependencies: [{
+                src: 'plugin/markdown/marked.js'
+            }, {
+                src: 'plugin/markdown/markdown.js'
+            }, {
+                src: 'plugin/notes/notes.js',
+                async: true
+            }, {
+                src: 'plugin/highlight/highlight.js',
+                async: true,
+                callback: function() {
+                    hljs.initHighlightingOnLoad();
+                }
+            }, {
+                src: 'plugin/zoom-js/zoom.js',
+                async: true
+            }]
+        });
+    </script>
+</body>
+
+</html>
